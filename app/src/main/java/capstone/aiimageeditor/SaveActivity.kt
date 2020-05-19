@@ -7,7 +7,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -25,7 +24,7 @@ class SaveActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save)
-        image = (application as ImagePasser).image
+        image = (application as ImageManager).original
         image_done.setImageBitmap(image)
     }
     fun onBackButtonClick(v: View){

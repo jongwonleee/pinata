@@ -21,9 +21,6 @@
 #define LOGI(str) __android_log_print(ANDROID_LOG_INFO,"mask corrector",str,__FUNCTION__);
 
 
-#define LOGI(str) __android_log_print(ANDROID_LOG_INFO,"mask corrector",str,__FUNCTION__);
-
-
 extern "C" JNIEXPORT jstring JNICALL
 Java_capstone_aiimageeditor_StartActivity_stringFromJNI(
         JNIEnv* env,
@@ -236,3 +233,4 @@ Java_capstone_aiimageeditor_PhotoProcessing_nativeEnhanceImage(JNIEnv *env, jcla
     }
 
 }
+

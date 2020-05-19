@@ -3,7 +3,11 @@ package capstone.aiimageeditor
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 
 import android.provider.MediaStore
@@ -11,6 +15,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gun0912.tedpermission.PermissionListener
@@ -35,7 +42,6 @@ class StartActivity : AppCompatActivity() {
 
         if(getSavedStringSets()!=null) images = getSavedStringSets()!!
         adapter = AdapterImageList(this, images)
-
         imgList.adapter = adapter
         adapter.setOnItemClickListener(object: AdapterImageList.OnItemClickListener{
             override fun onClick(position: Int) {
@@ -71,10 +77,23 @@ class StartActivity : AppCompatActivity() {
 
     private fun gotoNextActivity(uri:Uri){
         val intent = Intent(this,MainActivity::class.java)
-        intent.putExtra("photo",uri)
+        //intent.putExtra("photo",uri)
+/*Glide.with(applicationContext).asBitmap().load(uri).into(object: CustomTarget<Bitmap>(){
+override fun onLoadCleared(placeholder: Drawable?) {
+TODO("Not yet implemented")
+}
+
+override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+(application as ImageManager).original=resource
+}
+
+})*/
+        (application as ImageManager).loadOriginal(uri)
         saveStringSet(images)
         startActivity(intent)
     }
+
+
 
     override fun onResume() {
         super.onResume()

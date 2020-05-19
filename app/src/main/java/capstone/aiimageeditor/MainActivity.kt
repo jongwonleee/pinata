@@ -5,11 +5,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
+import androidx.viewpager.widget.ViewPager
+import capstone.aiimageeditor.adapter.TabPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import org.opencv.android.Utils
@@ -18,30 +19,46 @@ import android.graphics.Bitmap as Bitmap
 
 class MainActivity : AppCompatActivity() {
 
-    private var imageUri:Uri = Uri.EMPTY
-    private var maskUri:Uri = Uri.EMPTY
 
     private lateinit var imageNew:ImageView
-    private lateinit var imageDefault:ImageView
-    private lateinit var imageNow:ImageView
+    private lateinit var viewPager:ViewPager
+
+/*    private lateinit var imageDefault:ImageView
+    private lateinit var imageNow:ImageView*/
     private lateinit var buttonOriginal:ImageView
+    private lateinit var fragmentMask:FragmentMask
+    private lateinit var fragmentBackground: FragmentBackground
+    private lateinit var fragmentPerson: FragmentPerson
+    private lateinit var imageManager:ImageManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        imageDefault = findViewById(R.id.image_default)
-        imageNow = findViewById(R.id.image_now)
+        imageManager = application as ImageManager
+
         imageNew = findViewById(R.id.image_new)
         buttonOriginal =findViewById(R.id.button_original)
+        viewPager = findViewById(R.id.viewPager)
 
         buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
 
-        imageUri = intent.getParcelableExtra("photo") as Uri
         tabLayout.addOnTabSelectedListener(tabSelectedListener)
         initializeImage()
+        fragmentBackground = FragmentBackground()
+        fragmentMask = FragmentMask()
+        fragmentPerson = FragmentPerson()
 
+        val tabAdapter = TabPagerAdapter(supportFragmentManager,4)
+        tabAdapter.addPage(fragmentMask,"마스크")
+        tabAdapter.addPage(fragmentPerson,"인물")
+        tabAdapter.addPage(fragmentBackground,"배경")
+        tabAdapter.addPage(fragmentMask,"저장")
+
+        viewPager.adapter=tabAdapter
+        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
     }
     val tabSelectedListener = object:TabLayout.OnTabSelectedListener {
@@ -51,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 1->{ //배경
-                    var bitmap = imageNow.drawable.toBitmap()
+/*                    var bitmap = imageNow.drawable.toBitmap()
                     val outbit = PhotoProcessing.ApplyEnhance(bitmap,1,100)
                     imageNow.setImageBitmap(outbit)
                     imageDefault.setImageBitmap(outbit)
@@ -60,11 +77,11 @@ class MainActivity : AppCompatActivity() {
                     var bitmap = imageNow.drawable.toBitmap()
                     val outbit = PhotoProcessing.ApplyFilter(bitmap, 6, 100)
                     imageNow.setImageBitmap(outbit)
-                    imageDefault.setImageBitmap(outbit)
+                    imageDefault.setImageBitmap(outbit)*/
                 }
                 3->{
                     val intent = Intent(this@MainActivity,SaveActivity::class.java)
-                    (application as ImagePasser).image = imageNow.drawable.toBitmap()
+                    //(application as ImagePasser).image = imageNow.drawable.toBitmap()
                     startActivity(intent)
                 }
             }
@@ -78,9 +95,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initializeImage(){
-        imageNew.setImageURI(imageUri)
-        imageDefault.setImageURI(imageUri)
-        imageNow.setImageURI(imageUri)
+        imageNew.setImageBitmap(imageManager.original)
+/*        imageDefault.setImageURI(imageUri)
+        imageNow.setImageURI(imageUri)*/
         //TODO stack 초기화 시켜주기
     }
 
@@ -89,14 +106,7 @@ class MainActivity : AppCompatActivity() {
             if(p1!=null)
             {
                 when(p1.action){
-                    MotionEvent.ACTION_DOWN ->{
-                        Log.i("!!","1")
-                        imageDefault.visibility=View.VISIBLE
-                    }
-                    MotionEvent.ACTION_UP->{
-                        Log.i("!!","2")
-                        imageDefault.visibility=View.GONE
-                    }
+                    //TODO 원본 보여주
                 }
             }
             return true
@@ -129,24 +139,33 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         var masked:Long=0
+        val originalImage = imageNew.drawable.toBitmap()
         var original = Mat()
         var mask = Mat()
         if(requestCode== StartActivity.PICK_FROM_ALBUM && data!=null){
-          /* imageUri = data.data as Uri
-            initializeImage()*/
-            maskUri = data.data as Uri
-            imageNew.setImageURI(maskUri)
+            val imageUri = data.data as Uri
+            imageManager.loadMask(imageUri)
+            val originalMask = imageManager.mask
 
-            Utils.bitmapToMat(imageNow.drawable.toBitmap(),original)
-            Utils.bitmapToMat(imageNew.drawable.toBitmap(),mask)
-            startInpaint(original.nativeObjAddr,mask.nativeObjAddr)
-            //runMaskCorrector(original.nativeObjAddr,mask.nativeObjAddr)
+            Utils.bitmapToMat(originalImage,original)
+            Utils.bitmapToMat(originalMask,mask)
+            //startInpaint(original.nativeObjAddr,mask.nativeObjAddr)
+            runMaskCorrector(original.nativeObjAddr,mask.nativeObjAddr)
+            val bitmap = Bitmap.createBitmap(originalMask)
+            Utils.matToBitmap(mask, imageManager.mask)
+            fragmentMask.setImage()//imageNew.drawable.toBitmap()//imageManager.getImageFromUri(imageUri)
+
         }
-        var bitmap = Bitmap.createBitmap(imageNow.drawable.toBitmap())
-        Utils.matToBitmap(original,bitmap)
-        imageDefault.setImageBitmap(bitmap)
+
         super.onActivityResult(requestCode, resultCode, data)
     }
     external fun startInpaint(image: Long, mask: Long)
     external fun runMaskCorrector(imagePtr:Long, maskPtr:Long)
+
+
+    override fun onResume() {
+        super.onResume()
+        tabLayout.getTabAt(0)?.select()
+
+    }
 }
