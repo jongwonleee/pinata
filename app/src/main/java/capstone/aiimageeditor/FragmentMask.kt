@@ -33,10 +33,10 @@ class FragmentMask : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageManager = (activity?.application as ImageManager)
-        mask = MyView(context!!,imageManager.mask)
     }
 
     fun setImage(){
+        mask = MyView(context!!,imageManager.mask)
         imageBG.setImageBitmap (imageManager.original)
         //imageFG.setImageBitmap(imageManager.mask)
         imageFG.addView(mask)

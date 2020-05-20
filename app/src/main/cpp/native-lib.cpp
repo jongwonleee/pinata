@@ -13,12 +13,8 @@
 #include "inpaint.h"
 #include "mask_corrector.h"
 #include "size_changer.h"
-
-#include "enhance.h"
 #include "filters.h"
-#include <opencv2/imgproc/types_c.h>
-
-#define LOGI(str) __android_log_print(ANDROID_LOG_INFO,"mask corrector",str,__FUNCTION__);
+#include "enhance.h"
 
 
 extern "C" JNIEXPORT jstring JNICALL
@@ -74,8 +70,6 @@ Java_capstone_aiimageeditor_MainActivity_runMaskCorrector(JNIEnv *env, jobject t
     //bitwise_and(*source,*source,*mask,*mask);
     //mask = ret;
 }
-
-
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -233,4 +227,3 @@ Java_capstone_aiimageeditor_PhotoProcessing_nativeEnhanceImage(JNIEnv *env, jcla
     }
 
 }
-
