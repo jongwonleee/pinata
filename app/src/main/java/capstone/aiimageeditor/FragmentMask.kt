@@ -1,11 +1,9 @@
 package capstone.aiimageeditor
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -24,7 +22,7 @@ class FragmentMask : Fragment() {
     private lateinit var imageFG: LinearLayout
     private lateinit var tabLayout:TabLayout
     public lateinit var imageManager:ImageManager
-    private lateinit var mask:MyView
+    private lateinit var maskView:DrawingView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,13 +31,46 @@ class FragmentMask : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageManager = (activity?.application as ImageManager)
+
+        seekBar.max=90
+        seekBar.progress=45
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                maskView.setStrokeWidth((p1+10).toFloat())
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+            }
+
+        })
+        tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab?.position){
+                    0->maskView.setBrush(true)
+                    else->maskView.setBrush(false)
+                }
+            }
+
+        })
+
     }
 
     fun setImage(){
-        mask = MyView(context!!,imageManager.mask)
+        maskView = DrawingView(context!!,imageManager.mask)//,imageManager.mask)
+        maskView.setStrokeWidth(55f)
         imageBG.setImageBitmap (imageManager.original)
         //imageFG.setImageBitmap(imageManager.mask)
-        imageFG.addView(mask)
+        imageFG.addView(maskView)
         val bitmap = Bitmap.createBitmap(imageManager.mask.width,imageManager.mask.height, Bitmap.Config.ARGB_8888)
 
     }
@@ -51,6 +82,7 @@ class FragmentMask : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mask, container, false)
     }
+<<<<<<< HEAD
     internal class Point(
         var x: Float,
         var y: Float,
@@ -89,6 +121,9 @@ class FragmentMask : Fragment() {
             return true
         }
     }
+=======
+
+>>>>>>> 53328fd82739113631ed3b841ca486fefc91545d
 
 
 }

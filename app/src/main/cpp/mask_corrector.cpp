@@ -1,3 +1,4 @@
+/*
 //
 // Created by 이종원 on 2020/05/02.
 //
@@ -13,13 +14,15 @@ MaskCorrector::MaskCorrector(Mat source, Mat mask){
     this->edge =  Mat(source.size(),CV_8UC1);
     this->mask = mask;
     threshold(mask,result,120,255,THRESH_BINARY);
-   /* this->result = mask.clone(); = cv::Scalar::all(0);
+   */
+/* this->result = mask.clone(); = cv::Scalar::all(0);
     for (int i = 0; i < mask.size().height; ++i) {
         for (int j = 0; j < mask.size().width; ++j) {
             auto ptr = mask.ptr<unsigned char>(i,j);
             if(!isBlack(ptr)) this->result.at<unsigned char>(i, j) = 255;
         }
-    }*/
+    }*//*
+
     CHECK_SIZE = 50;
     leftEdges= vector<pair<int,int>>();
     rightEdges= vector<pair<int,int>>();
@@ -98,11 +101,14 @@ void MaskCorrector::Run(){
             break;
         }
     }
+*/
 /*    char str[20];
     sprintf(str,"!!%d %d",leftEdges.size(),rightEdges.size());
     LOGI(str);
     sprintf(str,"!!%d %d",leftEdges.size(),rightEdges.size());
-    LOGI(str);*/
+    LOGI(str);*//*
+
+*/
 /*    detectSharpMaskEdges();
     while(!leftEdges.empty() && !rightEdges.empty()) {
         while(!leftEdges.empty()){
@@ -117,7 +123,8 @@ void MaskCorrector::Run(){
             color(p.first,p.second);
             setMaskByNear(p.first,p.second,false);
         }
-    }*/
+    }*//*
+
 }
 
 void MaskCorrector::color(int y,int x){
@@ -212,8 +219,8 @@ Mat MaskCorrector::getResult() {
 }
 
 
-/*
 
+*/
 
 //
 // Created by 이종원 on 2020/05/02.
@@ -230,14 +237,13 @@ MaskCorrector::MaskCorrector(Mat source, Mat mask){
     this->edge =  Mat(source.size(),CV_8UC1);
     this->mask = mask;
     threshold(mask,result,120,255,THRESH_BINARY);
-    */
-/* this->result = mask.clone(); = cv::Scalar::all(0);
-     for (int i = 0; i < mask.size().height; ++i) {
+ this->result = mask.clone(); //= cv::Scalar::all(0);
+    /* for (int i = 0; i < mask.size().height; ++i) {
          for (int j = 0; j < mask.size().width; ++j) {
              auto ptr = mask.ptr<unsigned char>(i,j);
              if(!isBlack(ptr)) this->result.at<unsigned char>(i, j) = 255;
          }
-     }*//*
+     }*/
 
     CHECK_SIZE = 10;
     leftEdges= vector<pair<int,int>>();
@@ -317,13 +323,12 @@ void MaskCorrector::Run(){
             break;
         }
     }
-*/
-/*    char str[20];
+    char str[20];
     sprintf(str,"!!%d %d",leftEdges.size(),rightEdges.size());
     LOGI(str);
     sprintf(str,"!!%d %d",leftEdges.size(),rightEdges.size());
-    LOGI(str);*//*
-
+    LOGI(str);
+/*
     detectSharpMaskEdges();
     while(!leftEdges.empty() && !rightEdges.empty()) {
         while(!leftEdges.empty()){
@@ -338,7 +343,7 @@ void MaskCorrector::Run(){
             color(p.first,p.second);
             setMaskByNear(p.first,p.second,false);
         }
-    }
+    }*/
 }
 
 void MaskCorrector::color(int y,int x){
@@ -383,7 +388,7 @@ bool MaskCorrector::setMask(int y,int x, bool isLeft){
             for(int l =0;l<=k+3;l++){
                 result.ptr<unsigned char>(y,x+l)[0]=(isLeft)?0:255;
                 result.ptr<unsigned char>(y,x+l)[1]=(isLeft)?0:255;
-                result.ptr<unsigned char>(y,x+l)[2]=(isLeft)?255:0;
+                result.ptr<unsigned char>(y,x+l)[2]=(isLeft)?0:255;
             }
             return true;
         } else{
@@ -391,7 +396,7 @@ bool MaskCorrector::setMask(int y,int x, bool isLeft){
             for(int l =0;l<=k;l++){
                 result.ptr<unsigned char>(y,x-l)[0]=(isLeft)?255:0 ;
                 result.ptr<unsigned char>(y,x-l)[1]=(isLeft)?255:0;
-                result.ptr<unsigned char>(y,x-l)[2]=(isLeft)?0:255;
+                result.ptr<unsigned char>(y,x-l)[2]=(isLeft)?255:0;
             }
             return true;
         }
@@ -431,4 +436,3 @@ bool MaskCorrector::isBlack(uchar * ptr){
 Mat MaskCorrector::getResult() {
     return result;
 }
-*/
