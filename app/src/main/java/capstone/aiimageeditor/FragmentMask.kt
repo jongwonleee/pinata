@@ -60,23 +60,23 @@ class FragmentMask : Fragment() {
 
     internal class MyView(context: Context,mask:Bitmap) : View(context) {
 
-        public var points = arrayListOf<Point>()
+        var points = arrayListOf<Point>()
         var color: Int = Color.BLACK
         override fun onDraw(canvas: Canvas) {
            // canvas.drawBitmap(mask,0,0,)
             val p = Paint()
-            p.setStrokeWidth(15f)
+            p.strokeWidth = 15f
             for (i in 1 until points.size) {
-                p.setColor(points.get(i).color)
-                if (!points.get(i).check) continue
-                canvas.drawLine(points.get(i - 1).x, points.get(i - 1).y, points.get(i).x, points.get(i).y, p)
+                p.color = points[i].color
+                if (!points[i].check) continue
+                canvas.drawLine(points[i - 1].x, points[i - 1].y, points[i].x, points[i].y, p)
             }
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
-            val x: Float = event.getX()
-            val y: Float = event.getY()
-            when (event.getAction()) {
+            val x: Float = event.x
+            val y: Float = event.y
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     points.add(Point(x, y, false, color))
                     points.add(Point(x, y, true, color))
