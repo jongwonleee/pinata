@@ -80,6 +80,10 @@ class FragmentMask : Fragment() {
 
     }
 
+    fun deleteView(){
+        imageFG.removeView(maskView)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

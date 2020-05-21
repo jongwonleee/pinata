@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
+import capstone.aiimageeditor.imageprocessing.PhotoProcessing
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import org.opencv.android.Utils
@@ -69,14 +70,12 @@ class MainActivity : AppCompatActivity() {
                 0->{
 
                 }
-                1->{ //배경
-/*                    var bitmap = imageNow.drawable.toBitmap()
-                    val outbit = PhotoProcessing.ApplyEnhance(bitmap,1,100)
-                    imageNow.setImageBitmap(outbit)
-                    imageDefault.setImageBitmap(outbit)
+                1->{ imageManager.background=imageManager.original
+                    imageManager.person=imageManager.original
+                    fragmentPerson.setImages()
                 }
                 2-> { //전체
-                    var bitmap = imageNow.drawable.toBitmap()
+           /*         var bitmap = imageNow.drawable.toBitmap()
                     val outbit = PhotoProcessing.ApplyFilter(bitmap, 6, 100)
                     imageNow.setImageBitmap(outbit)
                     imageDefault.setImageBitmap(outbit)*/
@@ -94,6 +93,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
+            when(tab!!.position){
+                0->{
+                    fragmentMask.deleteView()
+                }
+            }
         }
     }
 

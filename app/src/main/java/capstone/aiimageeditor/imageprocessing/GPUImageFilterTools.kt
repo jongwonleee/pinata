@@ -21,6 +21,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.PointF
 import android.opengl.Matrix
+import capstone.aiimageeditor.R
 import jp.co.cyberagent.android.gpuimage.filter.*
 import java.util.*
 
@@ -130,7 +131,7 @@ object GPUImageFilterTools {
         builder.create().show()
     }
 
-    private fun createFilterForType(context: Context, type: FilterType): GPUImageFilter {
+    public fun createFilterForType(context: Context, type: FilterType): GPUImageFilter {
         return when (type) {
             FilterType.CONTRAST -> GPUImageContrastFilter(2.0f)
             FilterType.GAMMA -> GPUImageGammaFilter(2.0f)
@@ -316,7 +317,7 @@ object GPUImageFilterTools {
     ): GPUImageFilter {
         return try {
             filterClass.newInstance().apply {
-                bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher)
+                bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pinata_logo)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -324,7 +325,7 @@ object GPUImageFilterTools {
         }
     }
 
-    private enum class FilterType {
+    public enum class FilterType {
         CONTRAST, GRAYSCALE, SHARPEN, SEPIA, SOBEL_EDGE_DETECTION, THRESHOLD_EDGE_DETECTION, THREE_X_THREE_CONVOLUTION, FILTER_GROUP, EMBOSS, POSTERIZE, GAMMA, BRIGHTNESS, INVERT, HUE, PIXELATION,
         SATURATION, EXPOSURE, HIGHLIGHT_SHADOW, MONOCHROME, OPACITY, RGB, WHITE_BALANCE, VIGNETTE, TONE_CURVE, LUMINANCE, LUMINANCE_THRESHSOLD, BLEND_COLOR_BURN, BLEND_COLOR_DODGE, BLEND_DARKEN,
         BLEND_DIFFERENCE, BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA,
@@ -448,6 +449,7 @@ object GPUImageFilterTools {
             Adjuster<GPUImageBrightnessFilter>(filter) {
             override fun adjust(percentage: Int) {
                 filter.setBrightness(range(percentage, -1.0f, 1.0f))
+
             }
         }
 
