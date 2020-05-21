@@ -1,2 +1,3 @@
 rootProject.name='AI Image Editor'
-include ':app', ':opencv'
+include ':app', ':opencv', ':image'
+project(':image').projectDir = new File('library')

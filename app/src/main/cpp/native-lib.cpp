@@ -73,7 +73,7 @@ Java_capstone_aiimageeditor_MainActivity_runMaskCorrector(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_PhotoProcessing_nativeApplyFilter(JNIEnv *env, jclass clazz, jint mode,
+Java_capstone_aiimageeditor_imageprocessing_PhotoProcessing_nativeApplyFilter(JNIEnv *env, jclass clazz, jint mode,
                                                               jint val, jlong inp_addr,
                                                               jlong out_addr) {
     Mat &src = *(Mat*)inp_addr;
@@ -185,7 +185,7 @@ Java_capstone_aiimageeditor_PhotoProcessing_nativeApplyFilter(JNIEnv *env, jclas
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_PhotoProcessing_nativeEnhanceImage(JNIEnv *env, jclass clazz, jint mode,
+Java_capstone_aiimageeditor_imageprocessing_PhotoProcessing_nativeEnhanceImage(JNIEnv *env, jclass clazz, jint mode,
                                                                jint val, jlong inp_addr,
                                                                jlong out_addr) {
     Mat &src = *(Mat*)inp_addr;
