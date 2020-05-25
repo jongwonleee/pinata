@@ -15,7 +15,6 @@ abstract class ImageUtils {
         private fun decodeExifOrientation(orientation: Int): Matrix {
             val matrix = Matrix()
 
-            // Apply transformation corresponding to declared EXIF orientation
             when (orientation) {
                 ExifInterface.ORIENTATION_NORMAL, ExifInterface.ORIENTATION_UNDEFINED -> Unit
                 ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90F)
@@ -32,11 +31,9 @@ abstract class ImageUtils {
                     matrix.postRotate(90F)
                 }
 
-                // Error out if the EXIF orientation is invalid
                 else -> throw IllegalArgumentException("Invalid orientation: $orientation")
             }
 
-            // Return the resulting matrix
             return matrix
         }
 

@@ -79,10 +79,8 @@ class FragmentMask : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mask, container, false)
     }
-<<<<<<< HEAD
     internal class Point(
         var x: Float,
         var y: Float,
@@ -121,9 +119,5 @@ class FragmentMask : Fragment() {
             return true
         }
     }
-=======
-
->>>>>>> 53328fd82739113631ed3b841ca486fefc91545d
-
 
 }
