@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentMask">
+    tools:context=".ui.FragmentMask">
 
 
     <View
         android:id="@+id/view3"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#EEEEEE"
+        android:background="#DDEEEEEE"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -33,7 +33,7 @@
         android:id="@+id/view2"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#EEEEEE"
+        android:background="#DDEEEEEE"
         app:layout_constraintBottom_toTopOf="@+id/tabLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

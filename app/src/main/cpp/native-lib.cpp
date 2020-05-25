@@ -17,18 +17,9 @@
 #include "enhance.h"
 
 
-extern "C" JNIEXPORT jstring JNICALL
-Java_capstone_aiimageeditor_StartActivity_stringFromJNI(
-        JNIEnv* env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-
-    return env->NewStringUTF(hello.c_str());
-}
-
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_MainActivity_startInpaint(JNIEnv *env, jobject thiz, jlong InputImage,
+Java_capstone_aiimageeditor_ui_MainActivity_startInpaint(JNIEnv *env, jobject thiz, jlong InputImage,
                                                       jlong maskPtr) {
     cv::Mat image;
     cv::Mat* source;
@@ -57,7 +48,7 @@ Java_capstone_aiimageeditor_MainActivity_startInpaint(JNIEnv *env, jobject thiz,
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_MainActivity_runMaskCorrector(JNIEnv *env, jobject thiz, jlong imagePtr,
+Java_capstone_aiimageeditor_ui_MainActivity_runMaskCorrector(JNIEnv *env, jobject thiz, jlong imagePtr,
                                                           jlong maskPtr) {
     cv::Mat* source;
     cv::Mat* mask;
@@ -73,7 +64,7 @@ Java_capstone_aiimageeditor_MainActivity_runMaskCorrector(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_PhotoProcessing_nativeApplyFilter(JNIEnv *env, jclass clazz, jint mode,
+Java_capstone_aiimageeditor_imageprocessing_PhotoProcessing_nativeApplyFilter(JNIEnv *env, jclass clazz, jint mode,
                                                               jint val, jlong inp_addr,
                                                               jlong out_addr) {
     Mat &src = *(Mat*)inp_addr;
@@ -185,7 +176,7 @@ Java_capstone_aiimageeditor_PhotoProcessing_nativeApplyFilter(JNIEnv *env, jclas
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_PhotoProcessing_nativeEnhanceImage(JNIEnv *env, jclass clazz, jint mode,
+Java_capstone_aiimageeditor_imageprocessing_PhotoProcessing_nativeEnhanceImage(JNIEnv *env, jclass clazz, jint mode,
                                                                jint val, jlong inp_addr,
                                                                jlong out_addr) {
     Mat &src = *(Mat*)inp_addr;

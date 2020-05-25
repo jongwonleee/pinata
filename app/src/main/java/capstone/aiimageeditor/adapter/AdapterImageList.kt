@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import capstone.aiimageeditor.R
-import capstone.aiimageeditor.RoundedImageView
+import capstone.aiimageeditor.customviews.RoundedImageView
 import com.bumptech.glide.Glide
 
 class AdapterImageList(val context: Context, var images: MutableList<String>) : RecyclerView.Adapter<AdapterImageList.ViewHolder>() {

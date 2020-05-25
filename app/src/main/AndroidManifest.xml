@@ -17,8 +17,8 @@
         android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".SaveActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.SaveActivity"></activity>
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -27,7 +27,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartActivity">
+        <activity android:name=".ui.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
