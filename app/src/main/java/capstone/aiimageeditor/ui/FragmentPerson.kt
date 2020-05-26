@@ -1,11 +1,8 @@
 package capstone.aiimageeditor.ui
 
-<<<<<<< HEAD
 import android.R.attr.button
-=======
 import android.graphics.Color
 import android.graphics.drawable.Drawable
->>>>>>> dfc5ff3f8b884cf0c418f00c499991a903e28b60
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

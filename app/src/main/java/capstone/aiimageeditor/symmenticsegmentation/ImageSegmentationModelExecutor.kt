@@ -119,7 +119,7 @@ class ImageSegmentationModelExecutor(
             return ModelExecutionResult(
                 maskImageApplied,
                 data, //원본
-                maskOnly,
+                mutableOriginSizeMaskOnly,
                 itemsFound
             )
         } catch (e: Exception) {

@@ -14,3 +14,4 @@
 .cxx
 /app/src/main/cpp/CMakeLists.txt
 ./app/src/main/cpp/CMakeLists.txt
+app/src/main/cpp/CMakeLists.txt
