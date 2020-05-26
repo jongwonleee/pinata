@@ -20,9 +20,9 @@ import com.google.android.material.tabs.TabLayout
 class FragmentMask : Fragment() {
 
     private lateinit var seekBar: SeekBar
-    private lateinit var imageBG:ImageView
+    private lateinit var imageBG: ImageView
     private lateinit var imageFG: LinearLayout
-    private lateinit var tabLayout:TabLayout
+    private lateinit var tabLayout: TabLayout
     public lateinit var imageManager: ImageManager
     private lateinit var maskView: DrawingView
 
@@ -34,12 +34,12 @@ class FragmentMask : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         imageManager = (activity?.application as ImageManager)
 
-        seekBar.max=90
-        seekBar.progress=45
+        seekBar.max = 90
+        seekBar.progress = 45
 
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                maskView.setStrokeWidth((p1+10).toFloat())
+                maskView.setStrokeWidth((p1 + 10).toFloat())
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -49,7 +49,7 @@ class FragmentMask : Fragment() {
             }
 
         })
-        tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
@@ -57,9 +57,9 @@ class FragmentMask : Fragment() {
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(tab?.position){
-                    0->maskView.setBrush(true)
-                    else->maskView.setBrush(false)
+                when (tab?.position) {
+                    0 -> maskView.setBrush(true)
+                    else -> maskView.setBrush(false)
                 }
             }
 
@@ -67,20 +67,21 @@ class FragmentMask : Fragment() {
 
     }
 
-    fun setImage(){
-        maskView = DrawingView(
-            context!!,
-            imageManager.mask
-        )//,imageManager.mask)
+    fun setImage() {
+        maskView = DrawingView(context!!, imageManager.mask)//,imageManager.mask)
         maskView.setStrokeWidth(55f)
-        imageBG.setImageBitmap (imageManager.original)
+        imageBG.setImageBitmap(imageManager.original)
         //imageFG.setImageBitmap(imageManager.mask)
         imageFG.addView(maskView)
-        val bitmap = Bitmap.createBitmap(imageManager.mask.width,imageManager.mask.height, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(
+            imageManager.mask.width,
+            imageManager.mask.height,
+            Bitmap.Config.ARGB_8888
+        )
 
     }
 
-    fun deleteView(){
+    fun deleteView() {
         imageFG.removeView(maskView)
     }
 
@@ -90,6 +91,7 @@ class FragmentMask : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_mask, container, false)
     }
+
     internal class Point(
         var x: Float,
         var y: Float,
@@ -97,12 +99,12 @@ class FragmentMask : Fragment() {
         var color: Int
     )
 
-    internal class MyView(context: Context,mask:Bitmap) : View(context) {
+    internal class MyView(context: Context, mask: Bitmap) : View(context) {
 
         var points = arrayListOf<Point>()
         var color: Int = Color.BLACK
         override fun onDraw(canvas: Canvas) {
-           // canvas.drawBitmap(mask,0,0,)
+            // canvas.drawBitmap(mask,0,0,)
             val p = Paint()
             p.strokeWidth = 15f
             for (i in 1 until points.size) {

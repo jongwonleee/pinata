@@ -81,9 +81,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.resultingBitmap.observe(this,
             Observer { resultImage ->
                 if (resultImage != null) {
-                    //updateUIWithResults(resultImage)
-                    imageManager.person = resultImage.bitmapMaskWithOrigin
-                    imageManager.background = resultImage.bitmapMaskWithoutOrigin
                     imageManager.mask = resultImage.bitmapMaskOnly
                     fragmentMask.setImage()
                 }

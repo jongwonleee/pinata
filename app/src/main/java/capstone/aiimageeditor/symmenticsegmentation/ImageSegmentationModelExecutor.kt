@@ -27,8 +27,10 @@ class ImageSegmentationModelExecutor(
     private var numberThreads = 4
 
     init {
-        interpreter = getInterpreter(context,
-            imageSegmentationModel, useGPU)
+        interpreter = getInterpreter(
+            context,
+            imageSegmentationModel, useGPU
+        )
         segmentationMasks = ByteBuffer.allocateDirect(1 * imageSize * imageSize * NUM_CLASSES * 4)
         segmentationMasks.order(ByteOrder.nativeOrder())
     }
@@ -114,26 +116,10 @@ class ImageSegmentationModelExecutor(
             var canvasMask = Canvas(mutableOriginSizeMaskOnly)
             canvasMask.drawBitmap(scaledMaskOnly, destRect, sourceRect, null)
 
-            Log.i(
-                "originSizeMaskOnly : ",
-                originSizeMaskOnly.width.toString() + ',' + originSizeMaskOnly.height.toString()
-            )
-            Log.i(
-                "scaledMaskOnly : ",
-                scaledMaskOnly.width.toString() + ',' + scaledMaskOnly.height.toString()
-            )
-            Log.i("maskOnly : ", maskOnly.width.toString() + ',' + maskOnly.height.toString())
-
-            val maskWithOr = applyWithMask(data, mutableOriginSizeMaskOnly)
-            val maskWithoutOr = applyWithoutMask(data, mutableOriginSizeMaskOnly)
-
-            Log.i("maskWithOr", maskWithOr.toString())
             return ModelExecutionResult(
                 maskImageApplied,
                 data, //원본
                 maskOnly,
-                maskWithOr,
-                maskWithoutOr,
                 itemsFound
             )
         } catch (e: Exception) {
@@ -149,47 +135,9 @@ class ImageSegmentationModelExecutor(
                 emptyBitmap,
                 emptyBitmap,
                 emptyBitmap,
-                emptyBitmap,
-                emptyBitmap,
                 HashSet(0)
             )
         }
-    }
-
-    private fun applyWithMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
-        val canvas = Canvas()
-
-        val result = Bitmap.createBitmap(mainImage.width, mainImage.height, Bitmap.Config.ARGB_8888)
-
-        canvas.setBitmap(result)
-        val paint = Paint()
-
-        // resize image fills the whole canvas
-        canvas.drawBitmap(mainImage, null, Rect(0, 0, mainImage.width, mainImage.height), paint)
-
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
-        canvas.drawBitmap(maskImage, null, Rect(0, 0, mainImage.width, mainImage.height), paint)
-        paint.xfermode = null;
-
-        return result;
-    }
-
-    private fun applyWithoutMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
-        val canvas = Canvas()
-
-        val result = Bitmap.createBitmap(mainImage.width, mainImage.height, Bitmap.Config.ARGB_8888)
-
-        canvas.setBitmap(result)
-        val paint = Paint()
-
-        // resize image fills the whole canvas
-        canvas.drawBitmap(mainImage, null, Rect(0, 0, mainImage.width, mainImage.height), paint)
-
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
-        canvas.drawBitmap(maskImage, null, Rect(0, 0, mainImage.width, mainImage.height), paint)
-        paint.xfermode = null;
-
-        return result;
     }
 
     @Throws(IOException::class)
@@ -222,15 +170,21 @@ class ImageSegmentationModelExecutor(
         return Interpreter(loadModelFile(context, modelName), tfliteOptions)
     }
 
-    private val visited = Array(imageSize) { BooleanArray(
-        imageSize
-    ) }
-    private val mSegmentBits = Array(imageSize) { IntArray(
-        imageSize
-    ) }
-    private val areaArray = Array(imageSize) { IntArray(
-        imageSize
-    ) }
+    private val visited = Array(imageSize) {
+        BooleanArray(
+            imageSize
+        )
+    }
+    private val mSegmentBits = Array(imageSize) {
+        IntArray(
+            imageSize
+        )
+    }
+    private val areaArray = Array(imageSize) {
+        IntArray(
+            imageSize
+        )
+    }
     private var areaCnt: Int = 0
     private var maxArea: Int = 0
     private var bfsQueue: Queue<Pair<Int, Int>> = LinkedList<Pair<Int, Int>>()

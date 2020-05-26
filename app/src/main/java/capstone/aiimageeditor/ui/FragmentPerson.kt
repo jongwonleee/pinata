@@ -10,6 +10,7 @@ import android.widget.SeekBar
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.DrawingView
+import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
@@ -24,6 +25,7 @@ class FragmentPerson : Fragment() {
     private lateinit var imageFG: GPUImageView
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
+    private lateinit var maskSeparator: MaskSeparator
 
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
@@ -38,6 +40,7 @@ class FragmentPerson : Fragment() {
         imageBG = view.findViewById(R.id.image_bg)
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
+        maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
         imageFG.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
@@ -91,6 +94,9 @@ class FragmentPerson : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
+            imageManager.person = maskSeparator.applyWithMask(imageManager.original,imageManager.mask)
+            imageManager.background = maskSeparator.applyWithoutMask(imageManager.original,imageManager.mask)
+
             seekBar.visibility=View.VISIBLE
             seekBar.progress=50
             when(tab?.position){
