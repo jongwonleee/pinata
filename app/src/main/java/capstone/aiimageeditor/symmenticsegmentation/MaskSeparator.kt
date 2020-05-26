@@ -3,7 +3,7 @@ package capstone.aiimageeditor.symmenticsegmentation
 import android.graphics.*
 
 class MaskSeparator {
-    public fun applyWithMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
+    fun applyWithMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
         val canvas = Canvas()
 
         val result = Bitmap.createBitmap(mainImage.width, mainImage.height, Bitmap.Config.ARGB_8888)
@@ -21,7 +21,7 @@ class MaskSeparator {
         return result;
     }
 
-    public fun applyWithoutMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
+    fun applyWithoutMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
         val canvas = Canvas()
 
         val result = Bitmap.createBitmap(mainImage.width, mainImage.height, Bitmap.Config.ARGB_8888)
