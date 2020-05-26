@@ -43,6 +43,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
@@ -64,7 +65,7 @@ public class GPUImage {
     private int surfaceType = SURFACE_TYPE_SURFACE_VIEW;
     private GLSurfaceView glSurfaceView;
     private GLTextureView glTextureView;
-    private GPUImageFilter filter;
+    public GPUImageFilter filter;
     private Bitmap currentBitmap;
     private ScaleType scaleType = ScaleType.CENTER_CROP;
     private int scaleWidth, scaleHeight;
@@ -344,6 +345,15 @@ public class GPUImage {
         return getBitmapWithFilterApplied(bitmap, false);
     }
 
+    public Bitmap getBitmapWithFiltersApplied(Bitmap bitmap,final ArrayList<GPUImageFilter> filters) {
+        for(GPUImageFilter f:filters){
+            if(f!=null) {
+                filter = f;
+                bitmap = getBitmapWithFilterApplied(bitmap, false);
+            }
+        }
+        return bitmap;
+    }
     /**
      * Gets the given bitmap with current filter applied as a Bitmap.
      *

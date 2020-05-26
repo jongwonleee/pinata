@@ -25,15 +25,18 @@ class FragmentPerson : Fragment() {
     private lateinit var seekBar: SeekBar
     private lateinit var imageBG: ImageView
     private lateinit var imageFG: ImageView
+    private lateinit var gpuImage: GPUImage
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
+    private var filters = arrayListOf<GPUImageFilter?>()
 
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        for(i in 0 .. 8) filters.add(null)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,6 +48,8 @@ class FragmentPerson : Fragment() {
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
+        gpuImage = GPUImage(context)
+
         /*imageFG.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
         imageFG.setBackgroundColor(Color.TRANSPARENT)*/
         imageBG.visibility=View.VISIBLE
@@ -55,7 +60,8 @@ class FragmentPerson : Fragment() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 filterAdjuster?.adjust(progress)
-                //imageFG.requestRender()
+                //gpuImage.requestRender()
+                imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -66,8 +72,8 @@ class FragmentPerson : Fragment() {
 
     public fun setImage(){
         imageFG.setImageBitmap(imageManager.person)
-        //imageFG.background=imageBG.drawable
         imageBG.setImageBitmap(imageManager.original)
+        gpuImage.setImage(imageManager.person)
     }
 
     override fun onCreateView(
@@ -78,19 +84,17 @@ class FragmentPerson : Fragment() {
         return inflater.inflate(R.layout.fragment_person, container, false)
     }
 
-/*
-    private fun switchFilterTo(filter: GPUImageFilter) {
-        if (imageFG.filter == null || imageFG.filter.javaClass != filter.javaClass) {
-            imageFG.filter = filter
-            filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
-            if (filterAdjuster!!.canAdjust()) {
-                seekBar.visibility = View.VISIBLE
-                filterAdjuster!!.adjust(seekBar.progress)
-            } else {
-                seekBar.visibility = View.GONE
-            }
+
+    private fun addFilter(filter: GPUImageFilter,index:Int) {
+        filters[index]= filter
+        filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
+        if (filterAdjuster!!.canAdjust()) {
+            seekBar.visibility = View.VISIBLE
+            filterAdjuster!!.adjust(seekBar.progress)
+        } else {
+            seekBar.visibility = View.GONE
         }
-    }*/
+    }
 
     val tabListener = object : TabLayout.OnTabSelectedListener{
         override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -100,24 +104,24 @@ class FragmentPerson : Fragment() {
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
 
-           /* seekBar.visibility=View.VISIBLE
+            seekBar.visibility=View.VISIBLE
             seekBar.progress=50
             when(tab?.position){
                 0->{
-                    imageFG.filter=null
+                    gpuImage.setFilter(null)
                     seekBar.visibility=View.GONE
                 }
-                1-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.BRIGHTNESS))
-                2-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.CONTRAST))
-                3-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.TONE_CURVE))
-                //4-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.))
-                5-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HUE))
-                6-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIGNETTE))
-                7-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SHARPEN))
-                8-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.GAMMA))
+                1-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.BRIGHTNESS),1)
+                2-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.CONTRAST),2)
+                3-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.TONE_CURVE),3)
+                //4-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.))
+                5-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HUE),5)
+                6-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIGNETTE),6)
+                7-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SHARPEN),7)
+                8-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.GAMMA),8)
             }
-            imageFG.requestRender()
-*/
+            //gpuImage.requestRender()
+            imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
         }
 
     }
