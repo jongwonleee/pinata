@@ -17,10 +17,7 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
 import capstone.aiimageeditor.imageprocessing.PhotoProcessing
-import capstone.aiimageeditor.symmenticsegmentation.ImageSegmentationModelExecutor
-import capstone.aiimageeditor.symmenticsegmentation.ImageUtils
-import capstone.aiimageeditor.symmenticsegmentation.MLExecutionViewModel
-import capstone.aiimageeditor.symmenticsegmentation.ModelExecutionResult
+import capstone.aiimageeditor.symmenticsegmentation.*
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
@@ -50,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentBackground: FragmentBackground
     private lateinit var fragmentPerson: FragmentPerson
     private lateinit var imageManager: ImageManager
-
+    private lateinit var maskSeparator: MaskSeparator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         imageNew = findViewById(R.id.image_new)
         buttonOriginal = findViewById(R.id.button_original)
         viewPager = findViewById(R.id.viewPager)
+        maskSeparator = MaskSeparator()
 
 
         buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
@@ -102,9 +100,15 @@ class MainActivity : AppCompatActivity() {
 //                    fragmentMask.setImage()
                 }
                 1 -> {
-                    fragmentPerson.setImages()
+                    imageManager.person =
+                        maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
+                    imageManager.background =
+                        maskSeparator.applyWithoutMask(imageManager.original, imageManager.mask)
+                    fragmentPerson.setImage()
                 }
-                2 -> { //전체
+                2 -> {
+                    //fragmentBackground.setImage()
+                    //전체
                     /*         var bitmap = imageNow.drawable.toBitmap()
                              val outbit = PhotoProcessing.ApplyFilter(bitmap, 6, 100)
                              imageNow.setImageBitmap(outbit)
@@ -123,6 +127,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onTabReselected(tab: TabLayout.Tab?) {
+            when (tab!!.position) {
+                0 -> {
+
+                }
+            }
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {

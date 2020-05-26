@@ -61,7 +61,7 @@ class FragmentPerson : Fragment() {
         tabLayout.addOnTabSelectedListener(tabListener)
     }
 
-    public fun setImages(){
+    public fun setImage(){
         imageFG.setImage(imageManager.person)
         imageBG.setImageBitmap(imageManager.background)
     }
@@ -89,7 +89,10 @@ class FragmentPerson : Fragment() {
     }
 
     val tabListener = object : TabLayout.OnTabSelectedListener{
-        override fun onTabReselected(tab: TabLayout.Tab?) {}
+        override fun onTabReselected(tab: TabLayout.Tab?) {
+            imageManager.person = maskSeparator.applyWithMask(imageManager.original,imageManager.mask)
+            imageManager.background = maskSeparator.applyWithoutMask(imageManager.original,imageManager.mask)
+        }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
