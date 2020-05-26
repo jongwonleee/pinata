@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageNew: ImageView
     private lateinit var viewPager: ViewPager
 
-    /*    private lateinit var imageDefault:ImageView
-        private lateinit var imageNow:ImageView*/
+
     private lateinit var buttonOriginal: ImageView
     private lateinit var fragmentMask: FragmentMask
     private lateinit var fragmentBackground: FragmentBackground
@@ -60,33 +59,18 @@ class MainActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.viewPager)
         maskSeparator = MaskSeparator()
 
-
         buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
 
-        tabLayout.addOnTabSelectedListener(tabSelectedListener)
         initializeImage()
         fragmentBackground = FragmentBackground()
         fragmentMask = FragmentMask()
         fragmentPerson = FragmentPerson()
-
+        val fragmentEmpty=FragmentMask()
         val tabAdapter = TabPagerAdapter(supportFragmentManager, 4)
         tabAdapter.addPage(fragmentMask, "마스크")
         tabAdapter.addPage(fragmentPerson, "인물")
         tabAdapter.addPage(fragmentBackground, "배경")
-        tabAdapter.addPage(fragmentMask, "저장")
-
-        viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
-        viewModel.resultingBitmap.observe(this,
-            Observer { resultImage ->
-                if (resultImage != null) {
-                    imageManager.mask = resultImage.bitmapMaskOnly
-                    fragmentMask.setImage()
-                }
-            }
-        )
-
-        imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
-        viewModel.onApplyModel(imageSegmentationModel, inferenceThread, imageManager.original)
+        tabAdapter.addPage(fragmentEmpty, "저장")
 
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -97,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             when (tab!!.position) {
                 0 -> {
-//                    fragmentMask.setImage()
+                    fragmentMask.setImage()
                 }
                 1 -> {
                     imageManager.person =
@@ -145,8 +129,6 @@ class MainActivity : AppCompatActivity() {
 
     fun initializeImage() {
         imageNew.setImageBitmap(imageManager.original)
-/*        imageDefault.setImageURI(imageUri)
-        imageNow.setImageURI(imageUri)*/
         //TODO stack 초기화 시켜주기
     }
 
@@ -196,22 +178,6 @@ class MainActivity : AppCompatActivity() {
         var original = Mat()
         var mask = Mat()
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
-//            val imageUri = data.data as Uri
-//            imageManager.loadMask(imageUri)
-//            val originalMask = imageManager.mask
-//
-//            Utils.bitmapToMat(originalImage, original)
-//            Utils.bitmapToMat(originalMask, mask)
-//            //startInpaint(original.nativeObjAddr,mask.nativeObjAddr)
-//            runMaskCorrector(original.nativeObjAddr, mask.nativeObjAddr)
-//            val bitmap = Bitmap.createBitmap(originalMask)
-//            Utils.matToBitmap(mask, imageManager.mask)
-//            fragmentMask.setImage()//imageNew.drawable.toBitmap()//imageManager.getImageFromUri(imageUri)
-
-//            val imagePath: String = data.data?.getPathString(this).toString()
-//            imageBitmap = ImageUtils.decodeBitmap(File(imagePath))
-//            imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
-//            viewModel.onApplyModel(imagePath, imageSegmentationModel, inferenceThread)
 
         }
 

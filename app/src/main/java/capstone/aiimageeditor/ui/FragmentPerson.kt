@@ -1,6 +1,11 @@
 package capstone.aiimageeditor.ui
 
+<<<<<<< HEAD
 import android.R.attr.button
+=======
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+>>>>>>> dfc5ff3f8b884cf0c418f00c499991a903e28b60
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +27,7 @@ class FragmentPerson : Fragment() {
 
     private lateinit var seekBar: SeekBar
     private lateinit var imageBG: ImageView
-    private lateinit var imageFG: GPUImageView
+    private lateinit var imageFG: ImageView
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
@@ -44,8 +49,9 @@ class FragmentPerson : Fragment() {
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
-        imageFG.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
-        imageFG.setBackgroundColor(255f,255f,255f)
+        /*imageFG.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
+        imageFG.setBackgroundColor(Color.TRANSPARENT)*/
+        imageBG.visibility=View.VISIBLE
         seekBar.max=100
         seekBar.progress=50
         seekBar.visibility=View.GONE
@@ -53,7 +59,7 @@ class FragmentPerson : Fragment() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 filterAdjuster?.adjust(progress)
-                imageFG.requestRender()
+                //imageFG.requestRender()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -64,8 +70,9 @@ class FragmentPerson : Fragment() {
 
 
     public fun setImage(){
-        imageFG.setImage(imageManager.person)
-        imageBG.setImageBitmap(imageManager.background)
+        imageFG.setImageBitmap(imageManager.person)
+        //imageFG.background=imageBG.drawable
+        imageBG.setImageBitmap(imageManager.original)
     }
 
     override fun onCreateView(
@@ -76,7 +83,7 @@ class FragmentPerson : Fragment() {
         return inflater.inflate(R.layout.fragment_person, container, false)
     }
 
-
+/*
     private fun switchFilterTo(filter: GPUImageFilter) {
         if (imageFG.filter == null || imageFG.filter.javaClass != filter.javaClass) {
             imageFG.filter = filter
@@ -88,21 +95,17 @@ class FragmentPerson : Fragment() {
                 seekBar.visibility = View.GONE
             }
         }
-    }
+    }*/
 
     val tabListener = object : TabLayout.OnTabSelectedListener{
         override fun onTabReselected(tab: TabLayout.Tab?) {
-            imageManager.person = maskSeparator.applyWithMask(imageManager.original,imageManager.mask)
-            imageManager.background = maskSeparator.applyWithoutMask(imageManager.original,imageManager.mask)
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageManager.person = maskSeparator.applyWithMask(imageManager.original,imageManager.mask)
-            imageManager.background = maskSeparator.applyWithoutMask(imageManager.original,imageManager.mask)
 
-            seekBar.visibility=View.VISIBLE
+           /* seekBar.visibility=View.VISIBLE
             seekBar.progress=50
             when(tab?.position){
                 0->{
@@ -119,7 +122,7 @@ class FragmentPerson : Fragment() {
                 8-> switchFilterTo(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.GAMMA))
             }
             imageFG.requestRender()
-
+*/
         }
 
     }
