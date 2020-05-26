@@ -1,19 +1,19 @@
 package capstone.aiimageeditor.ui
 
+import android.R.attr.button
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SeekBar
+import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
-import capstone.aiimageeditor.customviews.DrawingView
-import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
+import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.GPUImageView
@@ -45,6 +45,7 @@ class FragmentPerson : Fragment() {
         imageBG = view.findViewById(R.id.image_bg)
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
+
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
@@ -69,6 +70,7 @@ class FragmentPerson : Fragment() {
         })
         tabLayout.addOnTabSelectedListener(tabListener)
     }
+
 
     public fun setImage(){
         imageFG.setImageBitmap(imageManager.person)

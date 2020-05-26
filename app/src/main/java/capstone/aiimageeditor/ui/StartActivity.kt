@@ -1,11 +1,11 @@
 package capstone.aiimageeditor.ui
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 
 import android.provider.MediaStore
 import android.util.Log
@@ -25,6 +25,9 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.itaewonproject.adapter.AdapterImageList
 import kotlinx.coroutines.asCoroutineDispatcher
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -93,7 +96,8 @@ class StartActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
         viewModel.resultingBitmap.observe(this, Observer { resultImage ->
                 if (resultImage != null) {
-                    (application as ImageManager).mask = Bitmap.createScaledBitmap(resultImage.bitmapMaskOnly,(application as ImageManager).original.width,(application as ImageManager).original.height,true)
+                    (application as ImageManager).mask = resultImage.bitmapMaskOnly
+//                    (application as ImageManager).mask = Bitmap.createScaledBitmap(resultImage.bitmapMaskOnly,(application as ImageManager).original.width,(application as ImageManager).original.height,true)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
@@ -105,8 +109,6 @@ class StartActivity : AppCompatActivity() {
 
 
     }
-
-
 
     override fun onResume() {
         super.onResume()
