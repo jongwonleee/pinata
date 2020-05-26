@@ -3,6 +3,7 @@ package capstone.aiimageeditor.ui
 import android.content.Context
 import android.graphics.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -33,7 +34,7 @@ class FragmentMask : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageManager = (activity?.application as ImageManager)
-
+        setImage()
         seekBar.max = 90
         seekBar.progress = 45
 
@@ -82,6 +83,7 @@ class FragmentMask : Fragment() {
     }
 
     fun deleteView() {
+        imageManager.mask = maskView.mask
         imageFG.removeView(maskView)
     }
 
@@ -90,66 +92,6 @@ class FragmentMask : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_mask, container, false)
-    }
-
-    internal class Point(
-        var x: Float,
-        var y: Float,
-        var check: Boolean,
-        var color: Int
-    )
-
-    internal class MyView(context: Context, mask: Bitmap) : View(context) {
-
-        var points = arrayListOf<Point>()
-        var color: Int = Color.BLACK
-        override fun onDraw(canvas: Canvas) {
-            // canvas.drawBitmap(mask,0,0,)
-            val p = Paint()
-            p.strokeWidth = 15f
-            for (i in 1 until points.size) {
-                p.color = points[i].color
-                if (!points[i].check) continue
-                canvas.drawLine(points[i - 1].x, points[i - 1].y, points[i].x, points[i].y, p)
-            }
-        }
-
-        override fun onTouchEvent(event: MotionEvent): Boolean {
-            val x: Float = event.x
-            val y: Float = event.y
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    points.add(
-                        Point(
-                            x,
-                            y,
-                            false,
-                            color
-                        )
-                    )
-                    points.add(
-                        Point(
-                            x,
-                            y,
-                            true,
-                            color
-                        )
-                    )
-                }
-                MotionEvent.ACTION_MOVE -> points.add(
-                    Point(
-                        x,
-                        y,
-                        true,
-                        color
-                    )
-                )
-                MotionEvent.ACTION_UP -> {
-                }
-            }
-            invalidate()
-            return true
-        }
     }
 
 }

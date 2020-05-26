@@ -23,13 +23,14 @@ public class DrawingView extends View {
     private Canvas drawCanvas;
     private Bitmap canvasBitmap;
     private Bitmap mask;
-    private int minx,miny,maxx,maxy;
+    private int minx,miny,maxx,maxy,width,height;
     private float touchX, touchY;
     private boolean isTouched;
     public DrawingView(Context context,Bitmap mask){
 
         super(context);
         this.mask = mask;
+
         setupDrawing();
     }
 
@@ -53,9 +54,8 @@ public class DrawingView extends View {
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged( w, h, oldw, oldh);
-        int width=mask.getWidth();
-        int height=mask.getHeight();
-        Log.i("!!",width+","+height+" "+w+","+h);
+        width=mask.getWidth();
+        height=mask.getHeight();
         if(width/height > w/h){
             height = height * w/width;
             width=w;
@@ -69,7 +69,6 @@ public class DrawingView extends View {
         miny=(h-height)/2;
         maxx=minx+width;
         maxy=miny+height;
-        Log.i("!!",width+","+height+" "+w+","+h);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(getDrawableBitmap(),width,height,true);
         canvasBitmap = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
@@ -139,13 +138,14 @@ public class DrawingView extends View {
     }
 
     public Bitmap getMask(){
-        Bitmap ret = Bitmap.createBitmap(mask.getWidth(),mask.getHeight(), Bitmap.Config.ARGB_8888);
-        for(int x=0;x<mask.getWidth();x++){
-            for(int y=0;y<mask.getHeight();y++){
-                if(canvasBitmap.getPixel(x=minx,y+miny)!=Color.RED) ret.setPixel(x,y,Color.BLACK);
+        Bitmap ret = Bitmap.createBitmap(canvasBitmap,minx,miny,width,height);
+        for(int x=0;x<ret.getWidth();x++){
+            for(int y=0;y<ret.getHeight();y++){
+                if(ret.getPixel(x,y)==0) ret.setPixel(x,y,Color.TRANSPARENT);
                 else ret.setPixel(x,y,Color.WHITE);
             }
         }
+        ret = Bitmap.createScaledBitmap(ret,mask.getWidth(),mask.getHeight(),true);
         return ret;
     }
 

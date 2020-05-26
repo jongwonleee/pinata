@@ -3,25 +3,40 @@ package capstone.aiimageeditor.ui
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.symmenticsegmentation.ImageSegmentationModelExecutor
+import capstone.aiimageeditor.symmenticsegmentation.MLExecutionViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.itaewonproject.adapter.AdapterImageList
+import kotlinx.coroutines.asCoroutineDispatcher
 import java.util.*
+import java.util.concurrent.Executors
 
 
 class StartActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: MLExecutionViewModel
+    private lateinit var imageBitmap: Bitmap
+    private lateinit var imageSegmentationModel: ImageSegmentationModelExecutor
+    private var useGPU = false
+    private val inferenceThread = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+
 
     private lateinit var imgList:RecyclerView
     var images = ArrayList<String>()
@@ -73,21 +88,22 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun gotoNextActivity(uri:Uri){
-        val intent = Intent(this, MainActivity::class.java)
-        //intent.putExtra("photo",uri)
-/*Glide.with(applicationContext).asBitmap().load(uri).into(object: CustomTarget<Bitmap>(){
-override fun onLoadCleared(placeholder: Drawable?) {
-TODO("Not yet implemented")
-}
-
-override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-(application as ImageManager).original=resource
-}
-
-})*/
         (application as ImageManager).loadOriginal(uri)
         saveStringSet(images)
-        startActivity(intent)
+        viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
+        viewModel.resultingBitmap.observe(this, Observer { resultImage ->
+                if (resultImage != null) {
+                    (application as ImageManager).mask = Bitmap.createScaledBitmap(resultImage.bitmapMaskOnly,(application as ImageManager).original.width,(application as ImageManager).original.height,true)
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        )
+
+        imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
+        viewModel.onApplyModel(imageSegmentationModel, inferenceThread, (application as ImageManager).original)
+
+
     }
 
 
