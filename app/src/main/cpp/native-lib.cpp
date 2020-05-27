@@ -19,7 +19,7 @@
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_ui_MainActivity_startInpaint(JNIEnv *env, jobject thiz, jlong InputImage,
+Java_capstone_aiimageeditor_ImageManager_00024InpaintTask_startInpaint(JNIEnv *env, jobject thiz, jlong InputImage,
                                                       jlong maskPtr) {
     cv::Mat image;
     cv::Mat* source;

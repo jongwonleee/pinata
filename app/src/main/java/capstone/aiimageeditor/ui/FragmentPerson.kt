@@ -89,6 +89,10 @@ class FragmentPerson : Fragment() {
         gpuImage.setImage(imageManager.person)
     }
 
+    public fun saveImage(){
+        imageManager.person = gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
