@@ -19,8 +19,8 @@ import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.GPUImageView
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 
-//밝기 내리는거, 대조 올리는거
-//밝기 올리는거, 대조 내리는거
+//밝기 내리는거, 대조 올리는거 잘됨
+//밝기 올리는거, 대조 내리는거 잘 안됨
 //톤은 컨트롤바가 안 나옴
 //채도는 컨트롤바 만져도 안 바뀜
 //틴트하면 배경이 까맣게 바뀌고 틴트를 최대치로 하면 인물도 까맣게 됨
