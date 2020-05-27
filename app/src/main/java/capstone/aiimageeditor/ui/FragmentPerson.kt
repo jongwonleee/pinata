@@ -123,7 +123,6 @@ class FragmentPerson : Fragment() {
             tabPosition= tab!!.position
             when(tab?.position){
                 0->{
-                    //gpuImage.setFilter(null)
                     imageFG.setImageBitmap(imageManager.person)
                     seekBar.visibility=View.GONE
                 }
