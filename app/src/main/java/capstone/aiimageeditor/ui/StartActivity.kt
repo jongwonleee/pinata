@@ -78,6 +78,17 @@ class StartActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         imgList.layoutManager = linearLayoutManager
         imgList.setHasFixedSize(true)
+
+        viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
+        viewModel.resultingBitmap.observe(this, Observer { resultImage ->
+            if (resultImage != null) {
+                Log.i("!!","~!!!")
+                (application as ImageManager).mask = resultImage.bitmapMaskOnly
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -93,21 +104,8 @@ class StartActivity : AppCompatActivity() {
     private fun gotoNextActivity(uri:Uri){
         (application as ImageManager).loadOriginal(uri)
         saveStringSet(images)
-        viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
-        viewModel.resultingBitmap.observe(this, Observer { resultImage ->
-                if (resultImage != null) {
-                    (application as ImageManager).mask = resultImage.bitmapMaskOnly
-//                    (application as ImageManager).mask = Bitmap.createScaledBitmap(resultImage.bitmapMaskOnly,(application as ImageManager).original.width,(application as ImageManager).original.height,true)
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-        )
-
         imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
         viewModel.onApplyModel(imageSegmentationModel, inferenceThread, (application as ImageManager).original)
-
-
     }
 
     override fun onResume() {

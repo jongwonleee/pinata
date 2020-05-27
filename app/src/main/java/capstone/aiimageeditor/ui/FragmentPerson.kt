@@ -35,13 +35,17 @@ class FragmentPerson : Fragment() {
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
     private var filters = arrayListOf<GPUImageFilter?>()
-
+    private var adjusts = arrayListOf<Int>()
+    private var tabPosition=0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 8) filters.add(null)
+        for(i in 0 .. 9) {
+            filters.add(null)
+            adjusts.add(50)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,6 +69,8 @@ class FragmentPerson : Fragment() {
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                adjusts[tabPosition]=progress
+                filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                 filterAdjuster?.adjust(progress)
                 //gpuImage.requestRender()
                 imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
@@ -92,12 +98,19 @@ class FragmentPerson : Fragment() {
     }
 
 
-    private fun addFilter(filter: GPUImageFilter,index:Int) {
-        filters[index]= filter
+    private fun addFilter(f: GPUImageFilter,index:Int) {
+        var filter = f
+        if(filters[index]!=null){
+            filter = filters[index]!!
+            seekBar.progress = adjusts[index];
+        }else
+        {
+            filters[index]=f
+        }
+
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
         if (filterAdjuster!!.canAdjust()) {
             seekBar.visibility = View.VISIBLE
-            filterAdjuster!!.adjust(seekBar.progress)
         } else {
             seekBar.visibility = View.GONE
         }
@@ -110,12 +123,12 @@ class FragmentPerson : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-
+            imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
             seekBar.visibility=View.VISIBLE
-            seekBar.progress=50
+            tabPosition= tab!!.position
             when(tab?.position){
                 0->{
-                    gpuImage.setFilter(null)
+                    imageFG.setImageBitmap(imageManager.person)
                     seekBar.visibility=View.GONE
                 }
                 1-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.BRIGHTNESS),1)
@@ -127,8 +140,8 @@ class FragmentPerson : Fragment() {
                 7-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SHARPEN),7)
                 8-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.GAMMA),8)
             }
+            seekBar.progress=adjusts[tabPosition]
             //gpuImage.requestRender()
-            imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
         }
 
     }

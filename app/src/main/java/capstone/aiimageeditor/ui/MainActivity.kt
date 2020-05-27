@@ -172,6 +172,12 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    override fun onBackPressed() {
+        imageManager.resetImages()
+        finish()
+        super.onBackPressed()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         var masked: Long = 0
         val originalImage = imageNew.drawable.toBitmap()
@@ -180,7 +186,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
 
         }
-
         super.onActivityResult(requestCode, resultCode, data)
     }
 

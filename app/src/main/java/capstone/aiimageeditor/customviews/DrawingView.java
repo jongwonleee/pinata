@@ -11,10 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
-
-import androidx.annotation.Nullable;
 
 public class DrawingView extends View {
     private Path drawPath;
@@ -56,10 +53,10 @@ public class DrawingView extends View {
         super.onSizeChanged( w, h, oldw, oldh);
         width=mask.getWidth();
         height=mask.getHeight();
-        if(width/height > w/h){
+
+        if((float)width/(float)height > (float)w/(float)h){
             height = height * w/width;
             width=w;
-
         }else
         {
             width = width * h/height;
@@ -102,8 +99,6 @@ public class DrawingView extends View {
         touchX = event.getX();
         touchY = event.getY();
         float brushSize = drawPaint.getStrokeWidth()/2;
-        if(touchX>maxx-brushSize|| touchX<minx+brushSize) return true;
-        if(touchY>maxy-brushSize || touchY<miny+brushSize) return true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 drawPath.moveTo(touchX, touchY);
