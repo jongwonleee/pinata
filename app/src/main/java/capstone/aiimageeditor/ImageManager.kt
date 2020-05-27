@@ -21,8 +21,11 @@ class ImageManager : Application() {
             ImageDecoder.decodeBitmap(source){decoder,_,_->decoder.isMutableRequired=true}
         }
     }
-    fun loadMask(uri:Uri) {
-        mask = getImageFromUri(uri)
+    fun resetImages(){
+        original = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        mask = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        person=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        background=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
     }
     fun loadOriginal(uri:Uri) {
         original = getImageFromUri(uri)
