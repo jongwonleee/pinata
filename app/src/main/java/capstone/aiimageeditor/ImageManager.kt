@@ -15,8 +15,10 @@ import org.opencv.core.Mat
 class ImageManager : Application() {
     lateinit var original:Bitmap
     lateinit var mask:Bitmap
-    lateinit var person:Bitmap
-    lateinit var background:Bitmap
+    lateinit var personOriginal:Bitmap
+    lateinit var backgroundOriginal:Bitmap
+    lateinit var personFiltered:Bitmap
+    lateinit var backgroundFiltered:Bitmap
     private lateinit var listener:OnFinishInpaint
     var isInpainting=false
 
@@ -34,25 +36,28 @@ class ImageManager : Application() {
     }
 
     fun startInpaint(){
-        background = Bitmap.createBitmap(original)
+        backgroundOriginal = Bitmap.createBitmap(original)
         InpaintTask().execute(0)
     }
 
     fun resetImages(){
         original = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
         mask = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
-        person=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
-        background=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        personOriginal=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        backgroundOriginal=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
+        personFiltered
     }
 
     fun loadOriginal(uri:Uri) {
         original = getImageFromUri(uri)
+        backgroundOriginal = Bitmap.createBitmap(original)
+        backgroundFiltered = Bitmap.createBitmap(original)
     }
 
     fun mergeImage():Bitmap{
-        val bitmap = Bitmap.createBitmap(background)
+        val bitmap = Bitmap.createBitmap(backgroundFiltered)
         val canvas = Canvas(bitmap)
-        canvas.drawBitmap(person,0f,0f,null)
+        canvas.drawBitmap(personFiltered,0f,0f,null)
         return bitmap
     }
 
@@ -76,7 +81,8 @@ class ImageManager : Application() {
         override fun onPostExecute(result: Bitmap?) {
             super.onPostExecute(result)
             if(result!=null){
-                background=result
+                backgroundOriginal=result
+                backgroundFiltered=result.copy(Bitmap.Config.ARGB_8888,true)
                 isInpainting=false
                 Log.i("!!","inpaint finished")
                 listener.onFinishInpaint()

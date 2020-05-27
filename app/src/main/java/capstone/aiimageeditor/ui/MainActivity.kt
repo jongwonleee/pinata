@@ -1,6 +1,7 @@
 package capstone.aiimageeditor.ui
 
 import android.content.Intent
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             when (tab!!.position) {
                 0 -> {
-                    fragmentMask.setImage()
+                    fragmentMask.setImage(this@MainActivity.applicationContext)
                 }
                 1 -> {
                     fragmentPerson.setImage()
@@ -83,7 +84,8 @@ class MainActivity : AppCompatActivity() {
             when (tab!!.position) {
                 0 -> {
                     fragmentMask.deleteView()
-                    imageManager.person = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
+                    imageManager.personOriginal = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
+                    imageManager.personFiltered = Bitmap.createBitmap(imageManager.personOriginal)
                     imageManager.startInpaint()
                     imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
                         override fun onFinishInpaint() {
@@ -147,7 +149,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        imageManager.resetImages()
         finish()
         super.onBackPressed()
     }
