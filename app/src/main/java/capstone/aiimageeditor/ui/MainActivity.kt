@@ -186,7 +186,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
 
         }
-
         super.onActivityResult(requestCode, resultCode, data)
     }
 
