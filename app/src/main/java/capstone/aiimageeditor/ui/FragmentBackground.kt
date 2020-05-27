@@ -65,7 +65,7 @@ class FragmentBackground : Fragment() {
                     adjusts[tabPosition]=progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.background,filters))
+                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
                 }
             }
 
@@ -79,16 +79,16 @@ class FragmentBackground : Fragment() {
 
     fun setImage()  {
         try{
-            gpuImage.setImage(imageManager.background)
-            imageFG.setImageBitmap(imageManager.person)
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.background,filters))
+            gpuImage.setImage(imageManager.backgroundOriginal)
+            imageFG.setImageBitmap(imageManager.personFiltered)
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         }catch (e:Exception){
             e.printStackTrace()
         }
 
     }
     fun saveImage(){
-        imageManager.background = gpuImage.getBitmapWithFiltersApplied(imageManager.background,filters)
+        imageManager.backgroundFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters)
     }
 
     override fun onCreateView(
@@ -125,12 +125,12 @@ class FragmentBackground : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.background,filters))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
             seekBar.visibility=View.VISIBLE
             tabPosition= tab!!.position
             when(tab?.position){
                 0->{
-                    imageFG.setImageBitmap(imageManager.person)
+                    imageBG.setImageBitmap(imageManager.backgroundOriginal)
                     seekBar.visibility=View.GONE
                 }
                 1-> addFilter(

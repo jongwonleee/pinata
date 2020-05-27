@@ -24,7 +24,7 @@ class FragmentMask : Fragment() {
     private lateinit var imageBG: ImageView
     private lateinit var imageFG: LinearLayout
     private lateinit var tabLayout: TabLayout
-    public lateinit var imageManager: ImageManager
+    private lateinit var imageManager: ImageManager
     private lateinit var maskView: DrawingView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class FragmentMask : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageManager = (activity?.application as ImageManager)
-        setImage()
+        setImage(context!!)
         seekBar.max = 90
         seekBar.progress = 45
 
@@ -68,18 +68,12 @@ class FragmentMask : Fragment() {
 
     }
 
-    fun setImage() {
-        maskView = DrawingView(context!!, imageManager.mask)//,imageManager.mask)
+    fun setImage(context:Context) {
+        Log.i("!!","${imageManager.mask.width}")
+        maskView = DrawingView(context,imageManager.mask)
         maskView.setStrokeWidth(55f)
         imageBG.setImageBitmap(imageManager.original)
-        //imageFG.setImageBitmap(imageManager.mask)
         imageFG.addView(maskView)
-        val bitmap = Bitmap.createBitmap(
-            imageManager.mask.width,
-            imageManager.mask.height,
-            Bitmap.Config.ARGB_8888
-        )
-
     }
 
     fun deleteView() {

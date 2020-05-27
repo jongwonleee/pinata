@@ -68,7 +68,7 @@ class FragmentPerson : Fragment() {
                 filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                 filterAdjuster?.adjust(progress)
                 //gpuImage.requestRender()
-                imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
+                imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.personOriginal,filters))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -79,13 +79,13 @@ class FragmentPerson : Fragment() {
 
 
     public fun setImage(){
-        imageFG.setImageBitmap(imageManager.person)
-        imageBG.setImageBitmap(imageManager.original)
-        gpuImage.setImage(imageManager.person)
+        imageFG.setImageBitmap(imageManager.personOriginal)
+        imageBG.setImageBitmap(imageManager.backgroundFiltered)
+        gpuImage.setImage(imageManager.personOriginal)
     }
 
     public fun saveImage(){
-        imageManager.person = gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters)
+        imageManager.personFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.personOriginal,filters)
     }
 
     override fun onCreateView(
@@ -122,12 +122,12 @@ class FragmentPerson : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.person,filters))
+            imageFG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.personOriginal,filters))
             seekBar.visibility=View.VISIBLE
             tabPosition= tab!!.position
             when(tab?.position){
                 0->{
-                    imageFG.setImageBitmap(imageManager.person)
+                    imageFG.setImageBitmap(imageManager.personOriginal)
                     seekBar.visibility=View.GONE
                 }
                 1-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.BRIGHTNESS),1)
