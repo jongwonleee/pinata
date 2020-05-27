@@ -2,6 +2,7 @@ package capstone.aiimageeditor
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -27,7 +28,15 @@ class ImageManager : Application() {
         person=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
         background=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
     }
+
     fun loadOriginal(uri:Uri) {
         original = getImageFromUri(uri)
+    }
+
+    fun mergeImage():Bitmap{
+        val bitmap = Bitmap.createBitmap(background)
+        val canvas = Canvas(bitmap)
+        canvas.drawBitmap(person,0f,0f,null)
+        return bitmap
     }
 }

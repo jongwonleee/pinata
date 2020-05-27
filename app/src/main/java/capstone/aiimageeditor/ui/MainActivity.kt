@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
@@ -84,14 +85,10 @@ class MainActivity : AppCompatActivity() {
                     fragmentMask.setImage()
                 }
                 1 -> {
-                    imageManager.person =
-                        maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
-                    imageManager.background =
-                        maskSeparator.applyWithoutMask(imageManager.original, imageManager.mask)
                     fragmentPerson.setImage()
                 }
                 2 -> {
-                    //fragmentBackground.setImage()
+                    fragmentBackground.setImage()
                     //전체
                     /*         var bitmap = imageNow.drawable.toBitmap()
                              val outbit = PhotoProcessing.ApplyFilter(bitmap, 6, 100)
@@ -122,6 +119,14 @@ class MainActivity : AppCompatActivity() {
             when (tab!!.position) {
                 0 -> {
                     fragmentMask.deleteView()
+                    imageManager.person = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
+                    imageManager.background = maskSeparator.applyWithoutMask(imageManager.original, imageManager.mask)
+                }
+                1->{
+                    fragmentPerson.saveImage()
+                }
+                2->{
+                    fragmentBackground.saveImage()
                 }
             }
         }
