@@ -199,7 +199,5 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        tabLayout.getTabAt(0)?.select()
-
     }
 }

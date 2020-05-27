@@ -34,7 +34,7 @@ class SaveActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save)
-        image = (application as ImageManager).original
+        image = (application as ImageManager).mergeImage()
         image_done.setImageBitmap(image)
     }
 
@@ -87,7 +87,7 @@ class SaveActivity : AppCompatActivity() {
     private fun saveImage(bitmap: Bitmap, name: String){
         val saved: Boolean
         val fos: OutputStream
-        var IMAGES_FOLDER_NAME: String = "myPhoto"
+        var IMAGES_FOLDER_NAME: String = "pinata"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val mContext = this
