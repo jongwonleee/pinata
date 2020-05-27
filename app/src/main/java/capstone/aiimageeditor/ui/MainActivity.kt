@@ -172,6 +172,12 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    override fun onBackPressed() {
+        imageManager.resetImages()
+        finish()
+        super.onBackPressed()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         var masked: Long = 0
         val originalImage = imageNew.drawable.toBitmap()
