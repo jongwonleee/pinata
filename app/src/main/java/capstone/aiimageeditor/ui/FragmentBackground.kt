@@ -1,6 +1,7 @@
 package capstone.aiimageeditor.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,6 @@ class FragmentBackground : Fragment() {
         imageBG = view.findViewById(R.id.image_bg)
         imageFG = view.findViewById(R.id.image_fg)
         gpuImage = GPUImage(context)
-
         tabLayout = view.findViewById(R.id.tabLayout)
 
         maskSeparator = MaskSeparator()
@@ -77,17 +77,17 @@ class FragmentBackground : Fragment() {
     }
 
 
-    public fun setImage()  {
+    fun setImage()  {
         try{
-            imageFG.setImageBitmap(imageManager.person)
-            imageBG.setImageBitmap(imageManager.background)
             gpuImage.setImage(imageManager.background)
+            imageFG.setImageBitmap(imageManager.person)
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.background,filters))
         }catch (e:Exception){
-
+            e.printStackTrace()
         }
 
     }
-    public fun saveImage(){
+    fun saveImage(){
         imageManager.background = gpuImage.getBitmapWithFiltersApplied(imageManager.background,filters)
     }
 

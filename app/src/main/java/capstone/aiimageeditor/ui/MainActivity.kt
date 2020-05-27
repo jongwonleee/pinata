@@ -1,43 +1,21 @@
 package capstone.aiimageeditor.ui
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
-import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
-import capstone.aiimageeditor.imageprocessing.PhotoProcessing
 import capstone.aiimageeditor.symmenticsegmentation.*
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.asCoroutineDispatcher
-import org.opencv.android.Utils
-import org.opencv.core.Mat
-import java.io.File
-import java.util.concurrent.Executors
-import android.graphics.Bitmap as Bitmap
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var viewModel: MLExecutionViewModel
-    private lateinit var imageBitmap: Bitmap
-    private lateinit var imageSegmentationModel: ImageSegmentationModelExecutor
-    private var useGPU = false
-    private val inferenceThread = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-
-
     private lateinit var imageNew: ImageView
     private lateinit var viewPager: ViewPager
 
@@ -89,30 +67,16 @@ class MainActivity : AppCompatActivity() {
                 }
                 2 -> {
                     fragmentBackground.setImage()
-                    //전체
-                    /*         var bitmap = imageNow.drawable.toBitmap()
-                             val outbit = PhotoProcessing.ApplyFilter(bitmap, 6, 100)
-                             imageNow.setImageBitmap(outbit)
-                             imageDefault.setImageBitmap(outbit)*/
-
                 }
                 3 -> {
-                    val intent = Intent(
-                        this@MainActivity,
-                        SaveActivity::class.java
-                    )
-//                    (application as ImagePasser).image = imageNow.drawable.toBitmap()
+                    val intent = Intent(this@MainActivity, SaveActivity::class.java)
                     startActivity(intent)
                 }
             }
         }
 
         override fun onTabReselected(tab: TabLayout.Tab?) {
-            when (tab!!.position) {
-                0 -> {
 
-                }
-            }
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -120,7 +84,12 @@ class MainActivity : AppCompatActivity() {
                 0 -> {
                     fragmentMask.deleteView()
                     imageManager.person = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
-                    imageManager.background = maskSeparator.applyWithoutMask(imageManager.original, imageManager.mask)
+                    imageManager.startInpaint()
+                    imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
+                        override fun onFinishInpaint() {
+                            fragmentBackground.setImage()
+                        }
+                    })
                 }
                 1->{
                     fragmentPerson.saveImage()
@@ -184,17 +153,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        var masked: Long = 0
-        val originalImage = imageNew.drawable.toBitmap()
-        var original = Mat()
-        var mask = Mat()
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
-
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    external fun startInpaint(image: Long, mask: Long)
     external fun runMaskCorrector(imagePtr: Long, maskPtr: Long)
 
     override fun onResume() {
