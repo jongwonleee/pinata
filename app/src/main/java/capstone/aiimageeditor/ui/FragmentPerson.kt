@@ -14,6 +14,8 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
+import com.github.chrisbanes.photoview.OnScaleChangedListener
+import com.github.chrisbanes.photoview.PhotoViewAttacher
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.GPUImageView
@@ -29,6 +31,8 @@ class FragmentPerson : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
+    private lateinit var imageFGAttacher: PhotoViewAttacher
+    private lateinit var imageBGAttacher: PhotoViewAttacher
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
     private var tabPosition=0
@@ -55,8 +59,17 @@ class FragmentPerson : Fragment() {
 
         gpuImage = GPUImage(context)
 
-        /*imageFG.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
-        imageFG.setBackgroundColor(Color.TRANSPARENT)*/
+        imageFGAttacher = PhotoViewAttacher(imageFG)
+        imageBGAttacher = PhotoViewAttacher(imageBG)
+        imageFGAttacher.minimumScale=1.0f
+        imageFGAttacher.maximumScale=3.0f
+        imageFGAttacher.setOnScaleChangeListener(object:OnScaleChangedListener{
+            override fun onScaleChange(scaleFactor: Float, focusX: Float, focusY: Float) {
+                imageBGAttacher.setScale(scaleFactor,focusX,focusY,false)
+            }
+        })
+
+
         imageBG.visibility=View.VISIBLE
         seekBar.max=100
         seekBar.progress=50
