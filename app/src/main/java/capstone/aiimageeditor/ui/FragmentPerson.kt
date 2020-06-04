@@ -1,12 +1,9 @@
 package capstone.aiimageeditor.ui
 
-import android.R.attr.button
-import android.graphics.Color
-import android.graphics.drawable.Drawable
+import android.graphics.Matrix
+import android.graphics.RectF
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
@@ -14,9 +11,11 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
+import com.github.chrisbanes.photoview.OnMatrixChangedListener
+import com.github.chrisbanes.photoview.PhotoView
+import com.github.chrisbanes.photoview.PhotoViewAttacher
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
-import jp.co.cyberagent.android.gpuimage.GPUImageView
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 
 //밝기 내리는거, 대조 올리는거 잘됨
@@ -28,12 +27,15 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 class FragmentPerson : Fragment() {
 
     private lateinit var seekBar: SeekBar
-    private lateinit var imageBG: ImageView
-    private lateinit var imageFG: ImageView
+    private lateinit var imageBG: PhotoView
+    private lateinit var imageFG: PhotoView
     private lateinit var gpuImage: GPUImage
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
+    private lateinit var imageFGAttacher: PhotoViewAttacher
+    private lateinit var imageBGAttacher: PhotoViewAttacher
+
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
     private var tabPosition=0
@@ -60,8 +62,27 @@ class FragmentPerson : Fragment() {
 
         gpuImage = GPUImage(context)
 
-        /*imageFG.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
-        imageFG.setBackgroundColor(Color.TRANSPARENT)*/
+        imageFGAttacher = PhotoViewAttacher(imageFG)
+        imageFGAttacher.isZoomable=true
+        imageFGAttacher.minimumScale=1.0f
+        imageFGAttacher.maximumScale=2.5f
+
+        imageBGAttacher = PhotoViewAttacher(imageBG)
+        imageBGAttacher.isZoomable=true
+        imageBGAttacher.minimumScale=1.0f
+        imageBGAttacher.maximumScale=2.5f
+
+        imageFGAttacher.setOnMatrixChangeListener ( object :OnMatrixChangedListener{
+            override fun onMatrixChanged(rect: RectF?) {
+                val matrix = Matrix()
+                imageFGAttacher.getDisplayMatrix(matrix)
+                imageBGAttacher.setDisplayMatrix(matrix)
+            }
+
+        })
+
+
+
         imageBG.visibility=View.VISIBLE
         seekBar.max=100
         seekBar.progress=50
@@ -100,6 +121,7 @@ class FragmentPerson : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_person, container, false)
     }
+
 
 
     private fun addFilter(f: GPUImageFilter,index:Int) {

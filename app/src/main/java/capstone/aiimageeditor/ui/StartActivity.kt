@@ -130,7 +130,7 @@ class StartActivity : AppCompatActivity() {
             .setPermissionListener(permissionListener)
             .setRationaleMessage(R.string.permission_desc)
             .setDeniedMessage(R.string.permission_rej)
-            .setPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .setPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE,android.Manifest.permission.INTERNET)
             .check()
 
 
