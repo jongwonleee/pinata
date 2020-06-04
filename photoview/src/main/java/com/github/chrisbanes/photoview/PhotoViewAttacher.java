@@ -31,8 +31,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
-import java.util.ArrayList;
-
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
  * It is made public in case you need to subclass something other than AppCompatImageView and still
@@ -142,7 +140,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                 getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
             mImageView.post(mCurrentFlingRunnable);
-
         }
 
         @Override
@@ -156,6 +153,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
         }
     };
+
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
@@ -458,7 +456,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
         if (animate) {
-            mImageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
+            mImageView.post(new AnimatedZoomRunnable(getScale(), scale,
+                focalX, focalY));
         } else {
             mSuppMatrix.setScale(scale, scale, focalX, focalY);
             checkAndDisplayMatrix();
