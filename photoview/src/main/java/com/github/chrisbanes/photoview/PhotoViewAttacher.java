@@ -20,6 +20,7 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -98,7 +99,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
         public void onDrag(float dx, float dy) {
-            if (mScaleDragDetector.isScaling()) {
+            /*if (mScaleDragDetector.isScaling()) {
                 return; // Do not drag if we are already scaling
             }
             if (mOnViewDragListener != null) {
@@ -106,8 +107,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
             mSuppMatrix.postTranslate(dx, dy);
             checkAndDisplayMatrix();
+            Log.i("!!","now dragging");
 
-            /*
+            *//*
              * Here we decide whether to let the ImageView's parent to start taking
              * over the touch event.
              *
@@ -115,7 +117,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
              * parent to take over if we're scaling. We then check the edge we're
              * on, and the direction of the scroll (i.e. if we're pulling against
              * the edge, aka 'overscrolling', let the parent take over).
-             */
+             *//*
             ViewParent parent = mImageView.getParent();
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
                 if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
@@ -131,15 +133,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
                 }
-            }
+            }*/
         }
 
         @Override
         public void onFling(float startX, float startY, float velocityX, float velocityY) {
-            mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
+            /*mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
             mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                 getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
-            mImageView.post(mCurrentFlingRunnable);
+            mImageView.post(mCurrentFlingRunnable);*/
         }
 
         @Override
