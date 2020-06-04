@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -15,6 +12,7 @@ import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.customviews.DrawingView
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.ZoomGestureListener
 import com.google.android.material.tabs.TabLayout
 
 
@@ -27,6 +25,7 @@ class FragmentMask : Fragment() {
     private lateinit var imageManager: ImageManager
     private lateinit var maskView: DrawingView
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         seekBar = view.findViewById(R.id.seekBar)
@@ -37,7 +36,6 @@ class FragmentMask : Fragment() {
         setImage(context!!)
         seekBar.max = 90
         seekBar.progress = 45
-
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 maskView.setStrokeWidth((p1 + 10).toFloat())

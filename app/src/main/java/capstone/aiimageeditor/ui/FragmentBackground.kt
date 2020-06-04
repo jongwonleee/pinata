@@ -14,9 +14,6 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
-import com.github.chrisbanes.photoview.OnMatrixChangedListener
-import com.github.chrisbanes.photoview.PhotoView
-import com.github.chrisbanes.photoview.PhotoViewAttacher
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
@@ -27,15 +24,13 @@ class FragmentBackground : Fragment() {
 
 
     private lateinit var seekBar: SeekBar
-    private lateinit var imageBG: PhotoView
-    private lateinit var imageFG: PhotoView
+    private lateinit var imageBG: ImageView
+    private lateinit var imageFG: ImageView
     private lateinit var gpuImage: GPUImage
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
 
-    private lateinit var imageFGAttacher: PhotoViewAttacher
-    private lateinit var imageBGAttacher: PhotoViewAttacher
 
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
@@ -62,24 +57,7 @@ class FragmentBackground : Fragment() {
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
-        imageFGAttacher = PhotoViewAttacher(imageFG)
-        imageFGAttacher.isZoomable=true
-        imageFGAttacher.minimumScale=1.0f
-        imageFGAttacher.maximumScale=2.5f
 
-        imageBGAttacher = PhotoViewAttacher(imageBG)
-        imageBGAttacher.isZoomable=true
-        imageBGAttacher.minimumScale=1.0f
-        imageBGAttacher.maximumScale=2.5f
-
-        imageFGAttacher.setOnMatrixChangeListener ( object : OnMatrixChangedListener {
-            override fun onMatrixChanged(rect: RectF?) {
-                val matrix = Matrix()
-                imageFGAttacher.getDisplayMatrix(matrix)
-                imageBGAttacher.setDisplayMatrix(matrix)
-            }
-
-        })
 
 
         imageBG.visibility=View.VISIBLE

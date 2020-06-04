@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,7 +15,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
 
-public class DrawingView extends View {
+import org.jetbrains.annotations.NotNull;
+
+import capstone.aiimageeditor.ZoomGestureListener;
+
+public class DrawingView extends View implements ZoomGestureListener.OnTouchListener {
     private Path drawPath;
     private Paint drawPaint, canvasPaint,pointPaint;
     private int paintColor = Color.RED;
@@ -23,10 +29,17 @@ public class DrawingView extends View {
     private int minx,miny,maxx,maxy,width,height;
     private float touchX, touchY;
     private boolean isTouched;
-    public DrawingView(Context context,Bitmap mask){
+    private ZoomGestureListener zoomGestureListener;
+    private ScaleGestureDetector scaleGestureDetector;
+    private GestureDetector gestureDetector;
+    public DrawingView(Context context,  Bitmap mask){
 
         super(context);
         this.mask = mask;
+        zoomGestureListener = new ZoomGestureListener();
+        zoomGestureListener.setOnTouchListener(this);
+        gestureDetector = zoomGestureListener.getZoomGestureDetector(context);
+        scaleGestureDetector = zoomGestureListener.getScaleGestureDetector(context);
 
         setupDrawing();
     }
@@ -96,28 +109,33 @@ public class DrawingView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        touchX = event.getX();
-        touchY = event.getY();
-        float brushSize = drawPaint.getStrokeWidth()/2;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                drawPath.moveTo(touchX, touchY);
-                isTouched=true;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                drawPath.lineTo(touchX, touchY);
-                break;
-            case MotionEvent.ACTION_UP:
-                drawPath.lineTo(touchX, touchY);
-                drawCanvas.drawPath(drawPath, drawPaint);
-                drawPath.reset();
-                isTouched=false;
-                break;
-            default:
-                return false;
+       /* gestureDetector.onTouchEvent(event);
+        scaleGestureDetector.onTouchEvent(event);*/
+
+        if(!zoomGestureListener.getOnScaling()){
+            touchX = event.getX();
+            touchY = event.getY();
+            float brushSize = drawPaint.getStrokeWidth()/2;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    drawPath.moveTo(touchX, touchY);
+                    isTouched=true;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    drawPath.lineTo(touchX, touchY);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    drawPath.lineTo(touchX, touchY);
+                    drawCanvas.drawPath(drawPath, drawPaint);
+                    drawPath.reset();
+                    isTouched=false;
+                    break;
+                default:
+            }
+
+            invalidate();
         }
 
-        invalidate();
         return true;
     }
 
@@ -144,4 +162,27 @@ public class DrawingView extends View {
         return ret;
     }
 
+    @Override
+    public void onScale(float scale, int x, int y) {
+        Log.i("!!",scale +" "+ x+ " "+y);
+        int w = canvasBitmap.getWidth();
+        int h = canvasBitmap.getHeight();
+        int width= (int)(this.width*scale);
+        int height= (int)(this.height*scale);
+
+        minx=(w-width)/2;
+        miny=(h-height)/2;
+        maxx=minx+width;
+        maxy=miny+height;
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(canvasBitmap,width,height,true);
+        canvasBitmap = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888);
+        drawCanvas = new Canvas(canvasBitmap);
+        drawCanvas.drawBitmap(scaledBitmap,minx,miny,null);
+        invalidate();
+    }
+
+    @Override
+    public void onDraw(@NotNull MotionEvent motionEvent) {
+
+    }
 }
