@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentMask: FragmentMask
     private lateinit var fragmentBackground: FragmentBackground
     private lateinit var fragmentPerson: FragmentPerson
+    private lateinit var fragmentLiquify: FragmentLiquify //for liquify
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
 
@@ -45,12 +46,14 @@ class MainActivity : AppCompatActivity() {
         fragmentBackground = FragmentBackground()
         fragmentMask = FragmentMask()
         fragmentPerson = FragmentPerson()
+        fragmentLiquify = FragmentLiquify() //for liquify
         val fragmentEmpty=FragmentMask()
-        val tabAdapter = TabPagerAdapter(supportFragmentManager, 4)
+        val tabAdapter = TabPagerAdapter(supportFragmentManager, 5) //behavior 4 -> 5
         tabAdapter.addPage(fragmentMask, "마스크")
         tabAdapter.addPage(fragmentPerson, "인물")
         tabAdapter.addPage(fragmentBackground, "배경")
         tabAdapter.addPage(fragmentEmpty, "저장")
+        tabAdapter.addPage(fragmentLiquify, "Liquify") //for liquify
 
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -72,6 +75,8 @@ class MainActivity : AppCompatActivity() {
                 3 -> {
                     val intent = Intent(this@MainActivity, SaveActivity::class.java)
                     startActivity(intent)
+                }
+                4-> { //for liquify
                 }
             }
         }
