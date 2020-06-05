@@ -40,10 +40,11 @@ class FragmentBackground : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 9) {
+        for(i in 0 .. 11) {
             filters.add(null)
             adjusts.add(50)
         }
+        adjusts[7]=0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -122,8 +123,21 @@ class FragmentBackground : Fragment() {
         } else {
             seekBar.visibility = View.GONE
         }
-    }
-
+    }/*
+    brightness 45~55
+    contrast 40~60
+    gamma 40~60
+    sharpness 40~60
+    saturation 0~100
+    exposure 45~55
+    highlight 0~50
+    whitebalance 30~70
+    vinette 50~70
+    gausian blur -> 흐리
+    Toon, SmoothToon -> 만화효과
+    haze 40~60
+    vibrance 25~75
+    */
     val tabListener = object : TabLayout.OnTabSelectedListener{
         override fun onTabReselected(tab: TabLayout.Tab?) {
         }
@@ -136,31 +150,18 @@ class FragmentBackground : Fragment() {
             tabPosition= tab!!.position
             when(tab?.position){
                 0->{
-                    imageBG.setImageBitmap(imageManager.backgroundOriginal)
+                    imageFG.setImageBitmap(imageManager.personOriginal)
                     seekBar.visibility=View.GONE
                 }
-                1-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.BRIGHTNESS),1)
-                2-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.CONTRAST),2)
-                3-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.TONE_CURVE),3)
-                //4-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.))
-                5-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.HUE),5)
-                6-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.VIGNETTE),6)
-                7-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.SHARPEN),7)
-                8-> addFilter(
-                    GPUImageFilterTools.createFilterForType(context!!,
-                        GPUImageFilterTools.FilterType.GAMMA),8)
+                1-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.BRIGHTNESS),tab?.position)
+                2-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.CONTRAST),tab?.position)
+                3-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SHARPEN),tab?.position)
+                5-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SATURATION),tab?.position)
+                6-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.EXPOSURE),tab?.position)
+                7-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW),tab?.position)
+                8-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.WHITE_BALANCE),tab?.position)
+                9-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HAZE),tab?.position)
+                10-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIBRANCE),tab?.position)
             }
             seekBar.progress=adjusts[tabPosition]
         }

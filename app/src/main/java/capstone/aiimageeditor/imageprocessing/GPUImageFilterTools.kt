@@ -131,6 +131,8 @@ object GPUImageFilterTools {
         builder.create().show()
     }
 
+
+
     public fun createFilterForType(context: Context, type: FilterType): GPUImageFilter {
         return when (type) {
             FilterType.CONTRAST -> GPUImageContrastFilter(2.0f)
@@ -413,7 +415,7 @@ object GPUImageFilterTools {
         private inner class SharpnessAdjuster(filter: GPUImageSharpenFilter) :
             Adjuster<GPUImageSharpenFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setSharpness(range(percentage, -4.0f, 4.0f))
+                filter.setSharpness(range(percentage, -0.4f, 0.4f))
             }
         }
 
@@ -434,21 +436,21 @@ object GPUImageFilterTools {
         private inner class ContrastAdjuster(filter: GPUImageContrastFilter) :
             Adjuster<GPUImageContrastFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setContrast(range(percentage, 0.0f, 2.0f))
+                filter.setContrast(range(percentage, 0.8f, 1.2f))
             }
         }
 
         private inner class GammaAdjuster(filter: GPUImageGammaFilter) :
             Adjuster<GPUImageGammaFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setGamma(range(percentage, 0.0f, 3.0f))
+                filter.setGamma(range(percentage, 1.35f, 1.55f))
             }
         }
 
         private inner class BrightnessAdjuster(filter: GPUImageBrightnessFilter) :
             Adjuster<GPUImageBrightnessFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setBrightness(range(percentage, -1.0f, 1.0f))
+                filter.setBrightness(range(percentage, -0.1f, 0.1f))
 
             }
         }
@@ -516,15 +518,15 @@ object GPUImageFilterTools {
         private inner class ExposureAdjuster(filter: GPUImageExposureFilter) :
             Adjuster<GPUImageExposureFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setExposure(range(percentage, -10.0f, 10.0f))
+                filter.setExposure(range(percentage, -0.5f, 0.5f))
             }
         }
 
         private inner class HighlightShadowAdjuster(filter: GPUImageHighlightShadowFilter) :
             Adjuster<GPUImageHighlightShadowFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setShadows(range(percentage, 0.0f, 1.0f))
-                filter.setHighlights(range(percentage, 0.0f, 1.0f))
+                filter.setShadows(range(percentage, 0.0f, 0.5f))
+                filter.setHighlights(range(percentage, 0.0f, 0.5f))
             }
         }
 
@@ -552,14 +554,14 @@ object GPUImageFilterTools {
         private inner class WhiteBalanceAdjuster(filter: GPUImageWhiteBalanceFilter) :
             Adjuster<GPUImageWhiteBalanceFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setTemperature(range(percentage, 2000.0f, 8000.0f))
+                filter.setTemperature(range(percentage, 4000.0f, 6000.0f))
             }
         }
 
         private inner class VignetteAdjuster(filter: GPUImageVignetteFilter) :
             Adjuster<GPUImageVignetteFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setVignetteStart(range(percentage, 0.0f, 1.0f))
+                filter.setVignetteStart(range(percentage, 0.5f, 0.7f))
             }
         }
 
@@ -606,12 +608,11 @@ object GPUImageFilterTools {
                 filter.setRadius(range(percentage, 0.0f, 1.0f))
             }
         }
-
         private inner class HazeAdjuster(filter: GPUImageHazeFilter) :
             Adjuster<GPUImageHazeFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setDistance(range(percentage, -0.3f, 0.3f))
-                filter.setSlope(range(percentage, -0.3f, 0.3f))
+                filter.setDistance(range(percentage, -0.06f, 0.06f))
+                filter.setSlope(range(percentage, -0.06f, 0.06f))
             }
         }
 
@@ -675,7 +676,7 @@ object GPUImageFilterTools {
         private inner class VibranceAdjuster(filter: GPUImageVibranceFilter) :
             Adjuster<GPUImageVibranceFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setVibrance(range(percentage, -1.2f, 1.2f))
+                filter.setVibrance(range(percentage, -0.6f, 0.6f))
             }
         }
     }
