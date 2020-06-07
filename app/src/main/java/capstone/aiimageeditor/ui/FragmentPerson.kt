@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
-import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
@@ -30,7 +29,6 @@ class FragmentPerson : Fragment() {
     private lateinit var gpuImage: GPUImage
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
-    private lateinit var maskSeparator: MaskSeparator
 
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
@@ -54,7 +52,6 @@ class FragmentPerson : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
 
-        maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
         gpuImage = GPUImage(context)
