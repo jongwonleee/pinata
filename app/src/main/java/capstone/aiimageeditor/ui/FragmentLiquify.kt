@@ -60,8 +60,4 @@ class FragmentLiquify : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_liquify, container, false)
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> [기타] 푸우우우우우울
