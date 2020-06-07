@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import capstone.aiimageeditor.customviews.LiquifyView
 import kotlinx.android.synthetic.main.fragment_liquify.*
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class FragmentLiquify : Fragment() {
@@ -59,4 +60,8 @@ class FragmentLiquify : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_liquify, container, false)
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> [기타] 푸우우우우우울
