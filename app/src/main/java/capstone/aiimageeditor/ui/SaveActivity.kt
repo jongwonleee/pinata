@@ -27,10 +27,12 @@ import java.util.*
 
 class SaveActivity : AppCompatActivity() {
     lateinit var image: Bitmap
-    var imageUri:Uri?=null
-    companion object{
-        val SHARED_ACTIVITY=1
+    var imageUri: Uri? = null
+
+    companion object {
+        val SHARED_ACTIVITY = 1
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save)
@@ -47,16 +49,15 @@ class SaveActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode== SHARED_ACTIVITY){
-            if(imageUri != null) {
+        if (requestCode == SHARED_ACTIVITY) {
+            if (imageUri != null) {
                 val file = File(imageUri!!.path)
                 if (file.exists()) {
                     if (file.delete()) {
                         Log.i("Pinata File Share", "File sharing done")
                     }
                 }
-            }
-            else{
+            } else {
                 Log.i("[imageUri] : ", "null")
             }
         }
@@ -67,24 +68,31 @@ class SaveActivity : AppCompatActivity() {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path: String =
-            MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null)
+            MediaStore.Images.Media.insertImage(
+                inContext.getContentResolver(),
+                inImage,
+                "Title",
+                null
+            )
         return Uri.parse(path)
     }
-    fun onShareButtonClick(v: View){
-        imageUri = getImageUri(this,image)
+
+    fun onShareButtonClick(v: View) {
+        imageUri = getImageUri(this, image)
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, imageUri)
             type = "image/bmp"
         }
         val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivityForResult(shareIntent,
+        startActivityForResult(
+            shareIntent,
             SHARED_ACTIVITY
         )
 
     }
 
-    private fun saveImage(bitmap: Bitmap, name: String){
+    fun saveImage(bitmap: Bitmap, name: String) {
         val saved: Boolean
         val fos: OutputStream
         var IMAGES_FOLDER_NAME: String = "pinata"

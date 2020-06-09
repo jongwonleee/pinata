@@ -2,9 +2,11 @@ package capstone.aiimageeditor.ui
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
@@ -95,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                     imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
                         override fun onFinishInpaint() {
                             fragmentBackground.setImage()
+                            //Log.i("[Inapint]", "끄으으으읕")
                         }
                     })
                 }

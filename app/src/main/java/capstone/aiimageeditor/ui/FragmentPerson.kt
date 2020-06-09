@@ -1,17 +1,22 @@
 package capstone.aiimageeditor.ui
 
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageHalo
@@ -21,6 +26,9 @@ import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 //밝기 내리는거, 대조 올리는거 잘됨
 //밝기 올리는거, 대조 내리는거 잘 안됨
@@ -42,6 +50,7 @@ class FragmentPerson : Fragment() {
     private var adjusts = arrayListOf<Int>()
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
+    var haloBoolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +67,6 @@ class FragmentPerson : Fragment() {
         seekBar = view.findViewById(R.id.seekBar)
         imageBG = view.findViewById(R.id.image_bg)
         imageFG = view.findViewById(R.id.image_fg)
-//        btnHalo = view.findViewById(R.id.btnHalo)
         tabLayout = view.findViewById(R.id.tabLayout)
 
         imageManager = (activity?.application as ImageManager)
@@ -207,14 +215,15 @@ class FragmentPerson : Fragment() {
                     ), tab?.position
                 )
                 8 -> {
-//                    imageManager.personOriginal =
-//                        imageHalo.setHalo(imageManager.personOriginal, imageManager.mask)
-                    val mutableImagePerson = imageManager.original.copy(Bitmap.Config.ARGB_8888,true)
-                    val mutableImageMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888,true)
-                    imageManager.backgroundFiltered =
-                        imageHalo.setHalo(mutableImagePerson, mutableImageMask)
+                    val mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
+//                    val mutablePersonFiltered =
+//                        imageManager.personFiltered.copy(Bitmap.Config.ARGB_8888, true)
+                    val mutablePersonOriginal =
+                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
+//                    val mutableOriginal = imageManager.original.copy(Bitmap.Config.ARGB_8888, true)
+                    imageManager.personOriginal = imageHalo.setHalo(mutablePersonOriginal, mutableMask)
+                    imageFG.setImageBitmap(imageManager.personOriginal)
                     seekBar.visibility = View.GONE
-                    setImage()
                 }
             }
             seekBar.progress = adjusts[tabPosition]
@@ -222,5 +231,4 @@ class FragmentPerson : Fragment() {
         }
 
     }
-
 }

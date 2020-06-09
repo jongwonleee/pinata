@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import java.util.*
 
 class ImageHalo() {
-    private lateinit var colors: IntArray
+    lateinit var colors: IntArray
 
     private var coordQueue: Queue<Triple<Int, Int, Pair<Int, Int>>> = LinkedList()
     private var width: Int = 0
@@ -23,7 +23,7 @@ class ImageHalo() {
         bool = false
 
         for (i in colors.indices) {
-            if (colors[i] == Color.RED) {
+            if (colors[i] == Color.WHITE) {
                 val x = i % width
                 val y = i / width
                 val xDirection = checkX(x, i)
@@ -45,208 +45,154 @@ class ImageHalo() {
             val alphaMax = (widthMax + heightMax)
 
             if (yDirection == -1) {
-                when (xDirection) {
-                    0 -> {
-                        for (w in 0 until widthMax) {
+                for (w in 0 until widthMax) {
+                    val newColor =
+                        Color.argb(255 * (widthMax - w) / widthMax, 0, 255, 0)
+                    when (xDirection) {
+                        0 -> {
                             if (x > w) {
-                                val newColor = Color.argb(255 * (widthMax - w) / widthMax, 0, 255, 255)
                                 inputImage.setPixel(x - w, y, newColor)
                             }
                         }
-                    }
-                    1 -> {
-                        for (w in 0 until widthMax) {
+                        1 -> {
                             if (x < width - w - 1) {
-                                val newColor = Color.argb(255 * (widthMax - w) / widthMax, 0, 255, 255)
                                 inputImage.setPixel(x + w, y, newColor)
                             }
                         }
-                    }
-                    2 -> {
-                        for (w in 0 until widthMax) {
+                        2 -> {
                             if (x > w) {
-                                val newColor = Color.argb(255 * (widthMax - w) / widthMax, 0, 255, 255)
                                 inputImage.setPixel(x - w, y, newColor)
                             }
                             if (x < width - w - 1) {
-                                val newColor = Color.argb(255 * (widthMax - w) / widthMax, 0, 255, 255)
                                 inputImage.setPixel(x + w, y, newColor)
                             }
                         }
                     }
                 }
             } else if (xDirection == -1) {
-                when (yDirection) {
-                    0 -> {
-                        for (h in 0 until heightMax) {
+                for (h in 0 until heightMax) {
+                    val newColor =
+                        Color.argb(255 * (heightMax - h) / heightMax, 0, 255, 0)
+                    when (yDirection) {
+                        0 -> {
                             if (y > h) {
-                                val newColor = Color.argb(255 * (heightMax - h) / heightMax, 0, 255, 255)
                                 inputImage.setPixel(x, y - h, newColor)
                             }
                         }
-                    }
-                    1 -> {
-                        for (h in 0 until heightMax) {
+                        1 -> {
                             if (y < height - h - 1) {
-                                val newColor = Color.argb(255 * (heightMax - h) / heightMax, 0, 255, 255)
                                 inputImage.setPixel(x, y + h, newColor)
                             }
                         }
-                    }
-                    2 -> {
-                        for (h in 0 until heightMax) {
+                        2 -> {
                             if (y > h) {
-                                val newColor = Color.argb(255 * (heightMax - h) / heightMax, 0, 255, 255)
                                 inputImage.setPixel(x, y - h, newColor)
                             }
                             if (y < height - h - 1) {
-                                val newColor = Color.argb(255 * (heightMax - h) / heightMax, 0, 255, 255)
                                 inputImage.setPixel(x, y + h, newColor)
                             }
                         }
                     }
                 }
             } else {
-                when (xDirection) {
-                    0 -> {
-                        for (w in 0 until widthMax) {
-                            if (x > w) {
-                                when (yDirection) {
-                                    0 -> {
-                                        for (h in 0 until heightMax) {
+                for (w in 0 until widthMax) {
+                    for (h in 0 until heightMax) {
+                        val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 0)
+                        when (xDirection) {
+                            0 -> {
+                                if (x > w) {
+                                    when (yDirection) {
+                                        0 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y - h, newColor)
                                             }
                                         }
-                                    }
-                                    1 -> {
-                                        for (h in 0 until heightMax) {
+                                        1 -> {
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y + h, newColor)
                                             }
                                         }
-                                    }
-                                    2 -> {
-                                        for (h in 0 until heightMax) {
+                                        2 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y - h, newColor)
                                             }
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y + h, newColor)
                                             }
+                                            Log.i("[xDyD]", "이런게 있네02")
                                         }
-                                        Log.i("[xDyD]", "이런게 있네02")
                                     }
                                 }
                             }
-                        }
-                    }
-                    1 -> {
-                        for (w in 0 until widthMax) {
-                            if (x < width - w - 1) {
-                                when (yDirection) {
-                                    0 -> {
-                                        for (h in 0 until heightMax) {
+                            1 -> {
+                                if (x < width - w - 1) {
+                                    when (yDirection) {
+                                        0 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y - h, newColor)
                                             }
                                         }
-                                    }
-                                    1 -> {
-                                        for (h in 0 until heightMax) {
+                                        1 -> {
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y + h, newColor)
                                             }
                                         }
-                                    }
-                                    2 -> {
-                                        for (h in 0 until heightMax) {
+                                        2 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y - h, newColor)
                                             }
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y + h, newColor)
                                             }
                                         }
-                                        Log.i("[xDyD]", "이런게 있네12")
                                     }
                                 }
                             }
-                        }
-                    }
-                    2 -> {
-                        for (w in 0 until widthMax) {
-                            if (x > w) {
-                                when (yDirection) {
-                                    0 -> {
-                                        for (h in 0 until heightMax) {
+                            2 -> {
+                                if (x > w) {
+                                    when (yDirection) {
+                                        0 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y - h, newColor)
                                             }
                                         }
-                                    }
-                                    1 -> {
-                                        for (h in 0 until heightMax) {
+                                        1 -> {
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y + h, newColor)
                                             }
                                         }
-                                    }
-                                    2 -> {
-                                        for (h in 0 until heightMax) {
+                                        2 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y - h, newColor)
                                             }
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x - w, y + h, newColor)
                                             }
+                                            Log.i("[xDyD]", "이런게 있네22")
                                         }
-                                        Log.i("[xDyD]", "이런게 있네22")
                                     }
                                 }
-                            }
-                            if (x < width - w - 1) {
-                                when (yDirection) {
-                                    0 -> {
-                                        for (h in 0 until heightMax) {
+                                if (x < width - w - 1) {
+                                    when (yDirection) {
+                                        0 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y - h, newColor)
                                             }
                                         }
-                                    }
-                                    1 -> {
-                                        for (h in 0 until heightMax) {
+                                        1 -> {
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y + h, newColor)
                                             }
                                         }
-                                    }
-                                    2 -> {
-                                        for (h in 0 until heightMax) {
+                                        2 -> {
                                             if (y > h) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y - h, newColor)
                                             }
                                             if (y < height - h - 1) {
-                                                val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 255)
                                                 inputImage.setPixel(x + w, y + h, newColor)
                                             }
+                                            Log.i("[xDyD]", "이런게 있네12")
                                         }
-                                        Log.i("[xDyD]", "이런게 있네12")
                                     }
                                 }
                             }
@@ -261,23 +207,23 @@ class ImageHalo() {
     private fun checkX(x: Int, i: Int): Int {
         when (x) {
             0 -> {
-                return if (colors[i + 1] != Color.RED)
+                return if (colors[i + 1] != Color.WHITE)
                     1
                 else
                     -1
             }
             height - 1 -> {
-                return if (colors[i - 1] != Color.RED)
+                return if (colors[i - 1] != Color.WHITE)
                     0
                 else
                     -1
             }
             else -> {
-                return if (colors[i - 1] != Color.RED && colors[i + 1] != Color.RED)
+                return if (colors[i - 1] != Color.WHITE && colors[i + 1] != Color.WHITE)
                     2
-                else if (colors[i - 1] != Color.RED)
+                else if (colors[i - 1] != Color.WHITE)
                     0
-                else if (colors[i + 1] != Color.RED)
+                else if (colors[i + 1] != Color.WHITE)
                     1
                 else
                     -1
@@ -288,23 +234,23 @@ class ImageHalo() {
     private fun checkY(y: Int, i: Int): Int {
         when (y) {
             0 -> {
-                return if (colors[i + width] != Color.RED)
+                return if (colors[i + width] != Color.WHITE)
                     1
                 else
                     -1
             }
             height - 1 -> {
-                return if (colors[i - width] != Color.RED)
+                return if (colors[i - width] != Color.WHITE)
                     0
                 else
                     -1
             }
             else -> {
-                return if (colors[i - width] != Color.RED && colors[i + width] != Color.RED)
+                return if (colors[i - width] != Color.WHITE && colors[i + width] != Color.WHITE)
                     2
-                else if (colors[i - width] != Color.RED)
+                else if (colors[i - width] != Color.WHITE)
                     0
-                else if (colors[i + width] != Color.RED)
+                else if (colors[i + width] != Color.WHITE)
                     1
                 else
                     -1
