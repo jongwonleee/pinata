@@ -24,6 +24,9 @@ class LiquifyView  @JvmOverloads constructor(
     private var xstart = 0f
     private var ystart = 0f
 
+    private var minx=0
+    private var miny=0
+
     private lateinit var sorted: List<Pair<Float, Float>>
     private lateinit var original: List<Pair<Float, Float>>
     private lateinit var selectedIndex: MutableList<Int>
@@ -50,7 +53,7 @@ class LiquifyView  @JvmOverloads constructor(
         selectedIndex = MutableList<Int>(300,{_ -> 0})
         paint.color = Color.BLACK
 
-        generateCoordinates()
+        //generateCoordinates()
         invalidate() //ondraw호출
     }
     fun brushsizechange(size: Int) {
@@ -67,10 +70,11 @@ class LiquifyView  @JvmOverloads constructor(
             _width = _width * h / _height
             _height = h
         }
-
-        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        minx = (w - _width) / 2
+        miny = (h - _height) / 2
+        canvasBitmap = Bitmap.createBitmap(_width, _height, Bitmap.Config.ARGB_8888)
         drawCanvas = Canvas(canvasBitmap)
-
+        bgimg = Bitmap.createScaledBitmap(bgimg,_width,_height,true)
         generateCoordinates()
     }
 
@@ -93,11 +97,14 @@ class LiquifyView  @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         Log.i("##ondraw", "ondraw 실행")
         super.onDraw(canvas)
+        val drawPaint = Paint()
+        drawPaint.setColor(Color.BLACK)
+        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 
-        drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR)
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR)
-        //canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
-
+        canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
+        paint.color=Color.argb(128,255,255,255)
+        canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
 
         drawCanvas.drawBitmapMesh(
             bitmap,
@@ -111,12 +118,12 @@ class LiquifyView  @JvmOverloads constructor(
         )
 
 
-        drawCoordinates(drawCanvas)
-        drawLines(drawCanvas)
+        //drawCoordinates(drawCanvas)
+        //drawLines(drawCanvas)
 
 
 
-        canvas.drawBitmap(canvasBitmap, 0f, (height/2 - _height/2).toFloat(), Paint())
+        canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
     }
 
     private fun drawCoordinates(canvas: Canvas) {
@@ -171,10 +178,11 @@ class LiquifyView  @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val gap = height/2 - _height/2
         when (event.action) {
             ACTION_DOWN -> {
                 xstart = event.x
-                ystart = event.y //- _height/2
+                ystart = event.y - gap
                 original = coordinates
                 sorted = coordinates.sortedBy { (it.first - xstart).pow(2) + (it.second - ystart).pow(2) }
                 for (i in 0..250) {
@@ -185,7 +193,7 @@ class LiquifyView  @JvmOverloads constructor(
             }
             ACTION_MOVE, ACTION_UP -> {
                 var xmove = (event.x - xstart) / 20
-                var ymove = (event.y - ystart) / 20
+                var ymove = (event.y - ystart - gap) / 20
 
                 for (i in 0..250) {
                     xmove *= weight(mode, i) //mode: 0~4
@@ -207,17 +215,16 @@ class LiquifyView  @JvmOverloads constructor(
         paddingTop: Int = 0, paddingBottom: Int = 0
     ): List<Pair<Float, Float>> {
 
-        val widthSlice = (width - (paddingStart + paddingEnd)) / (col)
-        val heightSlice = (height - (paddingTop + paddingBottom)) / (row)
-
+        val widthSlice = (width.toFloat() - (paddingStart + paddingEnd)) / (col.toFloat())
+        val heightSlice = (height.toFloat() - (paddingTop + paddingBottom)) / (row.toFloat())
         val coordinates = mutableListOf<Pair<Float, Float>>()
 
         for (y in 0..row) {
             for (x in 0..col) {
                 coordinates.add(
                     Pair(
-                        (x * widthSlice + paddingStart).toFloat(),
-                        (y * heightSlice + paddingTop).toFloat()
+                        x * widthSlice + paddingStart,
+                        y * heightSlice + paddingTop
                     )
                 )
             }
