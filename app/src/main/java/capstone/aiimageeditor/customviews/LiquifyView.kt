@@ -95,7 +95,6 @@ class LiquifyView  @JvmOverloads constructor(
 
 
     override fun onDraw(canvas: Canvas) {
-        Log.i("##ondraw", "ondraw 실행")
         super.onDraw(canvas)
         val drawPaint = Paint()
         drawPaint.setColor(Color.BLACK)
@@ -232,4 +231,9 @@ class LiquifyView  @JvmOverloads constructor(
 
         return coordinates
     }
+
+    public fun getLiquifiedImage(width: Int,height: Int):Bitmap{
+        return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
+    }
+
 }

@@ -40,11 +40,6 @@
             android:text="저장" />
 
         //for liquify
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_liquify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Liquify" />
 
     </com.google.android.material.tabs.TabLayout>
 
