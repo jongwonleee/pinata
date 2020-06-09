@@ -37,7 +37,7 @@ import android.view.MotionEvent.ACTION_MOVE
 import kotlin.math.pow
 import android.util.Log
 
-class LiquifyView : AppCompatActivity() {
+class LiquifyView :Fragment() {
 
     private lateinit var seekBar: SeekBar
     private lateinit var imageBG: ImageView

@@ -82,7 +82,6 @@ class StartActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
         viewModel.resultingBitmap.observe(this, Observer { resultImage ->
             if (resultImage != null) {
-                Log.i("!!","~!!!")
                 (application as ImageManager).mask = resultImage.bitmapMaskOnly
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -102,10 +101,17 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun gotoNextActivity(uri:Uri){
-        (application as ImageManager).loadOriginal(uri)
-        saveStringSet(images)
-        imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
-        viewModel.onApplyModel(imageSegmentationModel, inferenceThread, (application as ImageManager).original)
+        if((application as ImageManager).loadOriginal(uri)){
+            saveStringSet(images)
+            imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
+            viewModel.onApplyModel(imageSegmentationModel, inferenceThread, (application as ImageManager).original)
+        }else
+        {
+            images.remove(uri.toString())
+            Toast.makeText(this, "사진을 불러올 수 없습니다",Toast.LENGTH_LONG)
+            adapter.notifyDataSetChanged()
+        }
+
     }
 
     override fun onResume() {
