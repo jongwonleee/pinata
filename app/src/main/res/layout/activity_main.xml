@@ -40,11 +40,6 @@
             android:text="저장" />
 
         //for liquify
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_liquify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Liquify" />
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -66,7 +61,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0" >
+
+    </capstone.aiimageeditor.customviews.NonSwipeViewPager>
+
+    <ImageView
+        android:id="@+id/image_original"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"

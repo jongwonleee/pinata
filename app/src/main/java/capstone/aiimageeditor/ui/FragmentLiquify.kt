@@ -13,10 +13,6 @@ import kotlinx.android.synthetic.main.fragment_liquify.*
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 
-<<<<<<< HEAD
-class LiquifyView :Fragment() {
-=======
->>>>>>> b0d7734885cf3ed2c9042327296078e1b28c3364
 
 class FragmentLiquify : Fragment() {
     private lateinit var tabLayout: TabLayout
@@ -46,13 +42,7 @@ class FragmentLiquify : Fragment() {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            when (tab?.position) {
-                0 -> view_liquifyview.brushsizechange(0)
-                1 -> view_liquifyview.brushsizechange(1)
-                2 -> view_liquifyview.brushsizechange(2)
-                3 -> view_liquifyview.brushsizechange(3)
-                4 -> view_liquifyview.brushsizechange(4)
-            }
+            view_liquifyview.brushsizechange(tab!!.position)
         }
 
     }

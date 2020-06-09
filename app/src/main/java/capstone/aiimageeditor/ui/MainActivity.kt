@@ -2,17 +2,18 @@ package capstone.aiimageeditor.ui
 
 import android.content.Intent
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
-import capstone.aiimageeditor.symmenticsegmentation.*
+import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -22,10 +23,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var buttonOriginal: ImageView
+    private lateinit var imageOriginal:ImageView
     private lateinit var fragmentMask: FragmentMask
     private lateinit var fragmentBackground: FragmentBackground
     private lateinit var fragmentPerson: FragmentPerson
-    private lateinit var fragmentLiquify: FragmentLiquify //for liquify
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
 
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         imageNew = findViewById(R.id.image_new)
         buttonOriginal = findViewById(R.id.button_original)
         viewPager = findViewById(R.id.viewPager)
+        imageOriginal=findViewById(R.id.image_original)
         maskSeparator = MaskSeparator()
 
         buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
@@ -46,14 +48,12 @@ class MainActivity : AppCompatActivity() {
         fragmentBackground = FragmentBackground()
         fragmentMask = FragmentMask()
         fragmentPerson = FragmentPerson()
-        fragmentLiquify = FragmentLiquify() //for liquify
         val fragmentEmpty=FragmentMask()
         val tabAdapter = TabPagerAdapter(supportFragmentManager, 5) //behavior 4 -> 5
         tabAdapter.addPage(fragmentMask, "마스크")
         tabAdapter.addPage(fragmentPerson, "인물")
         tabAdapter.addPage(fragmentBackground, "배경")
         tabAdapter.addPage(fragmentEmpty, "저장")
-        tabAdapter.addPage(fragmentLiquify, "Liquify") //for liquify
 
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                 3 -> {
                     val intent = Intent(this@MainActivity, SaveActivity::class.java)
                     startActivity(intent)
+
                 }
                 4-> { //for liquify
                 }
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity() {
 
     fun initializeImage() {
         imageNew.setImageBitmap(imageManager.original)
+        imageOriginal.setImageBitmap(imageManager.original)
         //TODO stack 초기화 시켜주기
     }
 
@@ -117,11 +119,13 @@ class MainActivity : AppCompatActivity() {
         override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
             if (p1 != null) {
                 when (p1.action) {
-                    //TODO 원본 보여주
+                    MotionEvent.ACTION_DOWN-> imageOriginal.visibility= View.VISIBLE
+                    MotionEvent.ACTION_UP -> imageOriginal.visibility= View.GONE
                 }
             }
             return true
         }
+
     }
 
     fun onBackButtonClick(v: View) {
@@ -167,6 +171,7 @@ class MainActivity : AppCompatActivity() {
     external fun runMaskCorrector(imagePtr: Long, maskPtr: Long)
 
     override fun onResume() {
+        tabLayout.getTabAt(0)?.select()
         super.onResume()
     }
 }
