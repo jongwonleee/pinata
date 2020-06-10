@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.util.Log
 import org.opencv.android.Utils
 import org.opencv.core.Mat
+import java.lang.Exception
 
 class ImageManager : Application() {
     lateinit var original:Bitmap
@@ -22,13 +23,19 @@ class ImageManager : Application() {
     private lateinit var listener:OnFinishInpaint
     var isInpainting=false
 
-     fun getImageFromUri(selectedPhotoUri: Uri): Bitmap {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            MediaStore.Images.Media.getBitmap(this.contentResolver, selectedPhotoUri)
-        } else {
-            val source = ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
-            ImageDecoder.decodeBitmap(source){decoder,_,_->decoder.isMutableRequired=true}
-        }
+     fun getImageFromUri(selectedPhotoUri: Uri): Bitmap? {
+         try{
+             return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                 MediaStore.Images.Media.getBitmap(this.contentResolver, selectedPhotoUri)
+             } else {
+                 val source = ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
+                 ImageDecoder.decodeBitmap(source){decoder,_,_->decoder.isMutableRequired=true}
+             }
+         }catch (e:Exception){
+             e.printStackTrace()
+             return null
+         }
+
     }
 
     fun setOnFinishInpaint(listener:OnFinishInpaint){
@@ -48,10 +55,16 @@ class ImageManager : Application() {
         personFiltered
     }
 
-    fun loadOriginal(uri:Uri) {
-        original = getImageFromUri(uri)
-        backgroundOriginal = Bitmap.createBitmap(original)
-        backgroundFiltered = Bitmap.createBitmap(original)
+    fun loadOriginal(uri:Uri): Boolean {
+        var image =getImageFromUri(uri)
+        if(image!=null){
+            original = image
+            backgroundOriginal = Bitmap.createBitmap(original)
+            backgroundFiltered = Bitmap.createBitmap(original)
+            return true
+        }else return false
+
+
     }
 
     fun mergeImage():Bitmap{

@@ -42,13 +42,7 @@ class FragmentLiquify : Fragment() {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            when (tab?.position) {
-                0 -> view_liquifyview.brushsizechange(0)
-                1 -> view_liquifyview.brushsizechange(1)
-                2 -> view_liquifyview.brushsizechange(2)
-                3 -> view_liquifyview.brushsizechange(3)
-                4 -> view_liquifyview.brushsizechange(4)
-            }
+            view_liquifyview.brushsizechange(tab!!.position)
         }
 
     }
