@@ -51,7 +51,6 @@ class FragmentPerson : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var imageHalo: ImageHalo
-    private lateinit var mutableMask: Bitmap
     private lateinit var mutablePersonOriginal: Bitmap
 
     private var haloColor: Int = 0
@@ -115,7 +114,7 @@ class FragmentPerson : Fragment() {
                         imageHalo.setWeight(seekBar.progress)
                     }
                     imageManager.personOriginal =
-                        imageHalo.setHalo(mutablePersonOriginal, mutableMask, haloColor)
+                        imageHalo.setHalo(mutablePersonOriginal, haloColor)
                     imageFG.setImageBitmap(imageManager.personOriginal)
                 }
             }
@@ -128,6 +127,7 @@ class FragmentPerson : Fragment() {
         val colorPicker = AmbilWarnaDialog(
             view?.context,
             Color.RED,
+            true,
             object : AmbilWarnaDialog.OnAmbilWarnaListener {
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
                     return
@@ -135,11 +135,10 @@ class FragmentPerson : Fragment() {
 
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
                     haloColor = color
-                    mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
                     mutablePersonOriginal =
                         imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
                     imageManager.personOriginal =
-                        imageHalo.setHalo(mutablePersonOriginal, mutableMask, haloColor)
+                        imageHalo.setHalo(mutablePersonOriginal, haloColor)
                     imageFG.setImageBitmap(imageManager.personOriginal)
                 }
             })
