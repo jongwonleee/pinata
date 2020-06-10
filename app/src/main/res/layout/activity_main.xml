@@ -38,7 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="저장" />
+<<<<<<< HEAD
     </com.google.android.material.tabs.TabLayout>
+=======
+>>>>>>> 27bc51236fea28d84e1e62e12c4d787aaf7466ea
 
     <View
         android:id="@+id/view"
