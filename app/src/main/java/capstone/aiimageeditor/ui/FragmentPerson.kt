@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import kotlinx.android.synthetic.main.fragment_liquify.*
+import java.lang.Exception
 
 //밝기 내리는거, 대조 올리는거 잘됨
 //밝기 올리는거, 대조 내리는거 잘 안됨
@@ -73,7 +74,7 @@ class FragmentPerson : Fragment() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(tabPosition==0){
-                    imageLiquify.brushsizechange(progress/20)
+                    imageLiquify.brushsizechange(progress/25)
                 }else
                 {
                     adjusts[tabPosition]=progress
@@ -92,18 +93,23 @@ class FragmentPerson : Fragment() {
 
 
     public fun setImage(){
-        imageFG.setImageBitmap(imageManager.personOriginal)
-        imageBG.setImageBitmap(imageManager.backgroundFiltered)
-        gpuImage.setImage(imageManager.personOriginal)
-        imageLiquify.setup(
-            30,
-            50,
-            imageManager.personOriginal,
-            imageManager.backgroundOriginal
-        )
-        imageLiquify.visibility=View.VISIBLE
-        seekBar.progress=0
-        seekBar.visibility=View.VISIBLE
+        try{
+            imageFG.setImageBitmap(imageManager.personOriginal)
+            imageBG.setImageBitmap(imageManager.backgroundFiltered)
+            gpuImage.setImage(imageManager.personOriginal)
+            imageLiquify.setup(
+                30,
+                50,
+                imageManager.personOriginal,
+                imageManager.backgroundOriginal
+            )
+            imageLiquify.visibility=View.VISIBLE
+            seekBar.progress=0
+            seekBar.visibility=View.VISIBLE
+        }catch (e:Exception){
+
+        }
+
     }
 
     public fun saveImage(){

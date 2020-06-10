@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                     imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
                         override fun onFinishInpaint() {
                             fragmentBackground.setImage()
+                            fragmentPerson.setImage()
                         }
                     })
                 }
