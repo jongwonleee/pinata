@@ -13,6 +13,7 @@ import kotlin.math.sqrt
 
 class ImageHalo() {
     lateinit var colors: IntArray
+    private var weight: Int = 110
 
     private var coordQueue: Queue<Triple<Int, Int, Pair<Int, Int>>> = LinkedList()
     private var width: Int = 0
@@ -23,10 +24,10 @@ class ImageHalo() {
         inputMask.getPixels(colors, 0, inputMask.width, 0, 0, inputMask.width, inputMask.height)
         width = inputMask.width
         height = inputMask.height
-        val widthMax = inputMask.width / 75
-        val heightMax = inputMask.height / 75
+        val widthMax = inputMask.width / weight
+        val heightMax = inputMask.height / weight
         val distMax = widthMax.coerceAtMost(heightMax)
-        var dist: Array<Array<Float>> = Array(width) { Array(height) { _ -> distMax.toFloat() } }
+        var dist: Array<Array<Float>> = Array(width) { Array(height) { distMax.toFloat() } }
 
         val red = Color.red(color)
         val green = Color.green(color)
@@ -59,29 +60,33 @@ class ImageHalo() {
                     when (xDirection) {
                         0 -> {
                             if (x > w)
-                                if (dist[x - w][y] >= wDistance) {
-                                    inputImage.setPixel(x - w, y, newColor)
-                                    dist[x - w][y] = wDistance;
-                                }
+                                if (colors[i - w] != Color.WHITE)
+                                    if (dist[x - w][y] >= wDistance) {
+                                        inputImage.setPixel(x - w, y, newColor)
+                                        dist[x - w][y] = wDistance;
+                                    }
                         }
                         1 -> {
                             if (x < width - w - 1)
-                                if (dist[x + w][y] >= wDistance) {
-                                    inputImage.setPixel(x + w, y, newColor)
-                                    dist[x + w][y] = wDistance;
-                                }
+                                if (colors[i + w] != Color.WHITE)
+                                    if (dist[x + w][y] >= wDistance) {
+                                        inputImage.setPixel(x + w, y, newColor)
+                                        dist[x + w][y] = wDistance;
+                                    }
                         }
                         2 -> {
                             if (x > w)
-                                if (dist[x - w][y] >= wDistance) {
-                                    inputImage.setPixel(x - w, y, newColor)
-                                    dist[x - w][y] = wDistance;
-                                }
+                                if (colors[i - w] != Color.WHITE)
+                                    if (dist[x - w][y] >= wDistance) {
+                                        inputImage.setPixel(x - w, y, newColor)
+                                        dist[x - w][y] = wDistance;
+                                    }
                             if (x < width - w - 1)
-                                if (dist[x + w][y] >= wDistance) {
-                                    inputImage.setPixel(x + w, y, newColor)
-                                    dist[x + w][y] = wDistance;
-                                }
+                                if (colors[i + w] != Color.WHITE)
+                                    if (dist[x + w][y] >= wDistance) {
+                                        inputImage.setPixel(x + w, y, newColor)
+                                        dist[x + w][y] = wDistance;
+                                    }
                         }
                     }
                 }
@@ -93,29 +98,33 @@ class ImageHalo() {
                     when (yDirection) {
                         0 -> {
                             if (y > h)
-                                if (dist[x][y - h] >= yDistance) {
-                                    inputImage.setPixel(x, y - h, newColor)
-                                    dist[x][y - h] = yDistance
-                                }
+                                if (colors[i - h * width] != Color.WHITE)
+                                    if (dist[x][y - h] >= yDistance) {
+                                        inputImage.setPixel(x, y - h, newColor)
+                                        dist[x][y - h] = yDistance
+                                    }
                         }
                         1 -> {
                             if (y < height - h - 1)
-                                if (dist[x][y + h] >= yDistance) {
-                                    inputImage.setPixel(x, y + h, newColor)
-                                    dist[x][y + h] = yDistance
-                                }
+                                if (colors[i + h * width] != Color.WHITE)
+                                    if (dist[x][y + h] >= yDistance) {
+                                        inputImage.setPixel(x, y + h, newColor)
+                                        dist[x][y + h] = yDistance
+                                    }
                         }
                         2 -> {
                             if (y > h)
-                                if (dist[x][y - h] >= yDistance) {
-                                    inputImage.setPixel(x, y - h, newColor)
-                                    dist[x][y - h] = yDistance
-                                }
+                                if (colors[i - h * width] != Color.WHITE)
+                                    if (dist[x][y - h] >= yDistance) {
+                                        inputImage.setPixel(x, y - h, newColor)
+                                        dist[x][y - h] = yDistance
+                                    }
                             if (y < height - h - 1)
-                                if (dist[x][y + h] >= yDistance) {
-                                    inputImage.setPixel(x, y + h, newColor)
-                                    dist[x][y + h] = yDistance
-                                }
+                                if (colors[i + h * width] != Color.WHITE)
+                                    if (dist[x][y + h] >= yDistance) {
+                                        inputImage.setPixel(x, y + h, newColor)
+                                        dist[x][y + h] = yDistance
+                                    }
                         }
                     }
                 }
@@ -136,29 +145,33 @@ class ImageHalo() {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (dist[x - w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y - h, newColor)
-                                                    dist[x - w][y - h] = xyDistance
-                                                }
+                                                if (colors[i - w - h * width] != Color.WHITE)
+                                                    if (dist[x - w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y - h, newColor)
+                                                        dist[x - w][y - h] = xyDistance
+                                                    }
                                         }
                                         1 -> {
                                             if (y < height - h - 1)
-                                                if (dist[x - w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y + h, newColor)
-                                                    dist[x - w][y + h] = xyDistance
-                                                }
+                                                if (colors[i - w + h * width] != Color.WHITE)
+                                                    if (dist[x - w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y + h, newColor)
+                                                        dist[x - w][y + h] = xyDistance
+                                                    }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (dist[x - w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y - h, newColor)
-                                                    dist[x - w][y - h] = xyDistance
-                                                }
+                                                if (colors[i - w - h * width] != Color.WHITE)
+                                                    if (dist[x - w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y - h, newColor)
+                                                        dist[x - w][y - h] = xyDistance
+                                                    }
                                             if (y < height - h - 1)
-                                                if (dist[x - w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y + h, newColor)
-                                                    dist[x - w][y + h] = xyDistance
-                                                }
+                                                if (colors[i - w + h * width] != Color.WHITE)
+                                                    if (dist[x - w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y + h, newColor)
+                                                        dist[x - w][y + h] = xyDistance
+                                                    }
                                             Log.i("[xDyD]", "이런게 있네02")
                                         }
                                     }
@@ -169,29 +182,33 @@ class ImageHalo() {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (dist[x + w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y - h, newColor)
-                                                    dist[x + w][y - h] = xyDistance
-                                                }
+                                                if (colors[i + w - h * width] != Color.WHITE)
+                                                    if (dist[x + w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y - h, newColor)
+                                                        dist[x + w][y - h] = xyDistance
+                                                    }
                                         }
                                         1 -> {
                                             if (y < height - h - 1)
-                                                if (dist[x + w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y + h, newColor)
-                                                    dist[x + w][y + h] = xyDistance
-                                                }
+                                                if (colors[i + w + h * width] != Color.WHITE)
+                                                    if (dist[x + w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y + h, newColor)
+                                                        dist[x + w][y + h] = xyDistance
+                                                    }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (dist[x + w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y - h, newColor)
-                                                    dist[x + w][y - h] = xyDistance
-                                                }
+                                                if (colors[i + w - h * width] != Color.WHITE)
+                                                    if (dist[x + w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y - h, newColor)
+                                                        dist[x + w][y - h] = xyDistance
+                                                    }
                                             if (y < height - h - 1)
-                                                if (dist[x + w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y + h, newColor)
-                                                    dist[x + w][y + h] = xyDistance
-                                                }
+                                                if (colors[i + w + h * width] != Color.WHITE)
+                                                    if (dist[x + w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y + h, newColor)
+                                                        dist[x + w][y + h] = xyDistance
+                                                    }
                                             Log.i("[xDyD]", "이런게 있네12")
                                         }
                                     }
@@ -202,29 +219,33 @@ class ImageHalo() {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (dist[x - w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y - h, newColor)
-                                                    dist[x - w][y - h] = xyDistance
-                                                }
+                                                if (colors[i - w - h * width] != Color.WHITE)
+                                                    if (dist[x - w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y - h, newColor)
+                                                        dist[x - w][y - h] = xyDistance
+                                                    }
                                         }
                                         1 -> {
                                             if (y < height - h - 1)
-                                                if (dist[x - w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y + h, newColor)
-                                                    dist[x - w][y - h] = xyDistance
-                                                }
+                                                if (colors[i - w + h * width] != Color.WHITE)
+                                                    if (dist[x - w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y + h, newColor)
+                                                        dist[x - w][y - h] = xyDistance
+                                                    }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (dist[x - w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y - h, newColor)
-                                                    dist[x - w][y - h] = xyDistance
-                                                }
+                                                if (colors[i - w - h * width] != Color.WHITE)
+                                                    if (dist[x - w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y - h, newColor)
+                                                        dist[x - w][y - h] = xyDistance
+                                                    }
                                             if (y < height - h - 1)
-                                                if (dist[x - w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x - w, y + h, newColor)
-                                                    dist[x - w][y + h] = xyDistance
-                                                }
+                                                if (colors[i - w + h * width] != Color.WHITE)
+                                                    if (dist[x - w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x - w, y + h, newColor)
+                                                        dist[x - w][y + h] = xyDistance
+                                                    }
                                             Log.i("[xDyD]", "이런게 있네22")
                                         }
                                     }
@@ -233,29 +254,33 @@ class ImageHalo() {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (dist[x + w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y - h, newColor)
-                                                    dist[x + w][y - h] = xyDistance
-                                                }
+                                                if (colors[i + w - h * width] != Color.WHITE)
+                                                    if (dist[x + w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y - h, newColor)
+                                                        dist[x + w][y - h] = xyDistance
+                                                    }
                                         }
                                         1 -> {
                                             if (y < height - h - 1)
-                                                if (dist[x + w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y + h, newColor)
-                                                    dist[x + w][y + h] = xyDistance
-                                                }
+                                                if (colors[i + w + h * width] != Color.WHITE)
+                                                    if (dist[x + w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y + h, newColor)
+                                                        dist[x + w][y + h] = xyDistance
+                                                    }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (dist[x + w][y - h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y - h, newColor)
-                                                    dist[x + w][y - h] = xyDistance
-                                                }
+                                                if (colors[i + w - h * width] != Color.WHITE)
+                                                    if (dist[x + w][y - h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y - h, newColor)
+                                                        dist[x + w][y - h] = xyDistance
+                                                    }
                                             if (y < height - h - 1)
-                                                if (dist[x + w][y + h] >= xyDistance) {
-                                                    inputImage.setPixel(x + w, y + h, newColor)
-                                                    dist[x + w][y + h] = xyDistance
-                                                }
+                                                if (colors[i + w + h * width] != Color.WHITE)
+                                                    if (dist[x + w][y + h] >= xyDistance) {
+                                                        inputImage.setPixel(x + w, y + h, newColor)
+                                                        dist[x + w][y + h] = xyDistance
+                                                    }
                                             Log.i("[xDyD]", "이런게 있네22")
                                         }
                                     }
@@ -325,5 +350,11 @@ class ImageHalo() {
 
     private fun distance(x: Int, y: Int): Float {
         return sqrt(x.toFloat().pow(2) + y.toFloat().pow(2))
+    }
+
+    fun setWeight(w: Int) {
+        weight = 110 - w
+        weight = weight.coerceAtMost(width)
+        weight = weight.coerceAtMost(height)
     }
 }
