@@ -1,25 +1,11 @@
 package capstone.aiimageeditor.ui
 
-import android.app.ProgressDialog.show
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Matrix
-import android.graphics.RectF
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
@@ -29,12 +15,8 @@ import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
-import kotlinx.android.synthetic.main.fragment_liquify.*
 import java.lang.Exception
 import yuku.ambilwarna.AmbilWarnaDialog
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
 
 //밝기 내리는거, 대조 올리는거 잘됨
 //밝기 올리는거, 대조 내리는거 잘 안됨
@@ -62,7 +44,7 @@ class FragmentPerson : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 7) {
+        for(i in 0 .. 8) {
             filters.add(null)
             adjusts.add(50)
         }
@@ -92,6 +74,8 @@ class FragmentPerson : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(tabPosition==0){
                     imageLiquify.brushsizechange(progress/25)
+                }else if(tabPosition==8){
+
                 }else
                 {
                     adjusts[tabPosition]=progress
