@@ -1,5 +1,6 @@
 package capstone.aiimageeditor.ui
 
+import android.app.ProgressDialog.show
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
@@ -18,6 +19,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
@@ -26,6 +28,7 @@ import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
+import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -97,7 +100,30 @@ class FragmentPerson : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
         tabLayout.addOnTabSelectedListener(tabListener)
+
     }
+
+    fun openColorPicker() {
+        val colorPicker = AmbilWarnaDialog(
+            view?.context,
+            Color.RED,
+            object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    val mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
+                    val mutablePersonOriginal =
+                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
+                    imageManager.personOriginal =
+                        imageHalo.setHalo(mutablePersonOriginal, mutableMask, color)
+                    imageFG.setImageBitmap(imageManager.personOriginal)
+                }
+            })
+        colorPicker.show()
+    }
+
 
     public fun setImage() {
         imageFG.setImageBitmap(imageManager.personOriginal)
@@ -215,15 +241,14 @@ class FragmentPerson : Fragment() {
                     ), tab?.position
                 )
                 8 -> {
-                    val mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
-//                    val mutablePersonFiltered =
-//                        imageManager.personFiltered.copy(Bitmap.Config.ARGB_8888, true)
-                    val mutablePersonOriginal =
-                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
-//                    val mutableOriginal = imageManager.original.copy(Bitmap.Config.ARGB_8888, true)
-                    imageManager.personOriginal = imageHalo.setHalo(mutablePersonOriginal, mutableMask)
-                    imageFG.setImageBitmap(imageManager.personOriginal)
                     seekBar.visibility = View.GONE
+                    openColorPicker()
+//                    val mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
+//                    val mutablePersonOriginal =
+//                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
+//                    imageManager.personOriginal =
+//                        imageHalo.setHalo(mutablePersonOriginal, mutableMask)
+//                    imageFG.setImageBitmap(imageManager.personOriginal)
                 }
             }
             seekBar.progress = adjusts[tabPosition]

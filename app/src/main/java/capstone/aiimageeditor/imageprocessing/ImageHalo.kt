@@ -15,12 +15,16 @@ class ImageHalo() {
     private var height: Int = 0
     private var bool = false
 
-    fun setHalo(inputImage: Bitmap, inputMask: Bitmap): Bitmap {
+    fun setHalo(inputImage: Bitmap, inputMask: Bitmap, color: Int): Bitmap {
         colors = IntArray(inputMask.width * inputMask.height)
         inputMask.getPixels(colors, 0, inputMask.width, 0, 0, inputMask.width, inputMask.height)
         width = inputMask.width
         height = inputMask.height
         bool = false
+
+        val red = Color.red(color)
+        val green = Color.green(color)
+        val blue = Color.blue(color)
 
         for (i in colors.indices) {
             if (colors[i] == Color.WHITE) {
@@ -47,7 +51,7 @@ class ImageHalo() {
             if (yDirection == -1) {
                 for (w in 0 until widthMax) {
                     val newColor =
-                        Color.argb(255 * (widthMax - w) / widthMax, 0, 255, 0)
+                        Color.argb(255 * (widthMax - w) / widthMax, red, green, blue)
                     when (xDirection) {
                         0 -> {
                             if (x > w) {
@@ -72,7 +76,7 @@ class ImageHalo() {
             } else if (xDirection == -1) {
                 for (h in 0 until heightMax) {
                     val newColor =
-                        Color.argb(255 * (heightMax - h) / heightMax, 0, 255, 0)
+                        Color.argb(255 * (heightMax - h) / heightMax, red, green, blue)
                     when (yDirection) {
                         0 -> {
                             if (y > h) {
@@ -97,7 +101,8 @@ class ImageHalo() {
             } else {
                 for (w in 0 until widthMax) {
                     for (h in 0 until heightMax) {
-                        val newColor = Color.argb(255 * (alphaMax - h - w) / alphaMax, 0, 255, 0)
+                        val newColor =
+                            Color.argb(255 * (alphaMax - w - h) / alphaMax, red, green, blue)
                         when (xDirection) {
                             0 -> {
                                 if (x > w) {
