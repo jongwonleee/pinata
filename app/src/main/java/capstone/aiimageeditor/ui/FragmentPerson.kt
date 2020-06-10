@@ -1,13 +1,27 @@
 package capstone.aiimageeditor.ui
 
+import android.app.ProgressDialog.show
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.RectF
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.LiquifyView
@@ -17,6 +31,10 @@ import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import kotlinx.android.synthetic.main.fragment_liquify.*
 import java.lang.Exception
+import yuku.ambilwarna.AmbilWarnaDialog
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 //밝기 내리는거, 대조 올리는거 잘됨
 //밝기 올리는거, 대조 내리는거 잘 안됨
@@ -33,11 +51,13 @@ class FragmentPerson : Fragment() {
     private lateinit var gpuImage: GPUImage
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
+    private lateinit var imageHalo: ImageHalo
 
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
-    private var tabPosition=0
+    private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
+    var haloBoolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +66,7 @@ class FragmentPerson : Fragment() {
             filters.add(null)
             adjusts.add(50)
         }
-        adjusts[4]=0
+        adjusts[4] = 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,17 +79,14 @@ class FragmentPerson : Fragment() {
 
 
         imageManager = (activity?.application as ImageManager)
+        imageHalo = ImageHalo()
 
         gpuImage = GPUImage(context)
 
-
-
-
-
-        imageBG.visibility=View.VISIBLE
-        seekBar.max=100
-        seekBar.progress=50
-        seekBar.visibility=View.GONE
+        imageBG.visibility = View.VISIBLE
+        seekBar.max = 100
+        seekBar.progress = 50
+        seekBar.visibility = View.GONE
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -89,6 +106,28 @@ class FragmentPerson : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
         tabLayout.addOnTabSelectedListener(tabListener)
+
+    }
+
+    fun openColorPicker() {
+        val colorPicker = AmbilWarnaDialog(
+            view?.context,
+            Color.RED,
+            object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                    return
+                }
+
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    val mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
+                    val mutablePersonOriginal =
+                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
+                    imageManager.personOriginal =
+                        imageHalo.setHalo(mutablePersonOriginal, mutableMask, color)
+                    imageFG.setImageBitmap(imageManager.personOriginal)
+                }
+            })
+        colorPicker.show()
     }
 
 
@@ -109,11 +148,11 @@ class FragmentPerson : Fragment() {
         }catch (e:Exception){
 
         }
-
     }
 
-    public fun saveImage(){
-        imageManager.personFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.personOriginal,filters)
+    public fun saveImage() {
+        imageManager.personFiltered =
+            gpuImage.getBitmapWithFiltersApplied(imageManager.personOriginal, filters)
     }
 
     override fun onCreateView(
@@ -125,16 +164,14 @@ class FragmentPerson : Fragment() {
     }
 
 
-
     private fun addFilter(f: GPUImageFilter) {
         val index = tabPosition
         var filter = f
-        if(filters[index]!=null){
+        if (filters[index] != null) {
             filter = filters[index]!!
             seekBar.progress = adjusts[index];
-        }else
-        {
-            filters[index]=f
+        } else {
+            filters[index] = f
         }
 
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
@@ -144,23 +181,30 @@ class FragmentPerson : Fragment() {
             seekBar.visibility = View.GONE
         }
     }
-/*
-brightness 45~55
-contrast 40~60
-gamma 40~60
-sharpness 40~60
-saturation 0~100
-exposure 45~55
-highlight 0~50
-whitebalance 30~70
-vinette 50~70
-gausian blur -> 흐리
-Toon, SmoothToon -> 만화효과
-haze 40~60
-vibrance 25~75
- */
-    val tabListener = object : TabLayout.OnTabSelectedListener{
+
+    /*
+    brightness 45~55
+    contrast 40~60
+    gamma 40~60
+    sharpness 40~60
+    saturation 0~100
+    exposure 45~55
+    highlight 0~50
+    whitebalance 30~70
+    vinette 50~70
+    gausian blur -> 흐리
+    Toon, SmoothToon -> 만화효과
+    haze 40~60
+    vibrance 25~75
+     */
+    val tabListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {
+            when (tab?.position) {
+                8 -> {
+                    seekBar.visibility = View.GONE
+                    openColorPicker()
+                }
+            }
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -189,10 +233,14 @@ vibrance 25~75
                 5-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.WHITE_BALANCE))
                 6-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HAZE))
                 7-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIBRANCE))
+                8 -> {
+                    seekBar.visibility = View.GONE
+                    openColorPicker()
+                }
             }
             seekBar.progress=adjusts[tabPosition]
+
         }
 
     }
-
 }
