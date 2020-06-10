@@ -249,7 +249,6 @@ class FragmentPerson : Fragment() {
                     ), tab?.position
                 )
                 8 -> {
-                    seekBar.visibility = View.GONE
                     openColorPicker()
                 }
             }
