@@ -109,7 +109,7 @@ class FragmentPerson : Fragment() {
             Color.RED,
             object : AmbilWarnaDialog.OnAmbilWarnaListener {
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
-                    TODO("Not yet implemented")
+                    return
                 }
 
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
@@ -180,9 +180,17 @@ class FragmentPerson : Fragment() {
      */
     val tabListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {
+            when (tab?.position) {
+                8 -> {
+                    seekBar.visibility = View.GONE
+                    openColorPicker()
+                }
+            }
         }
 
-        override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+        }
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             imageFG.setImageBitmap(
@@ -243,12 +251,6 @@ class FragmentPerson : Fragment() {
                 8 -> {
                     seekBar.visibility = View.GONE
                     openColorPicker()
-//                    val mutableMask = imageManager.mask.copy(Bitmap.Config.ARGB_8888, true)
-//                    val mutablePersonOriginal =
-//                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
-//                    imageManager.personOriginal =
-//                        imageHalo.setHalo(mutablePersonOriginal, mutableMask)
-//                    imageFG.setImageBitmap(imageManager.personOriginal)
                 }
             }
             seekBar.progress = adjusts[tabPosition]
