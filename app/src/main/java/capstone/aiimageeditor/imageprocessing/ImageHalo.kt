@@ -18,9 +18,20 @@ class ImageHalo {
     private var coordQueue: Queue<Triple<Int, Int, Pair<Int, Int>>> = LinkedList()
     private var width: Int = 0
     private var height: Int = 0
+    var color:Int=0
+    var doHalo=false
 
-    fun setHalo(inputImage: Bitmap, color: Int): Bitmap {
+    constructor(inputImage: Bitmap,weight:Int, color:Int){
+        width=inputImage.width
+        height=inputImage.height
+        this.weight = 110 - weight
+        this.weight = this.weight.coerceAtMost(width)
+        this.weight = this.weight.coerceAtMost(height)
+        this.color=color
+    }
 
+
+    fun run(inputImage:Bitmap):Bitmap{
         colors = IntArray(inputImage.width * inputImage.height)
         inputImage.getPixels(colors, 0, inputImage.width, 0, 0, inputImage.width, inputImage.height)
         width = inputImage.width

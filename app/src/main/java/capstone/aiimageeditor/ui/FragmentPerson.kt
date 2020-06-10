@@ -1,25 +1,12 @@
 package capstone.aiimageeditor.ui
 
-import android.app.ProgressDialog.show
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Intent
+
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Matrix
-import android.graphics.RectF
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
@@ -30,10 +17,6 @@ import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import yuku.ambilwarna.AmbilWarnaDialog
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
-import kotlinx.android.synthetic.main.fragment_liquify.*
 
 //밝기 내리는거, 대조 올리는거 잘됨
 //밝기 올리는거, 대조 내리는거 잘 안됨
@@ -51,9 +34,7 @@ class FragmentPerson : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var imageHalo: ImageHalo
-    private lateinit var mutablePersonOriginal: Bitmap
 
-    private var haloColor: Int = 0
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
     private var tabPosition = 0
@@ -79,7 +60,6 @@ class FragmentPerson : Fragment() {
 
 
         imageManager = (activity?.application as ImageManager)
-        imageHalo = ImageHalo()
 
         gpuImage = GPUImage(context)
 
@@ -92,17 +72,12 @@ class FragmentPerson : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (tabPosition == 0) {
                     imageLiquify.brushsizechange(progress / 20)
-                } else if (tabPosition == 8) {
-                } else {
+                } else if (tabPosition != 8) {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    //gpuImage.requestRender()
                     imageFG.setImageBitmap(
-                        gpuImage.getBitmapWithFiltersApplied(
-                            imageManager.personOriginal,
-                            filters
-                        )
+                        applyFilters()
                     )
                 }
             }
@@ -113,9 +88,7 @@ class FragmentPerson : Fragment() {
                     if (seekBar != null) {
                         imageHalo.setWeight(seekBar.progress)
                     }
-                    imageManager.personOriginal =
-                        imageHalo.setHalo(mutablePersonOriginal, haloColor)
-                    imageFG.setImageBitmap(imageManager.personOriginal)
+                    imageFG.setImageBitmap(applyFilters())
                 }
             }
         })
@@ -134,12 +107,8 @@ class FragmentPerson : Fragment() {
                 }
 
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
-                    haloColor = color
-                    mutablePersonOriginal =
-                        imageManager.personOriginal.copy(Bitmap.Config.ARGB_8888, true)
-                    imageManager.personOriginal =
-                        imageHalo.setHalo(mutablePersonOriginal, haloColor)
-                    imageFG.setImageBitmap(imageManager.personOriginal)
+                    imageHalo.color=color
+                    imageFG.setImageBitmap(applyFilters())
                 }
             })
         colorPicker.show()
@@ -156,14 +125,14 @@ class FragmentPerson : Fragment() {
             imageManager.personOriginal,
             imageManager.backgroundOriginal
         )
+        imageHalo = ImageHalo(imageManager.personOriginal,0, Color.WHITE)
         imageLiquify.visibility = View.VISIBLE
         seekBar.progress = 0
         seekBar.visibility = View.VISIBLE
     }
 
     public fun saveImage() {
-        imageManager.personFiltered =
-            gpuImage.getBitmapWithFiltersApplied(imageManager.personOriginal, filters)
+        imageManager.personFiltered = applyFilters()
     }
 
     override fun onCreateView(
@@ -231,10 +200,7 @@ class FragmentPerson : Fragment() {
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
             imageFG.setImageBitmap(
-                gpuImage.getBitmapWithFiltersApplied(
-                    imageManager.personOriginal,
-                    filters
-                )
+                applyFilters()
             )
             seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
@@ -287,6 +253,7 @@ class FragmentPerson : Fragment() {
                     )
                 )
                 8 -> {
+                    imageHalo.doHalo=true
                     openColorPicker()
                 }
             }
@@ -295,4 +262,12 @@ class FragmentPerson : Fragment() {
         }
 
     }
+
+    fun applyFilters():Bitmap{
+        var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
+        gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
+        if(imageHalo.doHalo) bitmap = imageHalo.run(bitmap)
+        return bitmap
+    }
+
 }
