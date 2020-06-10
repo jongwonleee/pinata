@@ -62,7 +62,7 @@ abstract class ImageUtils {
         }
 
         fun decodeBitmap(file: File): Bitmap {
-            Log.e("[decodeBitmap]",file.absolutePath)
+            Log.e("[decodeBitmap]", file.absolutePath)
             val exif = ExifInterface(file.absolutePath)
             val transformation =
                 decodeExifOrientation(
@@ -79,7 +79,11 @@ abstract class ImageUtils {
             )
         }
 
-        fun scaleBitmapAndKeepRatio(targetBmp: Bitmap, reqHeightInPixels: Int, reqWidthInPixels: Int): Bitmap {
+        fun scaleBitmapAndKeepRatio(
+            targetBmp: Bitmap,
+            reqHeightInPixels: Int,
+            reqWidthInPixels: Int
+        ): Bitmap {
             if (targetBmp.height == reqHeightInPixels && targetBmp.width == reqWidthInPixels) {
                 return targetBmp
             }

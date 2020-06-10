@@ -110,11 +110,9 @@ class ImageSegmentationModelExecutor(
                 )
 
             val originSizeMaskOnly =
-                Bitmap.createBitmap(data.width, data.height, Bitmap.Config.ARGB_8888)
+                Bitmap.createScaledBitmap(scaledMaskOnly, data.width, data.height, true)
 
             var mutableOriginSizeMaskOnly = originSizeMaskOnly.copy(Bitmap.Config.ARGB_8888, true)
-            var canvasMask = Canvas(mutableOriginSizeMaskOnly)
-            canvasMask.drawBitmap(scaledMaskOnly, destRect, sourceRect, null)
 
             return ModelExecutionResult(
                 maskImageApplied,
