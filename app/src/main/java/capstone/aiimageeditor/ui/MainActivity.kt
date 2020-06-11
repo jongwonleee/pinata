@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             when (tab!!.position) {
                 0 -> {
+                    imageManager.InpaintTask().cancel(true)
                     fragmentMask.setImage(this@MainActivity.applicationContext)
                 }
                 1 -> {
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                     imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
                         override fun onFinishInpaint() {
                             fragmentBackground.setImage()
-                            fragmentPerson.setImage()
+                            fragmentPerson.refreshBackground()
                         }
                     })
                 }
@@ -161,6 +162,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        imageManager.InpaintTask().cancel(true)
         finish()
         super.onBackPressed()
     }

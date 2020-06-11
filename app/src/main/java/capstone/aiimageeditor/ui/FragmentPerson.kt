@@ -79,9 +79,7 @@ class FragmentPerson : Fragment() {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageFG.setImageBitmap(
-                        applyFilters()
-                    )
+                    imageFG.setImageBitmap(applyFilters())
                 }
             }
 
@@ -115,6 +113,10 @@ class FragmentPerson : Fragment() {
                 }
             })
         colorPicker.show()
+    }
+
+    fun refreshBackground(){
+        imageBG.setImageBitmap(imageManager.backgroundFiltered)
     }
 
     public fun setImage() {
@@ -270,7 +272,7 @@ class FragmentPerson : Fragment() {
 
     fun applyFilters():Bitmap{
         var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
-        gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
+        bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
         if(imageHalo.doHalo) bitmap = imageHalo.run(bitmap)
         return bitmap
     }
