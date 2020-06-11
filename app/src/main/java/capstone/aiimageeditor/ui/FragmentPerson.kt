@@ -44,7 +44,7 @@ class FragmentPerson : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 8) {
+        for(i in 0 .. 10) {
 
             filters.add(null)
             adjusts.add(50)
@@ -262,6 +262,14 @@ class FragmentPerson : Fragment() {
                 8 -> {
                     imageHalo.doHalo=true
                     openColorPicker()
+                }
+                9->{
+                    addFilter(
+                        GPUImageFilterTools.createFilterForType(
+                            context!!,
+                            GPUImageFilterTools.FilterType.TOON
+                        )
+                    )
                 }
             }
             if (tabPosition != 8)
