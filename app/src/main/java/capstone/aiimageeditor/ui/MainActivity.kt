@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
                 3 -> {
                     val intent = Intent(this@MainActivity, SaveActivity::class.java)
                     startActivity(intent)
-
                 }
                 4-> { //for liquify
                 }
