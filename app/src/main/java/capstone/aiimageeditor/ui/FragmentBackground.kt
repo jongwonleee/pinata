@@ -87,7 +87,7 @@ class FragmentBackground : Fragment() {
     fun setImage()  {
         try{
             gpuImage.setImage(imageManager.backgroundOriginal)
-            //imageFG.setImageBitmap(imageManager.personFiltered)
+            imageFG.setImageBitmap(imageManager.personFiltered)
             imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         }catch (e:Exception){
             e.printStackTrace()

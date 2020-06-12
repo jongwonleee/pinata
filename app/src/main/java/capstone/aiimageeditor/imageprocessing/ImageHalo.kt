@@ -310,7 +310,7 @@ class ImageHalo {
     private fun checkX(x: Int, i: Int): Int {
         when (x) {
             0 -> {
-                return if (colors[i + 1] == Color.TRANSPARENT)
+                return if (i<colors.lastIndex-1 && colors[i + 1] == Color.TRANSPARENT)
                     1
                 else
                     -1
@@ -326,7 +326,7 @@ class ImageHalo {
                     2
                 else if (colors[i - 1]  == Color.TRANSPARENT)
                     0
-                else if (colors[i + 1]  == Color.TRANSPARENT)
+                else if (i<colors.lastIndex-1 && colors[i + 1]  == Color.TRANSPARENT)
                     1
                 else
                     -1
@@ -337,7 +337,7 @@ class ImageHalo {
     private fun checkY(y: Int, i: Int): Int {
         when (y) {
             0 -> {
-                return if (colors[i + width]  == Color.TRANSPARENT)
+                return if (i<colors.lastIndex-1 && colors[i + width]  == Color.TRANSPARENT)
                     1
                 else
                     -1
@@ -353,7 +353,7 @@ class ImageHalo {
                     2
                 else if (colors[i - width]  == Color.TRANSPARENT)
                     0
-                else if (colors[i + width]  == Color.TRANSPARENT)
+                else if (i<colors.lastIndex-1 && colors[i + width]  == Color.TRANSPARENT)
                     1
                 else
                     -1

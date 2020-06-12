@@ -44,7 +44,7 @@ class FragmentPerson : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 8) {
+        for(i in 0 .. 10) {
 
             filters.add(null)
             adjusts.add(50)
@@ -79,9 +79,7 @@ class FragmentPerson : Fragment() {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageFG.setImageBitmap(
-                        applyFilters()
-                    )
+                    imageFG.setImageBitmap(applyFilters())
                 }
             }
 
@@ -115,6 +113,10 @@ class FragmentPerson : Fragment() {
                 }
             })
         colorPicker.show()
+    }
+
+    fun refreshBackground(){
+        imageBG.setImageBitmap(imageManager.backgroundFiltered)
     }
 
     public fun setImage() {
@@ -261,6 +263,14 @@ class FragmentPerson : Fragment() {
                     imageHalo.doHalo=true
                     openColorPicker()
                 }
+                9->{
+                    addFilter(
+                        GPUImageFilterTools.createFilterForType(
+                            context!!,
+                            GPUImageFilterTools.FilterType.TOON
+                        )
+                    )
+                }
             }
             if (tabPosition != 8)
                 seekBar.progress = adjusts[tabPosition]
@@ -270,7 +280,7 @@ class FragmentPerson : Fragment() {
 
     fun applyFilters():Bitmap{
         var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
-        gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
+        bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
         if(imageHalo.doHalo) bitmap = imageHalo.run(bitmap)
         return bitmap
     }
