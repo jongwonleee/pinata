@@ -30,6 +30,7 @@ class SettingActivity : Activity() {
         val intent =Intent(this, RegulationActivity::class.java)
         startActivity(intent)
     }
+
     fun OnFeedbackClick(v:View){
         val email = Intent(Intent.ACTION_SEND);
         email.putExtra(Intent.EXTRA_EMAIL, arrayOf("jong12ems@google.com"))

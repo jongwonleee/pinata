@@ -273,10 +273,8 @@ class FragmentPerson : Fragment(), View.OnClickListener {
     }
 
     private fun setImage(toImageView: Boolean, bitmap:Bitmap) {
-        if (toImageView) {
-            if (toImageView) imageFG.setImageBitmap(bitmap)
-            else imageManager.personFiltered = bitmap
-        }
+        if (toImageView) imageFG.setImageBitmap(bitmap)
+        else imageManager.personFiltered = bitmap
     }
 
     override fun onClick(p0: View?) {
