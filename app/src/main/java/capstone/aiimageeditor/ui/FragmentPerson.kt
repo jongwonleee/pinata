@@ -58,6 +58,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             adjusts.add(50)
         }
         adjusts[4] = 0
+        adjusts[9] = 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

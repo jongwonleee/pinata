@@ -41,9 +41,9 @@ class StartActivity : AppCompatActivity() {
     private val inferenceThread = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
 
-    private lateinit var imgList:RecyclerView
+    private lateinit var imgList: RecyclerView
     var images = ArrayList<String>()
-    private lateinit var adapter:AdapterImageList
+    private lateinit var adapter: AdapterImageList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
@@ -53,22 +53,22 @@ class StartActivity : AppCompatActivity() {
 
         imgList = findViewById(R.id.recyclerView)
 
-        if(getSavedStringSets()!=null) images = getSavedStringSets()!!
+        if (getSavedStringSets() != null) images = getSavedStringSets()!!
         adapter = AdapterImageList(this, images)
         imgList.adapter = adapter
-        adapter.setOnItemClickListener(object: AdapterImageList.OnItemClickListener{
+        adapter.setOnItemClickListener(object : AdapterImageList.OnItemClickListener {
             override fun onClick(position: Int) {
-                if(position==0){
+                if (position == 0) {
                     val intent = Intent(Intent.ACTION_PICK)
                     intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
-                    startActivityForResult(intent,
+                    startActivityForResult(
+                        intent,
                         PICK_FROM_ALBUM
                     )
-                }else
-                {
-                    val str = images[position-1]
+                } else {
+                    val str = images[position - 1]
                     images.remove(str)
-                    images.add(0,str)
+                    images.add(0, str)
                     gotoNextActivity(Uri.parse(str))
                 }
 
@@ -92,24 +92,30 @@ class StartActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode== PICK_FROM_ALBUM && data!=null){
+        if (requestCode == PICK_FROM_ALBUM && data != null) {
+
             val photoUri = data.data as Uri
-            images.add(0,photoUri.toString())
-            if(images.size>10) images.removeAt(images.lastIndex)
+            for (i in images.indices) {
+                if (images[i] == photoUri.toString()) {
+                    images.removeAt(i)
+                    break
+                }
+            }
+            images.add(0, photoUri.toString())
+            if (images.size > 10) images.removeAt(images.lastIndex)
             gotoNextActivity(photoUri)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun gotoNextActivity(uri:Uri){
-        if((application as ImageManager).loadOriginal(uri)){
+    private fun gotoNextActivity(uri: Uri) {
+        if ((application as ImageManager).loadOriginal(uri)) {
             saveStringSet(images)
             imageSegmentationModel = ImageSegmentationModelExecutor(this, useGPU)
             viewModel.onApplyModel(imageSegmentationModel, inferenceThread, (application as ImageManager).original)
-        }else
-        {
+        } else {
             images.remove(uri.toString())
-            Toast.makeText(this, "사진을 불러올 수 없습니다",Toast.LENGTH_LONG)
+            Toast.makeText(this, "사진을 불러올 수 없습니다", Toast.LENGTH_LONG)
             adapter.notifyDataSetChanged()
         }
 
@@ -120,14 +126,14 @@ class StartActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun tedPermission(){
-        val permissionListener = object: PermissionListener {
+    private fun tedPermission() {
+        val permissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
 
             }
 
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
-                Toast.makeText(this@StartActivity, "서비스 이용을 위해 권한을 허용해주세요.",Toast.LENGTH_LONG)
+                Toast.makeText(this@StartActivity, "서비스 이용을 위해 권한을 허용해주세요.", Toast.LENGTH_LONG)
 
             }
 
@@ -137,7 +143,11 @@ class StartActivity : AppCompatActivity() {
             .setPermissionListener(permissionListener)
             .setRationaleMessage(R.string.permission_desc)
             .setDeniedMessage(R.string.permission_rej)
-            .setPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE,android.Manifest.permission.INTERNET)
+            .setPermissions(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.INTERNET
+            )
             .check()
 
 
@@ -145,14 +155,15 @@ class StartActivity : AppCompatActivity() {
 
     companion object {
         // Used to load the 'native-lib' library on application startup.
-        val PICK_FROM_ALBUM=1
+        val PICK_FROM_ALBUM = 1
         private val PREF_STRING_SET_KEY = "URI"
+
         init {
             System.loadLibrary("native-lib")
         }
     }
 
-    fun saveStringSet( mList: ArrayList<String>) {
+    fun saveStringSet(mList: ArrayList<String>) {
         val sp: SharedPreferences = getSharedPreferences("uri", Context.MODE_PRIVATE)//PreferenceManager.getDefaultSharedPreferences(context)
         val editor: SharedPreferences.Editor = sp.edit()
         editor.putString(PREF_STRING_SET_KEY, Gson().toJson(mList))
@@ -161,8 +172,10 @@ class StartActivity : AppCompatActivity() {
 
     fun getSavedStringSets(): ArrayList<String>? {
         val sp = getSharedPreferences("uri", Context.MODE_PRIVATE)
-        return Gson().fromJson(sp.getString(PREF_STRING_SET_KEY, null),
-            TypeToken.getParameterized(ArrayList::class.java, String::class.java).type)
+        return Gson().fromJson(
+            sp.getString(PREF_STRING_SET_KEY, null),
+            TypeToken.getParameterized(ArrayList::class.java, String::class.java).type
+        )
     }
 
 }
