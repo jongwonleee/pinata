@@ -62,7 +62,6 @@ class FragmentBackground : Fragment() {
 
         imageBG.visibility = View.VISIBLE
         seekBar.max = 100
-        seekBar.progress = 50
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -81,6 +80,7 @@ class FragmentBackground : Fragment() {
         tabLayout.addOnTabSelectedListener(tabListener)
         setImage()
         addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
+        seekBar.progress = 50
     }
     fun setImageBitmap(iv:ImageView,bitmap: Bitmap){
         Glide.with(this).load(bitmap).into(iv)
