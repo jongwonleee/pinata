@@ -117,7 +117,6 @@ class FragmentPerson : Fragment(), View.OnClickListener {
 
     fun refreshBackground(){
         setImageBitmap(imageBG,imageManager.backgroundFiltered)
-
     }
 
     public fun setImage() {
@@ -133,6 +132,11 @@ class FragmentPerson : Fragment(), View.OnClickListener {
     }
 
     public fun saveImage() {
+        if(tabPosition==0){
+            imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+        }else if(tabPosition==1){
+            imageManager.personOriginal = imageTall.getTalledImage(imageManager.original.width, imageManager.original.height)
+        }
         applyFilters(false)
     }
 
@@ -145,6 +149,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
     }
 
     private fun addFilter(f: GPUImageFilter) {
+        imageFG.visibility=View.VISIBLE
         val index = tabPosition
         var filter = f
         if (filters[index] != null) {
@@ -199,6 +204,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                         imageManager.original.width,
                         imageManager.original.height
                     )
+                    Log.i("!!!","${imageManager.personOriginal.height}")
 
                 }
                 8 -> {
@@ -212,6 +218,9 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             buttonColorChange.visibility = View.GONE
             seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
+            imageLiquify.visibility = View.GONE
+            imageTall.visibility=View.GONE
+            imageFG.visibility=View.GONE
             when (tab?.position) {
                 0 -> {
                     imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
@@ -223,8 +232,6 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                     imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     imageTall.visibility = View.VISIBLE
                     seekBar.progress = 0
-
-
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
                 3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
@@ -234,6 +241,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 7 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HAZE))
                 8 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
                 9 -> {
+                    imageFG.visibility=View.VISIBLE
                     imageHalo.doHalo = true
                     buttonColorChange.visibility = View.VISIBLE
                     imageHalo.setColor(Color.WHITE)

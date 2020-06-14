@@ -50,6 +50,8 @@ class TallView  @JvmOverloads constructor(
     private var legBlocksize = 0f
 
 
+
+
     fun setup(column: Int, row: Int, img: Bitmap, backgroundimg:Bitmap) {
         meshWidth = column
         meshHeight = row
@@ -60,25 +62,12 @@ class TallView  @JvmOverloads constructor(
         selectedIndex = MutableList<Int>(300,{_ -> 0})
         paint.color = Color.BLACK
 
-//        coordinates = generateCoordinate(
-//        meshWidth,
-//        meshHeight,
-//        width,
-//        height,
-//        paddingStart,
-//        paddingEnd,
-//        paddingTop,
-//        paddingBottom
-//        )
+        if(width>0)initBitmap(width,height)
         generateCoordinates()
         invalidate() //ondraw호출
     }
 
-
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-
+    private fun initBitmap(w:Int,h:Int){
         if (_width.toFloat() / _height.toFloat() > w.toFloat() / h.toFloat()) {
             _height = _height * w / _width
             _width = w
@@ -93,7 +82,14 @@ class TallView  @JvmOverloads constructor(
         bgimg = Bitmap.createScaledBitmap(bgimg,_width,_height,true)
         generateCoordinates()
 
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        initBitmap(w,h)
         initialize(207f, 320f, 481f) //initialize after generateCoordinates
+
     }
 
 
@@ -132,11 +128,6 @@ class TallView  @JvmOverloads constructor(
             0,
             null
         )
-
-        //drawCoordinates(drawCanvas)
-        //drawLines(drawCanvas)
-
-        //canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -344,11 +335,6 @@ class TallView  @JvmOverloads constructor(
         LinePaint.setColor(Color.RED)
 
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
-
-
-
-
-
         drawCanvas.drawBitmapMesh(
             bitmap,
             meshWidth,
