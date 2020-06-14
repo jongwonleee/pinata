@@ -60,9 +60,6 @@ class FragmentBackground : Fragment() {
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
 
-
-
-
         imageBG.visibility = View.VISIBLE
         seekBar.max = 100
         seekBar.progress = 50
@@ -83,7 +80,6 @@ class FragmentBackground : Fragment() {
         })
         tabLayout.addOnTabSelectedListener(tabListener)
         setImage()
-        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
     }
     fun setImageBitmap(iv:ImageView,bitmap: Bitmap){

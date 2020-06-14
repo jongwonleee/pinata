@@ -152,7 +152,6 @@ class LiquifyView  @JvmOverloads constructor(
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val gap = height/2 - _height/2
-        Log.i("!!!!","$gap $height $_height")
         when (event.action) {
             ACTION_DOWN -> {
                 xstart = event.x
