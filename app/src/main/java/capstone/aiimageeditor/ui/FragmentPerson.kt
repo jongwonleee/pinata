@@ -48,7 +48,7 @@ class FragmentPerson : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 10) {
+        for (i in 0..10) {
 
             filters.add(null)
             adjusts.add(50)
@@ -103,7 +103,7 @@ class FragmentPerson : Fragment() {
     fun openColorPicker() {
         val colorPicker = AmbilWarnaDialog(
             view?.context,
-            Color.RED,
+            Color.GREEN,
             true,
             object : AmbilWarnaDialog.OnAmbilWarnaListener {
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
@@ -111,19 +111,14 @@ class FragmentPerson : Fragment() {
                 }
 
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
-<<<<<<< HEAD
                     imageHalo.setColor(color)
-                    imageFG.setImageBitmap(applyFilters())
-=======
-                    imageHalo.color=color
                     applyFilters(true)
->>>>>>> fd6206af0306711b571bd5455637e51785b82aa8
                 }
             })
         colorPicker.show()
     }
 
-    fun refreshBackground(){
+    fun refreshBackground() {
         imageBG.setImageBitmap(imageManager.backgroundFiltered)
     }
 
@@ -132,12 +127,7 @@ class FragmentPerson : Fragment() {
         imageFG.setImageBitmap(imageManager.personOriginal)
         imageBG.setImageBitmap(imageManager.backgroundFiltered)
         gpuImage.setImage(imageManager.personOriginal)
-        imageLiquify.setup(
-            30,
-            50,
-            imageManager.personOriginal,
-            imageManager.backgroundOriginal
-        )
+        imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageHalo = ImageHalo()
         imageLiquify.visibility = View.VISIBLE
         seekBar.progress = 0
@@ -146,7 +136,6 @@ class FragmentPerson : Fragment() {
 
     public fun saveImage() {
         applyFilters(false)
-
     }
 
     override fun onCreateView(
@@ -203,10 +192,7 @@ class FragmentPerson : Fragment() {
             when (tab?.position) {
                 0 -> {
                     imageLiquify.visibility = View.GONE
-                    imageManager.personOriginal = imageLiquify.getLiquifiedImage(
-                        imageManager.original.width,
-                        imageManager.original.height
-                    )
+                    imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
                 }
                 8 -> {
                 }
@@ -267,10 +253,10 @@ class FragmentPerson : Fragment() {
                     )
                 )
                 8 -> {
-                    imageHalo.doHalo=true
+                    imageHalo.doHalo = true
                     openColorPicker()
                 }
-                9->{
+                9 -> {
                     addFilter(
                         GPUImageFilterTools.createFilterForType(
                             context!!,
@@ -285,37 +271,21 @@ class FragmentPerson : Fragment() {
 
     }
 
-    fun applyFilters(toImageView:Boolean){
+    fun applyFilters(toImageView: Boolean) {
         var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
         bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
-        val haloTask = HaloTask()
-        if(imageHalo.doHalo)haloTask.execute(bitmap)
-        else{
+        if (imageHalo.doHalo) setImage(true, imageHalo.run(bitmap))
+        else {
             setImage(toImageView, bitmap)
         }
-
     }
 
-    private fun setImage(toImageView: Boolean, bitmap:Bitmap){
-        if(toImageView){
-            if(toImageView)  imageFG.setImageBitmap(bitmap)
-            else imageManager.personFiltered=bitmap
+    private fun setImage(toImageView: Boolean, bitmap: Bitmap) {
+        if (toImageView) {
+            if (toImageView)
+                imageFG.setImageBitmap(bitmap)
+            imageManager.personFiltered = bitmap
         }
-    }
-
-    inner class HaloTask: AsyncTask<Bitmap, Int, Bitmap>() {
-        var toImageView=true
-
-        override fun doInBackground(vararg p0: Bitmap): Bitmap {
-            return imageHalo.run(p0[0])
-        }
-
-        override fun onPostExecute(result: Bitmap?) {
-            setImage(toImageView, result!!)
-            super.onPostExecute(result)
-        }
-
-
     }
 
 }

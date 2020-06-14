@@ -14,9 +14,9 @@ class ImageHalo {
     private var weight: Int = 110
 
     private var coordQueue: Queue<Triple<Int, Int, Pair<Int, Int>>> = LinkedList()
-    private var width: Int = 0
-    private var height: Int = 0
-    private var totalSize: Int = 0
+    private var width: Int = 1
+    private var height: Int = 1
+    private var totalSize: Int = 1
     private var color: Int = 0
     var doHalo = false
 
