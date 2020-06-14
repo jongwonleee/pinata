@@ -74,6 +74,8 @@ class TallView  @JvmOverloads constructor(
         invalidate() //ondraw호출
     }
 
+
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -228,6 +230,7 @@ class TallView  @JvmOverloads constructor(
         c = nearestCoordinate(C.toInt())
         orig = coordinates[2].second - coordinates[0].second //원래 한칸의 길이
     }
+
     fun tall(adj : Float) {
         adjust = adj
         leg = 1.00f + (adjust - 1.00f)*1.5f
@@ -330,7 +333,33 @@ class TallView  @JvmOverloads constructor(
         return coordinates
     }
 
-    public fun getLiquifiedImage(width: Int,height: Int):Bitmap{
+    public fun getTalledImage(width: Int,height: Int):Bitmap{
+        val drawPaint = Paint()
+        drawPaint.setColor(Color.BLACK)
+        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+
+        val LinePaint = Paint()
+        LinePaint.setStrokeWidth(6f)
+        LinePaint.setStyle(Paint.Style.FILL)
+        LinePaint.setColor(Color.RED)
+
+        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
+
+
+
+
+
+        drawCanvas.drawBitmapMesh(
+            bitmap,
+            meshWidth,
+            meshHeight,     //2차원좌표를 1차원배열로 표현
+            coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
+            0,
+            null,
+            0,
+            null
+        )
+
         return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
     }
 

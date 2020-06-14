@@ -16,6 +16,7 @@ import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.LiquifyView
 import capstone.aiimageeditor.customviews.TallView //add tallview
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
@@ -57,6 +58,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             adjusts.add(50)
         }
         adjusts[4] = 0
+        adjusts[9] = 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -113,14 +115,14 @@ class FragmentPerson : Fragment(), View.OnClickListener {
 
     }
 
-    fun refreshBackground() {
-        imageBG.setImageBitmap(imageManager.backgroundFiltered)
+    fun refreshBackground(){
+        setImageBitmap(imageBG,imageManager.backgroundFiltered)
+
     }
 
     public fun setImage() {
-
-        imageFG.setImageBitmap(imageManager.personOriginal)
-        imageBG.setImageBitmap(imageManager.backgroundFiltered)
+        setImageBitmap(imageFG,imageManager.personOriginal)
+        setImageBitmap(imageBG,imageManager.backgroundFiltered)
         gpuImage.setImage(imageManager.personOriginal)
         imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
@@ -181,6 +183,8 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             }
         }
 
+
+
         override fun onTabUnselected(tab: TabLayout.Tab?) {
             when (tab?.position) {
                 0 -> {
@@ -190,7 +194,12 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 1 -> { //????
                     imageTall.removeLines()
                     imageTall.visibility = View.GONE
-                    imageManager.personOriginal = imageTall.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+
+                    imageManager.personOriginal = imageTall.getTalledImage(
+                        imageManager.original.width,
+                        imageManager.original.height
+                    )
+
                 }
                 8 -> {
                 }
@@ -214,7 +223,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                     imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     imageTall.visibility = View.VISIBLE
                     seekBar.progress = 0
-                    seekBar.visibility = View.VISIBLE
+
 
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
@@ -248,13 +257,17 @@ class FragmentPerson : Fragment(), View.OnClickListener {
         else {
             setImage(toImageView, bitmap)
         }
+
     }
 
-    private fun setImage(toImageView: Boolean, bitmap: Bitmap) {
+    fun setImageBitmap(iv:ImageView,bitmap:Bitmap){
+        Glide.with(this).load(bitmap).into(iv)
+    }
+
+    private fun setImage(toImageView: Boolean, bitmap:Bitmap) {
         if (toImageView) {
-            if (toImageView)
-                imageFG.setImageBitmap(bitmap)
-            imageManager.personFiltered = bitmap
+            if (toImageView) imageFG.setImageBitmap(bitmap)
+            else imageManager.personFiltered = bitmap
         }
     }
 
