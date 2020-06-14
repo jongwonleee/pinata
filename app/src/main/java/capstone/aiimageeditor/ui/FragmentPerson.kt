@@ -15,6 +15,7 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.LiquifyView
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
@@ -29,7 +30,7 @@ import yuku.ambilwarna.AmbilWarnaDialog
 //채도는 컨트롤바 만져도 안 바뀜
 //틴트하면 배경이 까맣게 바뀌고 틴트를 최대치로 하면 인물도 까맣게 됨
 
-class FragmentPerson : Fragment() {
+class FragmentPerson : Fragment(),View.OnClickListener {
 
     private lateinit var seekBar: SeekBar
     private lateinit var imageBG: ImageView
@@ -39,7 +40,7 @@ class FragmentPerson : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var imageHalo: ImageHalo
-
+    private lateinit var buttonColorChange: FloatingActionButton
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
     private var tabPosition = 0
@@ -63,11 +64,14 @@ class FragmentPerson : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageLiquify = view.findViewById(R.id.view_liquifyview)
+        buttonColorChange = view.findViewById(R.id.buttonColorChange)
+        buttonColorChange.setOnClickListener(this)
 
         imageManager = (activity?.application as ImageManager)
 
         gpuImage = GPUImage(context)
 
+        buttonColorChange.visibility=View.GONE
         imageBG.visibility = View.VISIBLE
         seekBar.max = 100
         seekBar.progress = 50
@@ -100,23 +104,6 @@ class FragmentPerson : Fragment() {
 
     }
 
-    fun openColorPicker() {
-        val colorPicker = AmbilWarnaDialog(
-            view?.context,
-            Color.RED,
-            true,
-            object : AmbilWarnaDialog.OnAmbilWarnaListener {
-                override fun onCancel(dialog: AmbilWarnaDialog?) {
-                    return
-                }
-
-                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
-                    imageHalo.color=color
-                    applyFilters(true)
-                }
-            })
-        colorPicker.show()
-    }
 
     fun refreshBackground(){
         imageBG.setImageBitmap(imageManager.backgroundFiltered)
@@ -190,7 +177,6 @@ class FragmentPerson : Fragment() {
             when (tab?.position) {
                 8 -> {
                     seekBar.visibility = View.GONE
-                    openColorPicker()
                 }
             }
         }
@@ -212,6 +198,7 @@ class FragmentPerson : Fragment() {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             applyFilters(true)
 
+            buttonColorChange.visibility=View.GONE
             seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
             when (tab?.position) {
@@ -264,7 +251,7 @@ class FragmentPerson : Fragment() {
                 )
                 8 -> {
                     imageHalo.doHalo=true
-                    openColorPicker()
+                    buttonColorChange.visibility=View.VISIBLE
                 }
                 9->{
                     addFilter(
@@ -313,5 +300,22 @@ class FragmentPerson : Fragment() {
 
 
     }
+
+    override fun onClick(p0: View?) {
+        val colorPicker = AmbilWarnaDialog(
+            view?.context,
+            Color.RED,
+            true,
+            object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                    return
+                }
+
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    imageHalo.color=color
+                    applyFilters(true)
+                }
+            })
+        colorPicker.show()    }
 
 }
