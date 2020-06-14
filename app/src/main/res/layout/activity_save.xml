@@ -38,15 +38,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/button_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onDeleteButtonClick"
-                android:padding="8dp"
-                app:srcCompat="@drawable/ic_delete_black_24dp" />
-
-            <ImageView
                 android:id="@+id/button_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -40,8 +40,8 @@ class AdapterImageList(val context: Context, var images: MutableList<String>) : 
 
         }
         override fun bind(pos: Int) {
-            // img.setImageBitmap(APIs.BitmapFromURL(url,300,300))
-            // img.setImageBitmap(images[pos])
+            // imgisUpitmap(APIs.BitmapFromURL(url,300,300))
+            // imgisUpitmap(images[pos])
             img.setOnClickListener({
                 listener.onClick(pos)
             })

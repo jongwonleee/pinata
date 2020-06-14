@@ -24,11 +24,10 @@ import androidx.annotation.RequiresApi;
 import org.jetbrains.annotations.NotNull;
 
 import capstone.aiimageeditor.ZoomGestureListener;
-
 import static com.google.common.primitives.Floats.min;
 import static java.lang.Float.max;
 
-public class DrawingView extends View implements ZoomGestureListener.OnTouchListener {
+public class DrawingView extends View  {
     private Path drawPath;
     private Paint drawPaint, canvasPaint, pointPaint, alphaPaint;
     private int paintColor = Color.RED;
@@ -40,20 +39,11 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
     private int minx, miny, maxx, maxy, width, height;
     private float touchX, touchY;
     private boolean isTouched;
-    private ZoomGestureListener zoomGestureListener;
-    private ScaleGestureDetector scaleGestureDetector;
-    private GestureDetector gestureDetector;
 
     public DrawingView(Context context, Bitmap mask, Bitmap original) {
-
         super(context);
         this.mask = mask;
         this.original = original;
-        zoomGestureListener = new ZoomGestureListener();
-        zoomGestureListener.setOnTouchListener(this);
-        gestureDetector = zoomGestureListener.getZoomGestureDetector(context);
-        scaleGestureDetector = zoomGestureListener.getScaleGestureDetector(context);
-
         setupDrawing();
     }
 
@@ -104,7 +94,6 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
         miny = (h - height) / 2;
         maxx = minx + width;
         maxy = miny + height;
-        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(mask,width,height,true);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(getDrawableBitmap(), width, height, true);
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         smallBitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
@@ -140,8 +129,6 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
         canvas.drawBitmap(tempBitmap, 0, 0, canvasPaint);
         tempOriginCanvas.drawBitmap(tempBitmap, 0, 0, alphaPaint);
 
-//        canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
-//        canvas.drawPath(drawPath, drawPaint);
         if (isTouched) {
             canvas.drawCircle(touchX, touchY, drawPaint.getStrokeWidth() / 2, pointPaint);
             tempCanvas.drawCircle(touchX, touchY, drawPaint.getStrokeWidth() / 2, pointPaint);
@@ -176,8 +163,6 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-       /* gestureDetector.onTouchEvent(event);
-        scaleGestureDetector.onTouchEvent(event);*/
         touchX = event.getX();
         touchY = event.getY();
         float brushSize = drawPaint.getStrokeWidth() / 2;
@@ -225,29 +210,5 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
         }
         ret = Bitmap.createScaledBitmap(ret, mask.getWidth(), mask.getHeight(), true);
         return ret;
-    }
-
-    @Override
-    public void onScale(float scale, int x, int y) {
-        Log.i("!!", scale + " " + x + " " + y);
-        int w = canvasBitmap.getWidth();
-        int h = canvasBitmap.getHeight();
-        int width = (int) (this.width * scale);
-        int height = (int) (this.height * scale);
-
-        minx = (w - width) / 2;
-        miny = (h - height) / 2;
-        maxx = minx + width;
-        maxy = miny + height;
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(canvasBitmap, width, height, true);
-        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        drawCanvas = new Canvas(canvasBitmap);
-        drawCanvas.drawBitmap(scaledBitmap, minx, miny, null);
-        invalidate();
-    }
-
-    @Override
-    public void onDraw(@NotNull MotionEvent motionEvent) {
-
     }
 }

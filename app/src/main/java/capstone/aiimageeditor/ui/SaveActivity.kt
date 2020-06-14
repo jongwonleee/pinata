@@ -12,10 +12,12 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_save.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -32,20 +34,18 @@ class SaveActivity : AppCompatActivity() {
     companion object {
         val SHARED_ACTIVITY = 1
     }
-
+    fun setImageBitmap(iv: ImageView, bitmap:Bitmap){
+        Glide.with(this).load(bitmap).into(iv)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save)
         image = (application as ImageManager).mergeImage()
-        image_done.setImageBitmap(image)
+        setImageBitmap(image_done,image)
     }
 
     fun onBackButtonClick(v: View) {
         finish()
-    }
-
-    fun onDeleteButtonClick(v: View) {
-        //TODO stack 구현 후 undo 구현
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

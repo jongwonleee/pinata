@@ -2,12 +2,9 @@ package capstone.aiimageeditor.ui
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
@@ -16,6 +13,7 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -79,8 +77,6 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this@MainActivity, SaveActivity::class.java)
                     startActivity(intent)
                 }
-                4-> { //for liquify
-                }
             }
         }
 
@@ -111,10 +107,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    fun setImageBitmap(iv:ImageView,bitmap:Bitmap){
+        Glide.with(this).load(bitmap).into(iv)
+    }
     fun initializeImage() {
-        imageNew.setImageBitmap(imageManager.original)
-        imageOriginal.setImageBitmap(imageManager.original)
+        setImageBitmap(imageNew,imageManager.original)
+        setImageBitmap(imageOriginal,imageManager.original)
         //TODO stack 초기화 시켜주기
     }
 
@@ -137,6 +135,11 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    fun onSettingButtonClick(v:View){
+        val intent = Intent(this, SettingActivity::class.java)
+        startActivity(intent)
+    }
+
     fun onUndoButtonClick(v: View) {
         //TODO stack 구현 후 undo 구현
 /*        var original = Mat()
@@ -144,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         runMaskCorrector(original.nativeObjAddr,original.nativeObjAddr)
         var bmp = Bitmap.createBitmap(imageNow.drawable.toBitmap())
         Utils.matToBitmap(original,bmp)
-        imageDefault.setImageBitmap(bmp)*/
+        imageDefaultisUpitmap(bmp)*/
     }
 
     fun onRedoButtonClick(v: View) {

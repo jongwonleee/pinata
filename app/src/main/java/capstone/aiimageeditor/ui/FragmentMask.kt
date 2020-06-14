@@ -13,6 +13,7 @@ import capstone.aiimageeditor.customviews.DrawingView
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.ZoomGestureListener
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 
 
@@ -69,10 +70,14 @@ class FragmentMask : Fragment() {
 
     }
 
+    fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
+        Glide.with(this).load(bitmap).into(iv)
+    }
+
     fun setImage(context: Context) {
         maskView = DrawingView(context, imageManager.mask, imageManager.original)
         maskView.setStrokeWidth(55f)
-        imageBG.setImageBitmap(imageManager.original)
+        setImageBitmap(imageBG, imageManager.original)
         imageFG.addView(maskView)
     }
 

@@ -31,7 +31,7 @@ class LiquifyView  @JvmOverloads constructor(
     private lateinit var original: List<Pair<Float, Float>>
     private lateinit var selectedIndex: MutableList<Int>
     private var paint = Paint()
-    private lateinit var coordinates: List<Pair<Float, Float>>
+    private var coordinates: List<Pair<Float, Float>> = listOf()
     private lateinit var bitmap: Bitmap
     private lateinit var bgimg: Bitmap
     private var mode: Int = 0
@@ -52,17 +52,14 @@ class LiquifyView  @JvmOverloads constructor(
         _height = bgimg.height
         selectedIndex = MutableList<Int>(300,{_ -> 0})
         paint.color = Color.BLACK
-
-        //generateCoordinates()
+        if(width>0)initBitmap(width,height)
         invalidate() //ondraw호출
     }
     fun brushsizechange(size: Int) {
         mode = size
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-
+    private fun initBitmap(w:Int,h:Int){
         if (_width.toFloat() / _height.toFloat() > w.toFloat() / h.toFloat()) {
             _height = _height * w / _width
             _width = w
@@ -76,6 +73,12 @@ class LiquifyView  @JvmOverloads constructor(
         drawCanvas = Canvas(canvasBitmap)
         bgimg = Bitmap.createScaledBitmap(bgimg,_width,_height,true)
         generateCoordinates()
+
+    }
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        initBitmap(w,h)
     }
 
 
@@ -93,7 +96,6 @@ class LiquifyView  @JvmOverloads constructor(
         )
     }
 
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawPaint = Paint()
@@ -101,9 +103,7 @@ class LiquifyView  @JvmOverloads constructor(
         drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 
-        //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
-        paint.color=Color.argb(128,255,255,255)
-        canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
+
 
         drawCanvas.drawBitmapMesh(
             bitmap,
@@ -117,35 +117,8 @@ class LiquifyView  @JvmOverloads constructor(
         )
 
 
-        //drawCoordinates(drawCanvas)
-        //drawLines(drawCanvas)
-
-
 
         canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
-    }
-
-    private fun drawCoordinates(canvas: Canvas) {
-        coordinates.forEach {
-            canvas.drawPoint(it.first, it.second, paint)
-        }
-    }
-
-    private fun drawLines(canvas: Canvas) {
-
-        coordinates.forEachIndexed { index, pair ->
-            // Draw horizontal line with next column
-            if (((index + 1) % (meshWidth + 1)) != 0) {
-                val nextCoordinate = coordinates[index + 1]
-                drawLine(canvas, pair, nextCoordinate)
-            }
-
-            // Draw horizontal line with next row
-            if (((index < (meshWidth + 1) * meshHeight))) {
-                val nextCoordinate = coordinates[index + meshWidth + 1]
-                drawLine(canvas, pair, nextCoordinate)
-            }
-        }
     }
 
     private fun drawLine(
@@ -232,7 +205,7 @@ class LiquifyView  @JvmOverloads constructor(
         return coordinates
     }
 
-    public fun getLiquifiedImage(width: Int,height: Int):Bitmap{
+    fun getLiquifiedImage(width: Int,height: Int):Bitmap{
         return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
     }
 

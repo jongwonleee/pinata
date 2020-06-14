@@ -51,7 +51,7 @@ class TallView @JvmOverloads constructor(
     private var bodyBlocksize = 0f
     private var legBlocksize = 0f
 
-    fun setup(column: Int, row: Int, img: Bitmap, backgroundimg: Bitmap) {
+    fun setup(column: Int, row: Int, img: Bitmap, backgroundimg:Bitmap) {
         meshWidth = column
         meshHeight = row
         bitmap = img
@@ -62,13 +62,12 @@ class TallView @JvmOverloads constructor(
         paint.color = Color.BLACK
         coordinates = List(0){Pair(0f,0f)}
 
-        //generateCoordinates()
+        if(width>0)initBitmap(width,height)
+        generateCoordinates()
         invalidate() //ondraw호출
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-
+    private fun initBitmap(w:Int,h:Int){
         if (_width.toFloat() / _height.toFloat() > w.toFloat() / h.toFloat()) {
             _height = _height * w / _width
             _width = w
@@ -83,7 +82,14 @@ class TallView @JvmOverloads constructor(
         bgimg = Bitmap.createScaledBitmap(bgimg, _width, _height, true)
         generateCoordinates()
 
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        initBitmap(w,h)
         initialize(207f, 320f, 481f) //initialize after generateCoordinates
+
     }
 
 
@@ -101,6 +107,27 @@ class TallView @JvmOverloads constructor(
     }
 
 
+    fun removeLines() {
+        val drawPaint = Paint()
+        drawPaint.setColor(Color.BLACK)
+        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
+
+        //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
+        paint.color=Color.argb(128,255,255,255)
+        //canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
+
+        drawCanvas.drawBitmapMesh(
+            bitmap,
+            meshWidth,
+            meshHeight,     //2차원좌표를 1차원배열로 표현
+            coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
+            0,
+            null,
+            0,
+            null
+        )
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawPaint = Paint()
@@ -111,13 +138,6 @@ class TallView @JvmOverloads constructor(
         LinePaint.strokeWidth = 6f
         LinePaint.style = Paint.Style.FILL
         LinePaint.color = Color.RED
-
-        drawCanvas.drawRect(0f, 0f, drawCanvas.width.toFloat(), drawCanvas.height.toFloat(), drawPaint)
-
-
-        //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
-        paint.color = Color.argb(128, 255, 255, 255)
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
         drawCanvas.drawBitmapMesh(
             bitmap,
@@ -189,7 +209,7 @@ class TallView @JvmOverloads constructor(
         orig = coordinates[2].second - coordinates[0].second //원래 한칸의 길이
     }
 
-    fun tall(adj: Float) {
+    fun tall(adj : Float) {
         adjust = adj
         leg = 1.00f + (adjust - 1.00f) * 1.5f
         bodyBlocksize = adjust * orig
@@ -291,8 +311,29 @@ class TallView @JvmOverloads constructor(
         return coordinates
     }
 
-    public fun getLiquifiedImage(width: Int, height: Int): Bitmap {
-        return Bitmap.createScaledBitmap(canvasBitmap, width, height, true)
+    public fun getTalledImage(width: Int,height: Int):Bitmap{
+        val drawPaint = Paint()
+        drawPaint.setColor(Color.BLACK)
+        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+
+        val LinePaint = Paint()
+        LinePaint.setStrokeWidth(6f)
+        LinePaint.setStyle(Paint.Style.FILL)
+        LinePaint.setColor(Color.RED)
+
+        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
+        drawCanvas.drawBitmapMesh(
+            bitmap,
+            meshWidth,
+            meshHeight,     //2차원좌표를 1차원배열로 표현
+            coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
+            0,
+            null,
+            0,
+            null
+        )
+
+        return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
     }
 
 }
