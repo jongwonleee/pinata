@@ -1,5 +1,3 @@
-
-
 #include <jni.h>
 #include <string>
 #include <opencv2/imgproc.hpp>
@@ -217,4 +215,21 @@ Java_capstone_aiimageeditor_imageprocessing_PhotoProcessing_nativeEnhanceImage(J
             break;
     }
 
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_capstone_aiimageeditor_ImageManager_startMaskCorrection(JNIEnv *env,
+                                                                              jobject thiz,
+                                                                              jlong sourceImage,
+                                                                              jlong maskPtr) {
+    cv::Mat image;
+    cv::Mat* source;
+    cv::Mat* mask;
+
+
+    source = (cv::Mat*) sourceImage;
+    mask = (cv::Mat*) maskPtr;
+    MaskCorrector maskCorrector = MaskCorrector(*source,*mask);
+    maskCorrector.Run();
+    *mask = maskCorrector.getResult();
 }

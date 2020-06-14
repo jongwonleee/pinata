@@ -83,6 +83,7 @@ class StartActivity : AppCompatActivity() {
         viewModel.resultingBitmap.observe(this, Observer { resultImage ->
             if (resultImage != null) {
                 (application as ImageManager).mask = resultImage.bitmapMaskOnly
+                (application as ImageManager).runMaskCorrection()
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }

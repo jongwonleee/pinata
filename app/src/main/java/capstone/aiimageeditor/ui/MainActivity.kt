@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         fragmentMask = FragmentMask()
         fragmentPerson = FragmentPerson()
         val fragmentEmpty=FragmentMask()
-        val tabAdapter = TabPagerAdapter(supportFragmentManager, 5) //behavior 4 -> 5
+        val tabAdapter = TabPagerAdapter(supportFragmentManager, 4) //behavior 4 -> 5
         tabAdapter.addPage(fragmentMask, "마스크")
         tabAdapter.addPage(fragmentPerson, "인물")
         tabAdapter.addPage(fragmentBackground, "배경")
@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
                 3 -> {
                     val intent = Intent(this@MainActivity, SaveActivity::class.java)
                     startActivity(intent)
-
                 }
                 4-> { //for liquify
                 }

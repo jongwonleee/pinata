@@ -79,6 +79,7 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
         miny=(h-height)/2;
         maxx=minx+width;
         maxy=miny+height;
+        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(mask,width,height,true);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(getDrawableBitmap(),width,height,true);
         canvasBitmap = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);

@@ -35,7 +35,16 @@ class ImageManager : Application() {
              e.printStackTrace()
              return null
          }
-
+    }
+    
+    fun runMaskCorrection(){
+        val source= Mat()
+        val mask = Mat()
+        Utils.bitmapToMat(original,source)
+        Utils.bitmapToMat(this@ImageManager.mask,mask)
+        startMaskCorrection(source.nativeObjAddr,mask.nativeObjAddr)
+        Utils.matToBitmap(mask,this.mask)
+        
     }
 
     fun setOnFinishInpaint(listener:OnFinishInpaint){
@@ -104,4 +113,6 @@ class ImageManager : Application() {
 
         external fun startInpaint(image: Long, mask: Long)
     }
+    external fun startMaskCorrection(sourceImage:Long, mask:Long)
+
 }
