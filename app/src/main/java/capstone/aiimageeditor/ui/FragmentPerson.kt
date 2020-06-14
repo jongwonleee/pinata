@@ -182,6 +182,8 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             }
         }
 
+
+
         override fun onTabUnselected(tab: TabLayout.Tab?) {
             when (tab?.position) {
                 0 -> {
@@ -190,7 +192,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 }
                 1 -> { //????
                     imageTall.visibility = View.GONE
-                    imageManager.personOriginal = imageTall.getLiquifiedImage(
+                    imageManager.personOriginal = imageTall.getTalledImage(
                         imageManager.original.width,
                         imageManager.original.height
                     )
@@ -214,8 +216,8 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 }
                 1 -> {
                     imageTall.visibility = View.VISIBLE
-                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     seekBar.progress = 0
+                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     seekBar.visibility = View.VISIBLE
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
@@ -258,7 +260,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
 
     private fun setImage(toImageView: Boolean, bitmap:Bitmap) {
         if (toImageView) {
-            if (toImageView) imageFG.setImageBitmap( bitmap)
+            if (toImageView) imageFG.setImageBitmap(bitmap)
             else imageManager.personFiltered = bitmap
         }
     }

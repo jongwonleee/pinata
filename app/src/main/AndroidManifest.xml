@@ -20,7 +20,12 @@
         <activity android:name=".ui.SettingActivity"
             android:theme="@style/Theme.Transparent"></activity>
         <activity android:name=".ui.SaveActivity" />
+        <activity android:name=".ui.CopyrightActivity" />
+        <activity android:name=".ui.RegulationActivity" />
         <activity android:name=".ui.MainActivity">
+
+        </activity>
+        <activity android:name=".ui.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -28,8 +33,6 @@
 
                 <data android:mimeType="image/*" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ui.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

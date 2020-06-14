@@ -6,16 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#22000000"
-    android:onClick="OnBackgroundClick"
-    tools:context=".ui.SettingActivity">
+    tools:context=".ui.CopyrightActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/rounded_box_white"
         android:elevation="3dp"
         android:orientation="vertical"
-        android:padding="32dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="32dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,93 +32,20 @@
             android:paddingTop="8dp"
             android:paddingRight="64dp"
             android:paddingBottom="8dp"
-            android:text="설정"
+            android:text="카피라이트"
             android:textColor="#000000"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right|center_horizontal"
-                android:padding="8dp"
-                android:text="버전"
-                android:textColor="#333333" />
+                android:id="@+id/textCopyright"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=""/>
+        </ScrollView>
 
-            <TextView
-                android:id="@+id/text_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal|left"
-                android:padding="8dp"
-                android:text="1.0.0"
-                android:textColor="#333333"
-                android:textStyle="italic" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/button_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="OnFeedbackClick"
-            android:paddingLeft="64dp"
-            android:paddingTop="8dp"
-            android:paddingRight="64dp"
-            android:paddingBottom="8dp"
-            android:text="피드백"
-            android:textColor="#333333" />
-
-        <TextView
-            android:id="@+id/button_personalData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="OnFeedbackClick"
-            android:paddingLeft="64dp"
-            android:paddingTop="8dp"
-            android:paddingRight="64dp"
-            android:paddingBottom="8dp"
-            android:text="개인정보보호규정"
-            android:textColor="#333333" />
-
-        <TextView
-            android:id="@+id/button_copyright"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="OnCopyrightClick"
-            android:padding="8dp"
-            android:paddingLeft="64dp"
-            android:paddingTop="8dp"
-            android:paddingRight="64dp"
-            android:paddingBottom="8dp"
-            android:text="카피라이트"
-            android:textColor="#333333" />
-
-        <TextView
-            android:id="@+id/button_review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="OnReviewClick"
-            android:padding="8dp"
-            android:paddingLeft="64dp"
-            android:paddingTop="8dp"
-            android:paddingRight="64dp"
-            android:paddingBottom="8dp"
-            android:text="후기"
-            android:textColor="#333333" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

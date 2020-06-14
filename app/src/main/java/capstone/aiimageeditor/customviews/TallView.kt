@@ -64,6 +64,8 @@ class TallView  @JvmOverloads constructor(
         invalidate() //ondraw호출
     }
 
+
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -295,7 +297,7 @@ class TallView  @JvmOverloads constructor(
         return coordinates
     }
 
-    public fun getLiquifiedImage(width: Int,height: Int):Bitmap{
+    public fun getTalledImage(width: Int,height: Int):Bitmap{
         val drawPaint = Paint()
         drawPaint.setColor(Color.BLACK)
         drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))

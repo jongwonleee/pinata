@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Parcelable
 
 import android.provider.MediaStore
 import android.util.Log
@@ -89,6 +90,23 @@ class StartActivity : AppCompatActivity() {
             }
         }
         )
+
+        if(intent?.action ==Intent.ACTION_SEND){
+            if(intent?.type?.startsWith("image/")==true){
+                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri)?.let {
+                    val photoUri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri
+                    for (i in images.indices) {
+                        if (images[i] == photoUri.toString()) {
+                            images.removeAt(i)
+                            break
+                        }
+                    }
+                    images.add(0, photoUri.toString())
+                    if (images.size > 10) images.removeAt(images.lastIndex)
+                    gotoNextActivity(photoUri)
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
