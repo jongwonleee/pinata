@@ -63,7 +63,7 @@ class FragmentPerson : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageLiquify = view.findViewById(R.id.view_liquifyview)
-        
+
         imageManager = (activity?.application as ImageManager)
 
         gpuImage = GPUImage(context)
