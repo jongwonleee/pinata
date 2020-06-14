@@ -142,12 +142,6 @@ class TallView  @JvmOverloads constructor(
 
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 
-
-
-        //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
-        paint.color=Color.argb(128,255,255,255)
-        canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
-
         drawCanvas.drawBitmapMesh(
             bitmap,
             meshWidth,

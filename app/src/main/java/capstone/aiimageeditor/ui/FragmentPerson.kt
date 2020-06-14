@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
+import kotlinx.android.synthetic.main.fragment_person.*
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 import java.lang.Exception
@@ -32,7 +33,7 @@ import yuku.ambilwarna.AmbilWarnaDialog
 //채도는 컨트롤바 만져도 안 바뀜
 //틴트하면 배경이 까맣게 바뀌고 틴트를 최대치로 하면 인물도 까맣게 됨
 
-class FragmentPerson : Fragment(), View.OnClickListener {
+class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
     private lateinit var seekBar: SeekBar
     private lateinit var imageBG: ImageView
@@ -80,10 +81,12 @@ class FragmentPerson : Fragment(), View.OnClickListener {
 
         gpuImage = GPUImage(context)
 
+        imageFG.setOnTouchListener(this)
+
+
         buttonColorChange.visibility = View.GONE
         imageBG.visibility = View.VISIBLE
         seekBar.max = 100
-        seekBar.progress = 50
         seekBar.visibility = View.GONE
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -112,8 +115,12 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             }
         })
         tabLayout.addOnTabSelectedListener(tabListener)
+        seekBar.progress = 50
 
     }
+
+
+
 
     fun refreshBackground(){
         setImageBitmap(imageBG,imageManager.backgroundFiltered)
@@ -221,16 +228,21 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             imageLiquify.visibility = View.GONE
             imageTall.visibility=View.GONE
             imageFG.visibility=View.GONE
+            white_view.visibility=View.GONE
             when (tab?.position) {
                 0 -> {
                     imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     imageLiquify.visibility = View.VISIBLE
                     seekBar.progress = 0
                     seekBar.visibility = View.VISIBLE
+                    white_view.visibility=View.VISIBLE
+
                 }
                 1 -> {
                     imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     imageTall.visibility = View.VISIBLE
+                    white_view.visibility=View.VISIBLE
+
                     seekBar.progress = 0
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
@@ -293,5 +305,13 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 }
             })
         colorPicker.show()
+    }
+
+    override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+        when(p1?.action){
+            MotionEvent.ACTION_DOWN->white_view.visibility=View.VISIBLE
+            MotionEvent.ACTION_UP->white_view.visibility=View.GONE
+        }
+        return true
     }
 }

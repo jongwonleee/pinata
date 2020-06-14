@@ -103,8 +103,7 @@ class LiquifyView  @JvmOverloads constructor(
         drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 
-        paint.color=Color.argb(128,255,255,255)
-        canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
+
 
         drawCanvas.drawBitmapMesh(
             bitmap,
