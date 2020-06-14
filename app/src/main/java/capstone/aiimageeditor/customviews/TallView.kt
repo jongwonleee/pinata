@@ -2,6 +2,7 @@ package capstone.aiimageeditor.customviews
 
 import android.content.Context
 import android.graphics.*
+import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.ACTION_DOWN
@@ -9,11 +10,12 @@ import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_MOVE
 import android.view.View
+import capstone.aiimageeditor.ImageManager
 import kotlin.math.abs
 import kotlin.math.pow
 
 
-class TallView  @JvmOverloads constructor(
+class TallView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -25,8 +27,8 @@ class TallView  @JvmOverloads constructor(
     private var xstart = 0f
     private var ystart = 0f
 
-    private var minx=0
-    private var miny=0
+    private var minx = 0
+    private var miny = 0
 
     private lateinit var selectedIndex: MutableList<Int>
     private var paint = Paint()
@@ -34,8 +36,8 @@ class TallView  @JvmOverloads constructor(
     private lateinit var bitmap: Bitmap
     private lateinit var bgimg: Bitmap
 
-    private var _width:Int = 0
-    private var _height:Int = 0
+    var _width: Int = 0
+    var _height: Int = 0
     private lateinit var drawCanvas: Canvas
     private lateinit var canvasBitmap: Bitmap
 
@@ -49,16 +51,16 @@ class TallView  @JvmOverloads constructor(
     private var bodyBlocksize = 0f
     private var legBlocksize = 0f
 
-
-    fun setup(column: Int, row: Int, img: Bitmap, backgroundimg:Bitmap) {
+    fun setup(column: Int, row: Int, img: Bitmap, backgroundimg: Bitmap) {
         meshWidth = column
         meshHeight = row
         bitmap = img
         bgimg = backgroundimg
         _width = bgimg.width
         _height = bgimg.height
-        selectedIndex = MutableList<Int>(300,{_ -> 0})
+        selectedIndex = MutableList<Int>(300, { _ -> 0 })
         paint.color = Color.BLACK
+        coordinates = List(0){Pair(0f,0f)}
 
         //generateCoordinates()
         invalidate() //ondraw호출
@@ -78,12 +80,11 @@ class TallView  @JvmOverloads constructor(
         miny = (h - _height) / 2
         canvasBitmap = Bitmap.createBitmap(_width, _height, Bitmap.Config.ARGB_8888)
         drawCanvas = Canvas(canvasBitmap)
-        bgimg = Bitmap.createScaledBitmap(bgimg,_width,_height,true)
+        bgimg = Bitmap.createScaledBitmap(bgimg, _width, _height, true)
         generateCoordinates()
 
         initialize(207f, 320f, 481f) //initialize after generateCoordinates
     }
-
 
 
     private fun generateCoordinates() {
@@ -107,17 +108,16 @@ class TallView  @JvmOverloads constructor(
         drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
 
         val LinePaint = Paint()
-        LinePaint.setStrokeWidth(6f)
-        LinePaint.setStyle(Paint.Style.FILL)
-        LinePaint.setColor(Color.RED)
+        LinePaint.strokeWidth = 6f
+        LinePaint.style = Paint.Style.FILL
+        LinePaint.color = Color.RED
 
-        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
-
+        drawCanvas.drawRect(0f, 0f, drawCanvas.width.toFloat(), drawCanvas.height.toFloat(), drawPaint)
 
 
         //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
-        paint.color=Color.argb(128,255,255,255)
-        canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
+        paint.color = Color.argb(128, 255, 255, 255)
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
         drawCanvas.drawBitmapMesh(
             bitmap,
@@ -133,12 +133,11 @@ class TallView  @JvmOverloads constructor(
         //drawCoordinates(drawCanvas)
         //drawLines(drawCanvas)
 
-        canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
-
         //drawcanvas or canvas 어디에 그리나?
         drawCanvas.drawLine(0f, Lines[0], drawCanvas.width.toFloat(), Lines[0], LinePaint)
         drawCanvas.drawLine(0f, Lines[1], drawCanvas.width.toFloat(), Lines[1], LinePaint)
         drawCanvas.drawLine(0f, Lines[2], drawCanvas.width.toFloat(), Lines[2], LinePaint)
+        canvas.drawBitmap(canvasBitmap, minx.toFloat(), miny.toFloat(), Paint())
     }
 
     private fun drawCoordinates(canvas: Canvas) {
@@ -177,10 +176,7 @@ class TallView  @JvmOverloads constructor(
     }
 
 
-
-
-
-    fun initialize(A:Float, B:Float, C:Float) {
+    fun initialize(A: Float, B: Float, C: Float) {
         //선 3개 그려
         Lines[0] = A
         Lines[1] = B
@@ -192,9 +188,10 @@ class TallView  @JvmOverloads constructor(
         c = nearestCoordinate(C.toInt())
         orig = coordinates[2].second - coordinates[0].second //원래 한칸의 길이
     }
-    fun tall(adj : Float) {
+
+    fun tall(adj: Float) {
         adjust = adj
-        leg = 1.00f + (adjust - 1.00f)*1.5f
+        leg = 1.00f + (adjust - 1.00f) * 1.5f
         bodyBlocksize = adjust * orig
         legBlocksize = leg * adjust * orig
 
@@ -202,22 +199,24 @@ class TallView  @JvmOverloads constructor(
 
         //다리부분
         var idx = 0
-        for (i in c-1 downTo b) { //c ~ b
-            coordinates = coordinates.mapIndexed { index, pair -> if (index == i) (coordinates[i].first to (coordinates[c].second - (idx/2 + 1)*legBlocksize)) else pair }
+        for (i in c - 1 downTo b) { //c ~ b
+            coordinates =
+                coordinates.mapIndexed { index, pair -> if (index == i) (coordinates[i].first to (coordinates[c].second - (idx / 2 + 1) * legBlocksize)) else pair }
             idx++
         }
 
         //몸통부분
         idx = 0
-        for (i in b-1 downTo a) { //b ~ a
-            coordinates = coordinates.mapIndexed { index, pair -> if (index == i) (coordinates[i].first to (coordinates[b].second - (idx/2 + 1)*bodyBlocksize)) else pair }
+        for (i in b - 1 downTo a) { //b ~ a
+            coordinates =
+                coordinates.mapIndexed { index, pair -> if (index == i) (coordinates[i].first to (coordinates[b].second - (idx / 2 + 1) * bodyBlocksize)) else pair }
             idx++
         }
 
         //몸통 윗부분
         var d = afirst - coordinates[a].second
-        for (i in a-1 downTo 0) //a-1 ~ 0
-            coordinates = coordinates.mapIndexed { index, pair -> if (index == i) (coordinates[i].first to coordinates[i].second  - d) else pair }
+        for (i in a - 1 downTo 0) //a-1 ~ 0
+            coordinates = coordinates.mapIndexed { index, pair -> if (index == i) (coordinates[i].first to coordinates[i].second - d) else pair }
 
 
         Lines[0] = coordinates[a].second
@@ -225,18 +224,16 @@ class TallView  @JvmOverloads constructor(
         Lines[2] = coordinates[c].second
         invalidate()
     }
-    private fun nearestCoordinate (i : Int) : Int {
+
+    private fun nearestCoordinate(i: Int): Int {
         val sorted = coordinates.sortedBy { abs(it.second - i) }
         return coordinates.indexOf(sorted[0])
     }
 
 
-
-
-
     //Lines중 가장 가까운 선분 인덱스 리턴
-    private fun nearestLine (y : Float) :Int{
-        var min = abs(Lines[0] - y )
+    private fun nearestLine(y: Float): Int {
+        var min = abs(Lines[0] - y)
         var idx = 0
 
         if (min > abs(Lines[1] - y)) {
@@ -253,7 +250,7 @@ class TallView  @JvmOverloads constructor(
 
     var selectedLineIdx = 0
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val gap = height/2 - _height/2
+        val gap = height / 2 - _height / 2
         when (event.action) {
             ACTION_DOWN -> {
                 //a,b,c중 가장 가까운 선분 선택
@@ -294,8 +291,8 @@ class TallView  @JvmOverloads constructor(
         return coordinates
     }
 
-    public fun getLiquifiedImage(width: Int,height: Int):Bitmap{
-        return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
+    public fun getLiquifiedImage(width: Int, height: Int): Bitmap {
+        return Bitmap.createScaledBitmap(canvasBitmap, width, height, true)
     }
 
 }

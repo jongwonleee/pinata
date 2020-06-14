@@ -52,10 +52,10 @@ class FragmentPerson : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         for (i in 0..10) {
-
             filters.add(null)
             adjusts.add(50)
         }
+        adjusts[1] = 0
         adjusts[4] = 0
         adjusts[9] = 0
     }
@@ -67,7 +67,6 @@ class FragmentPerson : Fragment(), View.OnClickListener {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageLiquify = view.findViewById(R.id.view_liquifyview)
-
         imageTall = view.findViewById(R.id.view_Tallview) //add tallview
 
 
@@ -83,7 +82,6 @@ class FragmentPerson : Fragment(), View.OnClickListener {
         imageBG.visibility = View.VISIBLE
         seekBar.max = 100
         seekBar.progress = 50
-        seekBar.visibility = View.GONE
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -92,6 +90,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                     imageLiquify.brushsizechange(progress / 20)
                 } else if (tabPosition == 1) {
                     imageTall.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
+//                    setImage(false, imageManager.personOriginal)
                 } else if (tabPosition != 9) {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
@@ -111,7 +110,6 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             }
         })
         tabLayout.addOnTabSelectedListener(tabListener)
-
     }
 
     fun refreshBackground() {
@@ -119,11 +117,11 @@ class FragmentPerson : Fragment(), View.OnClickListener {
     }
 
     public fun setImage() {
-
         imageFG.setImageBitmap(imageManager.personOriginal)
         imageBG.setImageBitmap(imageManager.backgroundFiltered)
         gpuImage.setImage(imageManager.personOriginal)
         imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
+        imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageHalo = ImageHalo()
         imageLiquify.visibility = View.VISIBLE
         seekBar.progress = 0
@@ -189,10 +187,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 }
                 1 -> { //????
                     imageTall.visibility = View.GONE
-                    imageManager.personOriginal = imageTall.getLiquifiedImage(
-                        imageManager.original.width,
-                        imageManager.original.height
-                    )
+                    imageManager.personOriginal = imageTall.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
                 }
                 8 -> {
                 }
@@ -215,7 +210,6 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                     imageTall.visibility = View.VISIBLE
                     seekBar.progress = 0
                     seekBar.visibility = View.VISIBLE
-                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
                 3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
@@ -252,10 +246,9 @@ class FragmentPerson : Fragment(), View.OnClickListener {
 
     private fun setImage(toImageView: Boolean, bitmap: Bitmap) {
         if (toImageView) {
-            if (toImageView)
-                imageFG.setImageBitmap(bitmap)
-            imageManager.personFiltered = bitmap
+            imageFG.setImageBitmap(bitmap)
         }
+        imageManager.personFiltered = bitmap
     }
 
     override fun onClick(p0: View?) {
