@@ -3,7 +3,9 @@ package capstone.aiimageeditor.ui
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.SeekBar
@@ -16,6 +18,8 @@ import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
+import org.opencv.android.Utils
+import org.opencv.core.Mat
 import java.lang.Exception
 import yuku.ambilwarna.AmbilWarnaDialog
 
@@ -60,7 +64,6 @@ class FragmentPerson : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         imageLiquify = view.findViewById(R.id.view_liquifyview)
 
-
         imageManager = (activity?.application as ImageManager)
 
         gpuImage = GPUImage(context)
@@ -79,7 +82,7 @@ class FragmentPerson : Fragment() {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageFG.setImageBitmap(applyFilters())
+                    applyFilters(true)
                 }
             }
 
@@ -89,7 +92,7 @@ class FragmentPerson : Fragment() {
                     if (seekBar != null) {
                         imageHalo.setWeight(seekBar.progress)
                     }
-                    imageFG.setImageBitmap(applyFilters())
+                    applyFilters(true)
                 }
             }
         })
@@ -108,8 +111,13 @@ class FragmentPerson : Fragment() {
                 }
 
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+<<<<<<< HEAD
                     imageHalo.setColor(color)
                     imageFG.setImageBitmap(applyFilters())
+=======
+                    imageHalo.color=color
+                    applyFilters(true)
+>>>>>>> fd6206af0306711b571bd5455637e51785b82aa8
                 }
             })
         colorPicker.show()
@@ -137,7 +145,8 @@ class FragmentPerson : Fragment() {
     }
 
     public fun saveImage() {
-        imageManager.personFiltered = applyFilters()
+        applyFilters(false)
+
     }
 
     override fun onCreateView(
@@ -205,9 +214,8 @@ class FragmentPerson : Fragment() {
         }
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageFG.setImageBitmap(
-                applyFilters()
-            )
+            applyFilters(true)
+
             seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
             when (tab?.position) {
@@ -277,11 +285,37 @@ class FragmentPerson : Fragment() {
 
     }
 
-    fun applyFilters():Bitmap{
+    fun applyFilters(toImageView:Boolean){
         var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
         bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
-        if(imageHalo.doHalo) bitmap = imageHalo.run(bitmap)
-        return bitmap
+        val haloTask = HaloTask()
+        if(imageHalo.doHalo)haloTask.execute(bitmap)
+        else{
+            setImage(toImageView, bitmap)
+        }
+
+    }
+
+    private fun setImage(toImageView: Boolean, bitmap:Bitmap){
+        if(toImageView){
+            if(toImageView)  imageFG.setImageBitmap(bitmap)
+            else imageManager.personFiltered=bitmap
+        }
+    }
+
+    inner class HaloTask: AsyncTask<Bitmap, Int, Bitmap>() {
+        var toImageView=true
+
+        override fun doInBackground(vararg p0: Bitmap): Bitmap {
+            return imageHalo.run(p0[0])
+        }
+
+        override fun onPostExecute(result: Bitmap?) {
+            setImage(toImageView, result!!)
+            super.onPostExecute(result)
+        }
+
+
     }
 
 }
