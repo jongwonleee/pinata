@@ -136,9 +136,9 @@ class TallView  @JvmOverloads constructor(
         canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
 
         //drawcanvas or canvas 어디에 그리나?
-        canvas.drawLine(0f, Lines[0], drawCanvas.width.toFloat(), Lines[0], LinePaint)
-        canvas.drawLine(0f, Lines[1], drawCanvas.width.toFloat(), Lines[1], LinePaint)
-        canvas.drawLine(0f, Lines[2], drawCanvas.width.toFloat(), Lines[2], LinePaint)
+        drawCanvas.drawLine(0f, Lines[0], drawCanvas.width.toFloat(), Lines[0], LinePaint)
+        drawCanvas.drawLine(0f, Lines[1], drawCanvas.width.toFloat(), Lines[1], LinePaint)
+        drawCanvas.drawLine(0f, Lines[2], drawCanvas.width.toFloat(), Lines[2], LinePaint)
     }
 
     private fun drawCoordinates(canvas: Canvas) {
@@ -182,7 +182,6 @@ class TallView  @JvmOverloads constructor(
 
     fun initialize(A:Float, B:Float, C:Float) {
         //선 3개 그려
-
         Lines[0] = A
         Lines[1] = B
         Lines[2] = C
@@ -191,19 +190,15 @@ class TallView  @JvmOverloads constructor(
         a = nearestCoordinate(A.toInt()) //가장 가까운 정점의 인덱스로 업데이트
         b = nearestCoordinate(B.toInt())
         c = nearestCoordinate(C.toInt())
-        Log.i("**initailize", "" + a + " " + b + " " + c )
         orig = coordinates[2].second - coordinates[0].second //원래 한칸의 길이
-
-        Log.i("**initialize" , "" + a  +" "+ b + " " + c + " original " + orig)
     }
     fun tall(adj : Float) {
         adjust = adj
         leg = 1.00f + (adjust - 1.00f)*1.5f
         bodyBlocksize = adjust * orig
         legBlocksize = leg * adjust * orig
-        Log.i("**adjust", "" + adjust)
-        var afirst = coordinates[a].second
 
+        var afirst = coordinates[a].second
 
         //다리부분
         var idx = 0
@@ -258,14 +253,15 @@ class TallView  @JvmOverloads constructor(
 
     var selectedLineIdx = 0
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val gap = height/2 - _height/2
         when (event.action) {
             ACTION_DOWN -> {
                 //a,b,c중 가장 가까운 선분 선택
-                selectedLineIdx = nearestLine(event.y)
+                selectedLineIdx = nearestLine(event.y - gap)
                 return true
             }
             ACTION_MOVE, ACTION_UP -> {
-                Lines[selectedLineIdx] = event.y
+                Lines[selectedLineIdx] = event.y - gap
                 Lines.sort() //line들 정렬
                 initialize(Lines[0], Lines[1], Lines[2]) //크기순으로 넣기
                 return true
