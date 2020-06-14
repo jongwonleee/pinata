@@ -112,7 +112,6 @@ public class DrawingView extends View implements ZoomGestureListener.OnTouchList
     public boolean onTouchEvent(MotionEvent event) {
        /* gestureDetector.onTouchEvent(event);
         scaleGestureDetector.onTouchEvent(event);*/
-
         if(!zoomGestureListener.getOnScaling()){
             touchX = event.getX();
             touchY = event.getY();
