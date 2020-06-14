@@ -1,5 +1,6 @@
 package capstone.aiimageeditor.ui
 
+import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.os.Bundle
@@ -14,6 +15,7 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
@@ -72,7 +74,7 @@ class FragmentBackground : Fragment() {
                     adjusts[tabPosition]=progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+                    setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
                 }
             }
 
@@ -82,13 +84,15 @@ class FragmentBackground : Fragment() {
         tabLayout.addOnTabSelectedListener(tabListener)
         setImage()
     }
-
+    fun setImageBitmap(iv:ImageView,bitmap: Bitmap){
+        Glide.with(this).load(bitmap).into(iv)
+    }
 
     fun setImage()  {
         try{
             gpuImage.setImage(imageManager.backgroundOriginal)
-            imageFG.setImageBitmap(imageManager.personFiltered)
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+            setImageBitmap(imageFG,imageManager.personFiltered)
+            setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         }catch (e:Exception){
             e.printStackTrace()
         }
@@ -146,7 +150,7 @@ class FragmentBackground : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+            setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
             seekBar.visibility=View.VISIBLE
             tabPosition= tab!!.position
             when(tab?.position){

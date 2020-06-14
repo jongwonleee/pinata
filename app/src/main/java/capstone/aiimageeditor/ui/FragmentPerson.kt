@@ -15,6 +15,7 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.LiquifyView
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
@@ -106,13 +107,12 @@ class FragmentPerson : Fragment(),View.OnClickListener {
 
 
     fun refreshBackground(){
-        imageBG.setImageBitmap(imageManager.backgroundFiltered)
+        setImageBitmap(imageBG,imageManager.backgroundFiltered)
     }
 
     public fun setImage() {
-
-        imageFG.setImageBitmap(imageManager.personOriginal)
-        imageBG.setImageBitmap(imageManager.backgroundFiltered)
+        setImageBitmap(imageFG,imageManager.personOriginal)
+        setImageBitmap(imageBG,imageManager.backgroundFiltered)
         gpuImage.setImage(imageManager.personOriginal)
         imageLiquify.setup(
             30,
@@ -128,7 +128,6 @@ class FragmentPerson : Fragment(),View.OnClickListener {
 
     public fun saveImage() {
         applyFilters(false)
-
     }
 
     override fun onCreateView(
@@ -279,9 +278,13 @@ class FragmentPerson : Fragment(),View.OnClickListener {
 
     }
 
+    fun setImageBitmap(iv:ImageView,bitmap:Bitmap){
+        Glide.with(this).load(bitmap).into(iv)
+    }
+
     private fun setImage(toImageView: Boolean, bitmap:Bitmap){
         if(toImageView){
-            if(toImageView)  imageFG.setImageBitmap(bitmap)
+            if(toImageView)  setImageBitmap(imageFG,bitmap)
             else imageManager.personFiltered=bitmap
         }
     }
