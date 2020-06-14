@@ -24,10 +24,11 @@ import androidx.annotation.RequiresApi;
 import org.jetbrains.annotations.NotNull;
 
 import capstone.aiimageeditor.ZoomGestureListener;
+
 import static com.google.common.primitives.Floats.min;
 import static java.lang.Float.max;
 
-public class DrawingView extends View  {
+public class DrawingView extends View {
     private Path drawPath;
     private Paint drawPaint, canvasPaint, pointPaint, alphaPaint;
     private int paintColor = Color.RED;
@@ -39,6 +40,7 @@ public class DrawingView extends View  {
     private int minx, miny, maxx, maxy, width, height;
     private float touchX, touchY;
     private boolean isTouched;
+    private boolean isRight;
 
     public DrawingView(Context context, Bitmap mask, Bitmap original) {
         super(context);
@@ -49,6 +51,7 @@ public class DrawingView extends View  {
 
     private void setupDrawing() {
         isTouched = false;
+        isRight = true;
         drawPath = new Path();
         drawPaint = new Paint();
         pointPaint = new Paint();
@@ -143,20 +146,25 @@ public class DrawingView extends View  {
             yCoord = min(yCoord, getHeight() - (float) smallBitmap.getHeight() / 2 - 1);
             smallBitmap =
                     Bitmap.createBitmap(tempOriginBitmap, (int) xCoord - smallBitmap.getWidth() / 2, (int) yCoord - smallBitmap.getHeight() / 2, smallBitmap.getWidth(), smallBitmap.getHeight());
-            Bitmap scaledSmallBitmap = Bitmap.createScaledBitmap(smallBitmap,400,400,true);
+            Bitmap scaledSmallBitmap = Bitmap.createScaledBitmap(smallBitmap, 400, 400, true);
 
 
             Paint rectPaint = new Paint();
             rectPaint.setColor(Color.BLACK);
             rectPaint.setStyle(Paint.Style.STROKE);
             rectPaint.setStrokeWidth(10);
+            if (isRight) {
+                if (xCoord >= getWidth() * 0.7) isRight = false;
+            } else {
+                if (xCoord < getWidth() * 0.3) isRight = true;
+            }
 
-            if (xCoord <= getWidth() / 2) {
+            if (isRight) {
                 canvas.drawBitmap(scaledSmallBitmap, getWidth() - (float) scaledSmallBitmap.getWidth() - minx - rectPaint.getStrokeWidth(), 200, null);
                 canvas.drawRect(new RectF(getWidth() - (float) scaledSmallBitmap.getWidth() - minx - rectPaint.getStrokeWidth(), 200, getWidth() - minx - rectPaint.getStrokeWidth(), 200 + (float) scaledSmallBitmap.getHeight()), rectPaint);
             } else {
-                canvas.drawBitmap(scaledSmallBitmap, minx+ rectPaint.getStrokeWidth(), 200, null);
-                canvas.drawRect(new RectF(minx+ rectPaint.getStrokeWidth(), 200, minx + (float) scaledSmallBitmap.getWidth() + rectPaint.getStrokeWidth(), 200 + (float) scaledSmallBitmap.getHeight()), rectPaint);
+                canvas.drawBitmap(scaledSmallBitmap, minx + rectPaint.getStrokeWidth(), 200, null);
+                canvas.drawRect(new RectF(minx + rectPaint.getStrokeWidth(), 200, minx + (float) scaledSmallBitmap.getWidth() + rectPaint.getStrokeWidth(), 200 + (float) scaledSmallBitmap.getHeight()), rectPaint);
             }
         }
     }

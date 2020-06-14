@@ -59,7 +59,6 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
             filters.add(null)
             adjusts.add(50)
         }
-        adjusts[1] = 0
         adjusts[4] = 0
         adjusts[8] = 0
     }
@@ -71,6 +70,7 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageLiquify = view.findViewById(R.id.view_liquifyview)
+
         imageTall = view.findViewById(R.id.view_Tallview) //add tallview
 
 
@@ -109,7 +109,7 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (tabPosition == 8) {
+                if (tabPosition == 9) {
                     if (seekBar != null) {
                         imageHalo.setWeight(seekBar.progress)
                     }
@@ -119,6 +119,7 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
         })
         tabLayout.addOnTabSelectedListener(tabListener)
         seekBar.progress = 50
+
     }
 
 
@@ -142,9 +143,9 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
     public fun saveImage() {
         if(tabPosition==0){
-            imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
-        }else if(tabPosition==1){
-            imageManager.personOriginal = imageTall.getTalledImage(imageManager.original.width, imageManager.original.height)
+            if(isLiquify) imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+            else imageManager.personOriginal = imageTall.getTalledImage(imageManager.original.width, imageManager.original.height)
+
         }
         applyFilters(false)
     }
