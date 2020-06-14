@@ -1,7 +1,5 @@
 <component name="CopyrightManager">
   <settings>
-    <LanguageOptions name="Kotlin">
-      <option name="fileTypeOverride" value="3" />
-    </LanguageOptions>
+    <LanguageOptions name="Kotlin" />
   </settings>
 </component>

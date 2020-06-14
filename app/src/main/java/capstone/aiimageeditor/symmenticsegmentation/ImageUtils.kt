@@ -79,11 +79,7 @@ abstract class ImageUtils {
             )
         }
 
-        fun scaleBitmapAndKeepRatio(
-            targetBmp: Bitmap,
-            reqHeightInPixels: Int,
-            reqWidthInPixels: Int
-        ): Bitmap {
+        fun scaleBitmapAndKeepRatio(targetBmp: Bitmap, reqHeightInPixels: Int, reqWidthInPixels: Int): Bitmap {
             if (targetBmp.height == reqHeightInPixels && targetBmp.width == reqWidthInPixels) {
                 return targetBmp
             }
@@ -100,13 +96,7 @@ abstract class ImageUtils {
             )
         }
 
-        fun bitmapToByteBuffer(
-            bitmapIn: Bitmap,
-            width: Int,
-            height: Int,
-            mean: Float = 0.0f,
-            std: Float = 255.0f
-        ): ByteBuffer {
+        fun bitmapToByteBuffer(bitmapIn: Bitmap, width: Int, height: Int, mean: Float = 0.0f, std: Float = 255.0f): ByteBuffer {
             val bitmap = bitmapIn
 
             val inputImage = ByteBuffer.allocateDirect(1 * width * height * 3 * 4)

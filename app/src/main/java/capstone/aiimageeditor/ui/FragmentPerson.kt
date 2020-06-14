@@ -108,7 +108,7 @@ class FragmentPerson : Fragment() {
                 }
 
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
-                    imageHalo.color=color
+                    imageHalo.setColor(color)
                     imageFG.setImageBitmap(applyFilters())
                 }
             })
@@ -130,7 +130,7 @@ class FragmentPerson : Fragment() {
             imageManager.personOriginal,
             imageManager.backgroundOriginal
         )
-        imageHalo = ImageHalo(imageManager.personOriginal,0, Color.WHITE)
+        imageHalo = ImageHalo()
         imageLiquify.visibility = View.VISIBLE
         seekBar.progress = 0
         seekBar.visibility = View.VISIBLE
@@ -185,7 +185,6 @@ class FragmentPerson : Fragment() {
         override fun onTabReselected(tab: TabLayout.Tab?) {
             when (tab?.position) {
                 8 -> {
-                    seekBar.visibility = View.GONE
                     openColorPicker()
                 }
             }
