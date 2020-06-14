@@ -75,6 +75,22 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
+
+    //add TallView
+    <capstone.aiimageeditor.customviews.TallView
+        android:id="@+id/view_Tallview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="0dp"
@@ -100,6 +116,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="보정" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="키늘리기" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

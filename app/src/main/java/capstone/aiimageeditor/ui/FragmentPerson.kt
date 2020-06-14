@@ -12,6 +12,7 @@ import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.LiquifyView
+import capstone.aiimageeditor.customviews.TallView //add tallview
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
@@ -31,6 +32,7 @@ class FragmentPerson : Fragment() {
     private lateinit var imageBG: ImageView
     private lateinit var imageFG: ImageView
     private lateinit var imageLiquify: LiquifyView
+    private lateinit var imageTall: TallView //add tallview
     private lateinit var gpuImage: GPUImage
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
@@ -59,6 +61,7 @@ class FragmentPerson : Fragment() {
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageLiquify = view.findViewById(R.id.view_liquifyview)
+        imageTall = view.findViewById(R.id.view_Tallview) //add tallview
 
 
         imageManager = (activity?.application as ImageManager)
@@ -75,7 +78,10 @@ class FragmentPerson : Fragment() {
 
                 if (tabPosition == 0) {
                     imageLiquify.brushsizechange(progress / 20)
-                } else if (tabPosition != 8) {
+                } else if (tabPosition == 1) {
+                    imageTall.tall(progress.toFloat()/33/10 + 1.0f) //1.00f ~ 1.30f
+                }
+                else if (tabPosition != 8) {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
@@ -200,6 +206,13 @@ class FragmentPerson : Fragment() {
                         imageManager.original.height
                     )
                 }
+                1 -> { //????
+                    imageTall.visibility = View.GONE
+                    imageManager.personOriginal = imageTall.getLiquifiedImage(
+                        imageManager.original.width,
+                        imageManager.original.height
+                    )
+                }
                 8 -> {
                 }
             }
@@ -217,53 +230,64 @@ class FragmentPerson : Fragment() {
                     seekBar.progress = 0
                     seekBar.visibility = View.VISIBLE
                 }
-                1 -> addFilter(
+                1 -> {
+                    imageTall.visibility = View.VISIBLE
+                    seekBar.progress = 0
+                    seekBar.visibility = View.VISIBLE
+                    imageTall.setup(1, 50,
+                        imageManager.personOriginal,
+                        imageManager.backgroundOriginal)
+
+
+
+                }
+                2 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.GAMMA
                     )
                 )
-                2 -> addFilter(
+                3 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.SATURATION
                     )
                 )
-                3 -> addFilter(
+                4 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.EXPOSURE
                     )
                 )
-                4 -> addFilter(
+                5 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW
                     )
                 )
-                5 -> addFilter(
+                6 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.WHITE_BALANCE
                     )
                 )
-                6 -> addFilter(
+                7 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.HAZE
                     )
                 )
-                7 -> addFilter(
+                8 -> addFilter(
                     GPUImageFilterTools.createFilterForType(
                         context!!,
                         GPUImageFilterTools.FilterType.VIBRANCE
                     )
                 )
-                8 -> {
+                9 -> {
                     imageHalo.doHalo=true
                     openColorPicker()
                 }
-                9->{
+                10->{
                     addFilter(
                         GPUImageFilterTools.createFilterForType(
                             context!!,
@@ -272,7 +296,7 @@ class FragmentPerson : Fragment() {
                     )
                 }
             }
-            if (tabPosition != 8)
+            if (tabPosition != 8 && tabPosition != 1) //나중에 고치기
                 seekBar.progress = adjusts[tabPosition]
         }
 
