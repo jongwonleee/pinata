@@ -525,8 +525,8 @@ object GPUImageFilterTools {
         private inner class HighlightShadowAdjuster(filter: GPUImageHighlightShadowFilter) :
             Adjuster<GPUImageHighlightShadowFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setShadows(range(percentage, 0.0f, 0.5f))
-                filter.setHighlights(range(percentage, 0.0f, 0.5f))
+                filter.setShadows(range(percentage, 0.0f, 1.0f))
+                filter.setHighlights(range(percentage, 0.0f, 1.0f))
             }
         }
 
@@ -611,8 +611,8 @@ object GPUImageFilterTools {
         private inner class HazeAdjuster(filter: GPUImageHazeFilter) :
             Adjuster<GPUImageHazeFilter>(filter) {
             override fun adjust(percentage: Int) {
-                filter.setDistance(range(percentage, -0.06f, 0.06f))
-                filter.setSlope(range(percentage, -0.06f, 0.06f))
+                filter.setDistance(range(percentage, -0.12f, 0.12f))
+                filter.setSlope(range(percentage, -0.12f, 0.12f))
             }
         }
 

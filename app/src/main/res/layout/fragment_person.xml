@@ -109,7 +109,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="포화" />
+            android:text="채도" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="헤이즈" />
+            android:text="번" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -148,4 +148,15 @@
             android:text="만화" />
 
     </com.google.android.material.tabs.TabLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonColorChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_palette_24"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
