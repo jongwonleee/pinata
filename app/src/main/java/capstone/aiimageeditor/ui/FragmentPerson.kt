@@ -214,9 +214,9 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                 }
                 1 -> {
                     imageTall.visibility = View.VISIBLE
+                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     seekBar.progress = 0
                     seekBar.visibility = View.VISIBLE
-                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
                 3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
@@ -258,7 +258,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
 
     private fun setImage(toImageView: Boolean, bitmap:Bitmap) {
         if (toImageView) {
-            if (toImageView) setImageBitmap(imageFG, bitmap)
+            if (toImageView) imageFG.setImageBitmap( bitmap)
             else imageManager.personFiltered = bitmap
         }
     }

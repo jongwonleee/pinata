@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SettingActivity"
+        <activity android:name=".ui.SettingActivity"
             android:theme="@style/Theme.Transparent"></activity>
         <activity android:name=".ui.SaveActivity" />
         <activity android:name=".ui.MainActivity">

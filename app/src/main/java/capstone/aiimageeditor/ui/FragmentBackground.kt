@@ -73,7 +73,7 @@ class FragmentBackground : Fragment() {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
 
                 }
             }
@@ -83,7 +83,7 @@ class FragmentBackground : Fragment() {
         })
         tabLayout.addOnTabSelectedListener(tabListener)
         setImage()
-        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, filters))
+        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
     }
     fun setImageBitmap(iv:ImageView,bitmap: Bitmap){
@@ -94,7 +94,7 @@ class FragmentBackground : Fragment() {
         try {
             gpuImage.setImage(imageManager.backgroundOriginal)
             setImageBitmap(imageFG,imageManager.personFiltered)
-            setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         }catch (e:Exception){
 
             e.printStackTrace()
@@ -153,7 +153,7 @@ class FragmentBackground : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
             seekBar.visibility=View.VISIBLE
             tabPosition= tab!!.position
             when(tab?.position){

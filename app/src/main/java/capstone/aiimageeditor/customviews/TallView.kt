@@ -296,6 +296,32 @@ class TallView  @JvmOverloads constructor(
     }
 
     public fun getLiquifiedImage(width: Int,height: Int):Bitmap{
+        val drawPaint = Paint()
+        drawPaint.setColor(Color.BLACK)
+        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+
+        val LinePaint = Paint()
+        LinePaint.setStrokeWidth(6f)
+        LinePaint.setStyle(Paint.Style.FILL)
+        LinePaint.setColor(Color.RED)
+
+        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
+
+
+
+
+
+        drawCanvas.drawBitmapMesh(
+            bitmap,
+            meshWidth,
+            meshHeight,     //2차원좌표를 1차원배열로 표현
+            coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
+            0,
+            null,
+            0,
+            null
+        )
+
         return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
     }
 

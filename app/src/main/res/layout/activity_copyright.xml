@@ -79,6 +79,19 @@
             android:textColor="#333333" />
 
         <TextView
+            android:id="@+id/button_personalData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="OnFeedbackClick"
+            android:paddingLeft="64dp"
+            android:paddingTop="8dp"
+            android:paddingRight="64dp"
+            android:paddingBottom="8dp"
+            android:text="개인정보보호규정"
+            android:textColor="#333333" />
+
+        <TextView
             android:id="@+id/button_copyright"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

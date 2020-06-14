@@ -11,7 +11,6 @@ import android.widget.ImageView
 import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
-import capstone.aiimageeditor.SettingActivity
 import capstone.aiimageeditor.adapter.TabPagerAdapter
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.bumptech.glide.Glide
@@ -137,7 +136,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onSettingButtonClick(v:View){
-        val intent = Intent(this,SettingActivity::class.java)
+        val intent = Intent(this, SettingActivity::class.java)
         startActivity(intent)
     }
 
