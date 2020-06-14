@@ -196,6 +196,7 @@ class TallView  @JvmOverloads constructor(
 
         Log.i("**initialize" , "" + a  +" "+ b + " " + c + " original " + orig)
     }
+
     fun tall(adj : Float) {
         adjust = adj
         leg = 1.00f + (adjust - 1.00f)*1.5f

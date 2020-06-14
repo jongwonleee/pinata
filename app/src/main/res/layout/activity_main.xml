@@ -129,6 +129,15 @@
                 android:onClick="onRedoButtonClick"
                 android:padding="8dp"
                 app:srcCompat="@drawable/ic_last_page_black_24dp" />
+
+            <ImageView
+                android:id="@+id/button_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onSettingButtonClick"
+                android:padding="8dp"
+                app:srcCompat="@drawable/ic_baseline_settings_24" />
         </LinearLayout>
 
         <ImageView

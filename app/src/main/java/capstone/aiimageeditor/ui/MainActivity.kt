@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.SettingActivity
 import capstone.aiimageeditor.adapter.TabPagerAdapter
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.bumptech.glide.Glide
@@ -132,6 +133,11 @@ class MainActivity : AppCompatActivity() {
     fun onBackButtonClick(v: View) {
         //TODO stack에 무언가 쌓였으면 체크 후 뒤로가기
         finish()
+    }
+
+    fun onSettingButtonClick(v:View){
+        val intent = Intent(this,SettingActivity::class.java)
+        startActivity(intent)
     }
 
     fun onUndoButtonClick(v: View) {
