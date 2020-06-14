@@ -25,9 +25,10 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ```
+mm
 ----
 ##__opensource license__
-----
+  
 ### [intel]
 #### [https://opencv.org/license/]
 ```markdown
@@ -50,13 +51,12 @@ Neither the names of the copyright holders nor the names of the contributors may
 This software is provided by the copyright holders and contributors “as is” and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. In no event shall copyright holders or contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
   
 ```
-----
+  
 ### [tensorflow]
 #### [https://github.com/tensorflow]
 #### [license][https://github.com/tensorflow/tensorflow/blob/master/LICENSE]
+  
 
-
-----
 ### [bumptech]
 #### [https://github.com/bumptech/glide]
 ```markdown
@@ -67,7 +67,8 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   
 ```
-----
+  
+
 ### [cats-oss]
 #### [https://github.com/cats-oss/android-gpuimage]
 ```markdown
@@ -87,8 +88,8 @@ See the License for the specific language governing permissions and
 limitations under the License
   
 ```
+  
 
-----
 ### gun0912
 #### [https://github.com/ParkSangGwon/TedPermission]
 ```markdown
@@ -107,7 +108,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
   
 ```
-----
+  
 ### yydcdut
 #### [https://github.com/yydcdut/RxMarkdown]
 ```markdown
@@ -118,13 +119,22 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   
 ```
-----
+  
+
 ### yukuku
 #### [https://github.com/yukuku/ambilwarna]
+  
 
-----
 ### [elye]
 #### [https://github.com/elye/demo_android_draw_bitmap_mesh]
+  
+
+### [flaticon]
+#### [https://www.flaticon.com/authors/freepik]
+```
+Icons made by flaticon
+```
+  
 """
     }
     override fun onCreate(savedInstanceState: Bundle?) {

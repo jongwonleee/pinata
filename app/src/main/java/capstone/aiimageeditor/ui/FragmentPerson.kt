@@ -45,21 +45,22 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
     private lateinit var imageManager: ImageManager
     private lateinit var imageHalo: ImageHalo
     private lateinit var buttonColorChange: FloatingActionButton
+    private lateinit var buttonToggleLiquify:FloatingActionButton
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
+    private var isLiquify=true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for (i in 0..10) {
-
+        for (i in 0..9) {
             filters.add(null)
             adjusts.add(50)
         }
         adjusts[4] = 0
-        adjusts[9] = 0
+        adjusts[8] = 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,7 +75,9 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
 
         buttonColorChange = view.findViewById(R.id.buttonColorChange)
+        buttonToggleLiquify = view.findViewById(R.id.buttonTogleLiquify)
         buttonColorChange.setOnClickListener(this)
+        buttonTogleLiquify.setOnClickListener(this)
 
 
         imageManager = (activity?.application as ImageManager)
@@ -93,10 +96,10 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
                 if (tabPosition == 0) {
-                    imageLiquify.brushsizechange(progress / 25) //0~4
-                } else if (tabPosition == 1) {
-                    imageTall.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
-                } else if (tabPosition != 9) {
+                    if(isLiquify)imageLiquify.brushsizechange(progress / 25) //0~4
+                    else  imageTall.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
+
+                } else if (tabPosition != 8) {
                     adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
@@ -195,26 +198,25 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
             }
         }
 
-
-
         override fun onTabUnselected(tab: TabLayout.Tab?) {
-            when (tab?.position) {
-                0 -> {
-                    imageLiquify.visibility = View.GONE
-                    imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
-                }
-                1 -> { //????
-                    imageTall.removeLines()
-                    imageTall.visibility = View.GONE
+            when(tab?.position){
+                0->{
+                    if(isLiquify){
+                        imageLiquify.visibility = View.GONE
+                        imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+                        buttonTogleLiquify.setImageResource(R.drawable.ic_finger)
+                    }else
+                    {
+                        //imageTall.removeLines()
+                        imageTall.visibility = View.GONE
 
-                    imageManager.personOriginal = imageTall.getTalledImage(
-                        imageManager.original.width,
-                        imageManager.original.height
-                    )
-                    Log.i("!!!","${imageManager.personOriginal.height}")
-
-                }
-                8 -> {
+                        imageManager.personOriginal = imageTall.getTalledImage(
+                            imageManager.original.width,
+                            imageManager.original.height
+                        )
+                        buttonTogleLiquify.setImageResource(R.drawable.ic_height)
+                    }
+                    isLiquify=true
                 }
             }
         }
@@ -229,30 +231,21 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
             imageTall.visibility=View.GONE
             imageFG.visibility=View.GONE
             white_view.visibility=View.GONE
+            buttonTogleLiquify.visibility=View.GONE
+
             when (tab?.position) {
                 0 -> {
-                    imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
-                    imageLiquify.visibility = View.VISIBLE
-                    seekBar.progress = 0
-                    seekBar.visibility = View.VISIBLE
-                    white_view.visibility=View.VISIBLE
-
+                    buttonTogleLiquify.visibility=View.VISIBLE
+                    setLiquify()
                 }
-                1 -> {
-                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
-                    imageTall.visibility = View.VISIBLE
-                    white_view.visibility=View.VISIBLE
-
-                    seekBar.progress = 0
-                }
-                2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
-                3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
-                4 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.EXPOSURE))
-                5 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW))
-                6 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.WHITE_BALANCE))
-                7 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HAZE))
-                8 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
-                9 -> {
+                1 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
+                2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
+                3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.EXPOSURE))
+                4 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW))
+                5 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.WHITE_BALANCE))
+                6 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HAZE))
+                7 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
+                8 -> {
                     imageFG.visibility=View.VISIBLE
                     imageHalo.doHalo = true
                     buttonColorChange.visibility = View.VISIBLE
@@ -260,7 +253,7 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
                     seekBar.progress = 0
                     applyFilters(true)
                 }
-                10 -> {
+                9 -> {
                     addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.TOON))
                 }
             }
@@ -290,21 +283,42 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
     }
 
     override fun onClick(p0: View?) {
-        val colorPicker = AmbilWarnaDialog(
-            view?.context,
-            Color.WHITE,
-            true,
-            object : AmbilWarnaDialog.OnAmbilWarnaListener {
-                override fun onCancel(dialog: AmbilWarnaDialog?) {
-                    return
-                }
+        if(tabPosition==0){
+            if(isLiquify){
+                imageLiquify.visibility = View.GONE
+                imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+                buttonTogleLiquify.setImageResource(R.drawable.ic_finger)
+            }else
+            {
+                //imageTall.removeLines()
+                imageTall.visibility = View.GONE
 
-                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
-                    imageHalo.setColor(color)
-                    applyFilters(true)
-                }
-            })
-        colorPicker.show()
+                imageManager.personOriginal = imageTall.getTalledImage(
+                    imageManager.original.width,
+                    imageManager.original.height
+                )
+                buttonTogleLiquify.setImageResource(R.drawable.ic_height)
+            }
+            isLiquify=!isLiquify
+            setLiquify()
+        }else{
+            val colorPicker = AmbilWarnaDialog(
+                view?.context,
+                Color.WHITE,
+                true,
+                object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                    override fun onCancel(dialog: AmbilWarnaDialog?) {
+                        return
+                    }
+
+                    override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                        imageHalo.setColor(color)
+                        applyFilters(true)
+                    }
+                })
+            colorPicker.show()
+        }
+
     }
 
     override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
@@ -313,5 +327,25 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
             MotionEvent.ACTION_UP->white_view.visibility=View.GONE
         }
         return true
+    }
+    fun setLiquify(){
+        imageLiquify.visibility = View.GONE
+        imageTall.visibility=View.GONE
+        imageFG.visibility=View.GONE
+        white_view.visibility=View.GONE
+        if(isLiquify){
+            imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
+            imageLiquify.visibility = View.VISIBLE
+            seekBar.progress = 0
+            seekBar.visibility = View.VISIBLE
+            white_view.visibility=View.VISIBLE
+        }else
+        {
+            imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
+            imageTall.visibility = View.VISIBLE
+            white_view.visibility=View.VISIBLE
+
+            seekBar.progress = 0
+        }
     }
 }
