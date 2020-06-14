@@ -36,17 +36,17 @@ class FragmentBackground : Fragment() {
 
     private var filters = arrayListOf<GPUImageFilter?>()
     private var adjusts = arrayListOf<Int>()
-    private var tabPosition=0
+    private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for(i in 0 .. 8) {
+        for (i in 0..8) {
             filters.add(null)
             adjusts.add(50)
         }
-        adjusts[5]=0
+        adjusts[5] = 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,18 +63,18 @@ class FragmentBackground : Fragment() {
 
 
 
-        imageBG.visibility=View.VISIBLE
-        seekBar.max=100
-        seekBar.progress=50
-        seekBar.visibility=View.GONE
+        imageBG.visibility = View.VISIBLE
+        seekBar.max = 100
+        seekBar.progress = 50
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(filters[tabPosition]!=null){
-                    adjusts[tabPosition]=progress
+                if (filters[tabPosition] != null) {
+                    adjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
                     setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+
                 }
             }
 
@@ -83,23 +83,27 @@ class FragmentBackground : Fragment() {
         })
         tabLayout.addOnTabSelectedListener(tabListener)
         setImage()
+        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, filters))
+        addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
     }
     fun setImageBitmap(iv:ImageView,bitmap: Bitmap){
         Glide.with(this).load(bitmap).into(iv)
     }
 
-    fun setImage()  {
-        try{
+    fun setImage() {
+        try {
             gpuImage.setImage(imageManager.backgroundOriginal)
             setImageBitmap(imageFG,imageManager.personFiltered)
             setImageBitmap(imageBG,gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         }catch (e:Exception){
+
             e.printStackTrace()
         }
 
     }
-    fun saveImage(){
-        imageManager.backgroundFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters)
+
+    fun saveImage() {
+        imageManager.backgroundFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, filters)
     }
 
     override fun onCreateView(
@@ -114,12 +118,11 @@ class FragmentBackground : Fragment() {
     private fun addFilter(f: GPUImageFilter) {
         val index = tabPosition
         var filter = f
-        if(filters[index]!=null){
+        if (filters[index] != null) {
             filter = filters[index]!!
             seekBar.progress = adjusts[index];
-        }else
-        {
-            filters[index]=f
+        } else {
+            filters[index] = f
         }
 
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
@@ -143,9 +146,9 @@ class FragmentBackground : Fragment() {
     haze 40~60
     vibrance 25~75
     */
-    val tabListener = object : TabLayout.OnTabSelectedListener{
-        override fun onTabReselected(tab: TabLayout.Tab?) {
-        }
+
+    val tabListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabReselected(tab: TabLayout.Tab?) {}
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
@@ -163,8 +166,9 @@ class FragmentBackground : Fragment() {
                 6-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.WHITE_BALANCE))
                 7-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HAZE))
                 8-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIBRANCE))
+
             }
-            seekBar.progress=adjusts[tabPosition]
+            seekBar.progress = adjusts[tabPosition]
         }
 
     }

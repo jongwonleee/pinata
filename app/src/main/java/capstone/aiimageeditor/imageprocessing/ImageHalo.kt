@@ -1,43 +1,47 @@
 package capstone.aiimageeditor
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import java.lang.Math.max
-import java.lang.Math.pow
 import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 class ImageHalo {
-    lateinit var colors: IntArray
+    private lateinit var colors: IntArray
+
     private var weight: Int = 110
 
     private var coordQueue: Queue<Triple<Int, Int, Pair<Int, Int>>> = LinkedList()
-    private var width: Int = 0
-    private var height: Int = 0
-    var color:Int=0
-    var doHalo=false
+    private var width: Int = 1
+    private var height: Int = 1
+    private var totalSize: Int = 1
+    private var color: Int = 0
+    var doHalo = false
 
-    constructor(inputImage: Bitmap,weight:Int, color:Int){
-        width=inputImage.width
-        height=inputImage.height
-        this.weight = 110 - weight
-        this.weight = this.weight.coerceAtMost(width)
-        this.weight = this.weight.coerceAtMost(height)
-        this.color=color
-    }
-
-
-    fun run(inputImage:Bitmap):Bitmap{
-        colors = IntArray(inputImage.width * inputImage.height)
-        inputImage.getPixels(colors, 0, inputImage.width, 0, 0, inputImage.width, inputImage.height)
+    fun run(inputImage: Bitmap): Bitmap {
         width = inputImage.width
         height = inputImage.height
-        val widthMax = inputImage.width / weight
-        val heightMax = inputImage.height / weight
+        totalSize = width * height
+        var scaledInputBitmap: Bitmap = inputImage
+        var isScaled = false
+
+        while (totalSize > 1000000) {
+            width /= 2
+            height /= 2
+            totalSize /= 4
+            scaledInputBitmap = Bitmap.createScaledBitmap(scaledInputBitmap, width, height, true)
+            isScaled = true
+        }
+
+        colors = IntArray(scaledInputBitmap.width * scaledInputBitmap.height)
+        scaledInputBitmap.getPixels(colors, 0, scaledInputBitmap.width, 0, 0, scaledInputBitmap.width, scaledInputBitmap.height)
+
+        width = scaledInputBitmap.width
+        height = scaledInputBitmap.height
+        val widthMax = scaledInputBitmap.width / weight
+        val heightMax = scaledInputBitmap.height / weight
         val distMax = widthMax.coerceAtMost(heightMax)
         var dist: Array<Array<Float>> = Array(width) { Array(height) { distMax.toFloat() } }
 
@@ -72,34 +76,38 @@ class ImageHalo {
                         Color.argb(alpha * (widthMax - w) / widthMax, red, green, blue)
                     when (xDirection) {
                         0 -> {
-                            if (x > w)
-                                if (colors[i - w] == Color.TRANSPARENT)
-                                    if (dist[x - w][y] >= wDistance) {
-                                        inputImage.setPixel(x - w, y, newColor)
-                                        dist[x - w][y] = wDistance;
-                                    }
+                            if (x >= w)
+                                if (i >= w)
+                                    if (colors[i - w] == Color.TRANSPARENT)
+                                        if (dist[x - w][y] >= wDistance) {
+                                            scaledInputBitmap.setPixel(x - w, y, newColor)
+                                            dist[x - w][y] = wDistance;
+                                        }
                         }
                         1 -> {
-                            if (x < width - w - 1)
-                                if (colors[i + w] == Color.TRANSPARENT)
-                                    if (dist[x + w][y] >= wDistance) {
-                                        inputImage.setPixel(x + w, y, newColor)
-                                        dist[x + w][y] = wDistance;
-                                    }
+                            if (x < width - w)
+                                if (i < totalSize - w)
+                                    if (colors[i + w] == Color.TRANSPARENT)
+                                        if (dist[x + w][y] >= wDistance) {
+                                            scaledInputBitmap.setPixel(x + w, y, newColor)
+                                            dist[x + w][y] = wDistance;
+                                        }
                         }
                         2 -> {
                             if (x > w)
-                                if (colors[i - w] == Color.TRANSPARENT)
-                                    if (dist[x - w][y] >= wDistance) {
-                                        inputImage.setPixel(x - w, y, newColor)
-                                        dist[x - w][y] = wDistance;
-                                    }
-                            if (x < width - w - 1)
-                                if (colors[i + w] == Color.TRANSPARENT)
-                                    if (dist[x + w][y] >= wDistance) {
-                                        inputImage.setPixel(x + w, y, newColor)
-                                        dist[x + w][y] = wDistance;
-                                    }
+                                if (i >= w)
+                                    if (colors[i - w] == Color.TRANSPARENT)
+                                        if (dist[x - w][y] >= wDistance) {
+                                            scaledInputBitmap.setPixel(x - w, y, newColor)
+                                            dist[x - w][y] = wDistance;
+                                        }
+                            if (x < width - w)
+                                if (i < totalSize - w)
+                                    if (colors[i + w] == Color.TRANSPARENT)
+                                        if (dist[x + w][y] >= wDistance) {
+                                            scaledInputBitmap.setPixel(x + w, y, newColor)
+                                            dist[x + w][y] = wDistance;
+                                        }
                         }
                     }
                 }
@@ -111,33 +119,37 @@ class ImageHalo {
                     when (yDirection) {
                         0 -> {
                             if (y > h)
-                                if (colors[i - h * width] == Color.TRANSPARENT)
-                                    if (dist[x][y - h] >= yDistance) {
-                                        inputImage.setPixel(x, y - h, newColor)
-                                        dist[x][y - h] = yDistance
-                                    }
+                                if (i >= h * width)
+                                    if (colors[i - h * width] == Color.TRANSPARENT)
+                                        if (dist[x][y - h] >= yDistance) {
+                                            scaledInputBitmap.setPixel(x, y - h, newColor)
+                                            dist[x][y - h] = yDistance
+                                        }
                         }
                         1 -> {
-                            if (y < height - h - 1)
-                                if (colors[i + h * width] == Color.TRANSPARENT)
-                                    if (dist[x][y + h] >= yDistance) {
-                                        inputImage.setPixel(x, y + h, newColor)
-                                        dist[x][y + h] = yDistance
-                                    }
+                            if (y < height - h)
+                                if (i < totalSize - h * width)
+                                    if (colors[i + h * width] == Color.TRANSPARENT)
+                                        if (dist[x][y + h] >= yDistance) {
+                                            scaledInputBitmap.setPixel(x, y + h, newColor)
+                                            dist[x][y + h] = yDistance
+                                        }
                         }
                         2 -> {
                             if (y > h)
-                                if (colors[i - h * width] == Color.TRANSPARENT)
-                                    if (dist[x][y - h] >= yDistance) {
-                                        inputImage.setPixel(x, y - h, newColor)
-                                        dist[x][y - h] = yDistance
-                                    }
-                            if (y < height - h - 1)
-                                if (colors[i + h * width] == Color.TRANSPARENT)
-                                    if (dist[x][y + h] >= yDistance) {
-                                        inputImage.setPixel(x, y + h, newColor)
-                                        dist[x][y + h] = yDistance
-                                    }
+                                if (i >= h * width)
+                                    if (colors[i - h * width] == Color.TRANSPARENT)
+                                        if (dist[x][y - h] >= yDistance) {
+                                            scaledInputBitmap.setPixel(x, y - h, newColor)
+                                            dist[x][y - h] = yDistance
+                                        }
+                            if (y < height - h)
+                                if (i < totalSize - h * width)
+                                    if (colors[i + h * width] == Color.TRANSPARENT)
+                                        if (dist[x][y + h] >= yDistance) {
+                                            scaledInputBitmap.setPixel(x, y + h, newColor)
+                                            dist[x][y + h] = yDistance
+                                        }
                         }
                     }
                 }
@@ -158,33 +170,37 @@ class ImageHalo {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (colors[i - w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y - h, newColor)
-                                                        dist[x - w][y - h] = xyDistance
-                                                    }
+                                                if (i >= w + h * width)
+                                                    if (colors[i - w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y - h, newColor)
+                                                            dist[x - w][y - h] = xyDistance
+                                                        }
                                         }
                                         1 -> {
-                                            if (y < height - h - 1)
-                                                if (colors[i - w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y + h, newColor)
-                                                        dist[x - w][y + h] = xyDistance
-                                                    }
+                                            if (y < height - h)
+                                                if (i >= w - h * width && i < totalSize + w - h * width)
+                                                    if (colors[i - w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y + h, newColor)
+                                                            dist[x - w][y + h] = xyDistance
+                                                        }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (colors[i - w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y - h, newColor)
-                                                        dist[x - w][y - h] = xyDistance
-                                                    }
-                                            if (y < height - h - 1)
-                                                if (colors[i - w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y + h, newColor)
-                                                        dist[x - w][y + h] = xyDistance
-                                                    }
+                                                if (i >= w + h * height)
+                                                    if (colors[i - w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y - h, newColor)
+                                                            dist[x - w][y - h] = xyDistance
+                                                        }
+                                            if (y < height - h)
+                                                if (i >= w - h * width && i < totalSize + w - h * width)
+                                                    if (colors[i - w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y + h, newColor)
+                                                            dist[x - w][y + h] = xyDistance
+                                                        }
                                             Log.i("[xDyD]", "이런게 있네02")
                                         }
                                     }
@@ -195,33 +211,37 @@ class ImageHalo {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (colors[i + w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y - h, newColor)
-                                                        dist[x + w][y - h] = xyDistance
-                                                    }
+                                                if (i >= -w + h * width && i < totalSize - w + h * width)
+                                                    if (colors[i + w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y - h, newColor)
+                                                            dist[x + w][y - h] = xyDistance
+                                                        }
                                         }
                                         1 -> {
-                                            if (y < height - h - 1)
-                                                if (colors[i + w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y + h, newColor)
-                                                        dist[x + w][y + h] = xyDistance
-                                                    }
+                                            if (y < height - h)
+                                                if (i < totalSize - w - h * width)
+                                                    if (colors[i + w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y + h, newColor)
+                                                            dist[x + w][y + h] = xyDistance
+                                                        }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (colors[i + w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y - h, newColor)
-                                                        dist[x + w][y - h] = xyDistance
-                                                    }
-                                            if (y < height - h - 1)
-                                                if (colors[i + w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y + h, newColor)
-                                                        dist[x + w][y + h] = xyDistance
-                                                    }
+                                                if (i >= -w + h * width && i < totalSize - w + h * width)
+                                                    if (colors[i + w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y - h, newColor)
+                                                            dist[x + w][y - h] = xyDistance
+                                                        }
+                                            if (y < height - h)
+                                                if (i < totalSize - w - h * width)
+                                                    if (colors[i + w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y + h, newColor)
+                                                            dist[x + w][y + h] = xyDistance
+                                                        }
                                             Log.i("[xDyD]", "이런게 있네12")
                                         }
                                     }
@@ -232,68 +252,76 @@ class ImageHalo {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (colors[i - w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y - h, newColor)
-                                                        dist[x - w][y - h] = xyDistance
-                                                    }
+                                                if (i >= w + h * width)
+                                                    if (colors[i - w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y - h, newColor)
+                                                            dist[x - w][y - h] = xyDistance
+                                                        }
                                         }
                                         1 -> {
-                                            if (y < height - h - 1)
-                                                if (colors[i - w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y + h, newColor)
-                                                        dist[x - w][y - h] = xyDistance
-                                                    }
+                                            if (y < height - h)
+                                                if (i >= w - h * width && i < totalSize + w - h * width)
+                                                    if (colors[i - w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y + h, newColor)
+                                                            dist[x - w][y - h] = xyDistance
+                                                        }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (colors[i - w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y - h, newColor)
-                                                        dist[x - w][y - h] = xyDistance
-                                                    }
-                                            if (y < height - h - 1)
-                                                if (colors[i - w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x - w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x - w, y + h, newColor)
-                                                        dist[x - w][y + h] = xyDistance
-                                                    }
+                                                if (i >= w + h * width)
+                                                    if (colors[i - w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y - h, newColor)
+                                                            dist[x - w][y - h] = xyDistance
+                                                        }
+                                            if (y < height - h)
+                                                if (i >= w - h * width && i < totalSize + w - h * width)
+                                                    if (colors[i - w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x - w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x - w, y + h, newColor)
+                                                            dist[x - w][y + h] = xyDistance
+                                                        }
                                             Log.i("[xDyD]", "이런게 있네22")
                                         }
                                     }
                                 }
-                                if (x < width - w - 1) {
+                                if (x < width - w) {
                                     when (yDirection) {
                                         0 -> {
                                             if (y > h)
-                                                if (colors[i + w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y - h, newColor)
-                                                        dist[x + w][y - h] = xyDistance
-                                                    }
+                                                if (i >= -w + h * width && i < totalSize - w + h * width)
+                                                    if (colors[i + w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y - h, newColor)
+                                                            dist[x + w][y - h] = xyDistance
+                                                        }
                                         }
                                         1 -> {
-                                            if (y < height - h - 1)
-                                                if (colors[i + w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y + h, newColor)
-                                                        dist[x + w][y + h] = xyDistance
-                                                    }
+                                            if (y < height - h)
+                                                if (i < totalSize - w - h * width)
+                                                    if (colors[i + w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y + h, newColor)
+                                                            dist[x + w][y + h] = xyDistance
+                                                        }
                                         }
                                         2 -> {
                                             if (y > h)
-                                                if (colors[i + w - h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y - h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y - h, newColor)
-                                                        dist[x + w][y - h] = xyDistance
-                                                    }
-                                            if (y < height - h - 1)
-                                                if (colors[i + w + h * width] == Color.TRANSPARENT)
-                                                    if (dist[x + w][y + h] >= xyDistance) {
-                                                        inputImage.setPixel(x + w, y + h, newColor)
-                                                        dist[x + w][y + h] = xyDistance
-                                                    }
+                                                if (i >= -w + h * width && i < totalSize - w + h * width)
+                                                    if (colors[i + w - h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y - h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y - h, newColor)
+                                                            dist[x + w][y - h] = xyDistance
+                                                        }
+                                            if (y < height - h)
+                                                if (i < totalSize - w - h * width)
+                                                    if (colors[i + w + h * width] == Color.TRANSPARENT)
+                                                        if (dist[x + w][y + h] >= xyDistance) {
+                                                            scaledInputBitmap.setPixel(x + w, y + h, newColor)
+                                                            dist[x + w][y + h] = xyDistance
+                                                        }
                                             Log.i("[xDyD]", "이런게 있네22")
                                         }
                                     }
@@ -304,29 +332,34 @@ class ImageHalo {
                 }
             }
         }
-        return inputImage
+        if (isScaled) {
+            scaledInputBitmap = Bitmap.createScaledBitmap(scaledInputBitmap, inputImage.width, inputImage.height, true)
+            val canvas = Canvas(scaledInputBitmap)
+            canvas.drawBitmap(inputImage, 0f, 0f, null)
+        }
+        return scaledInputBitmap
     }
 
     private fun checkX(x: Int, i: Int): Int {
         when (x) {
             0 -> {
-                return if (i<colors.lastIndex-1 && colors[i + 1] == Color.TRANSPARENT)
+                return if (colors[i + 1] == Color.TRANSPARENT)
                     1
                 else
                     -1
             }
-            height - 1 -> {
+            width - 1 -> {
                 return if (colors[i - 1] == Color.TRANSPARENT)
                     0
                 else
                     -1
             }
             else -> {
-                return if (colors[i - 1]  == Color.TRANSPARENT && colors[i + 1]  == Color.TRANSPARENT)
+                return if (colors[i - 1] == Color.TRANSPARENT && colors[i + 1] == Color.TRANSPARENT)
                     2
-                else if (colors[i - 1]  == Color.TRANSPARENT)
+                else if (colors[i - 1] == Color.TRANSPARENT)
                     0
-                else if (i<colors.lastIndex-1 && colors[i + 1]  == Color.TRANSPARENT)
+                else if (colors[i + 1] == Color.TRANSPARENT)
                     1
                 else
                     -1
@@ -337,23 +370,23 @@ class ImageHalo {
     private fun checkY(y: Int, i: Int): Int {
         when (y) {
             0 -> {
-                return if (i<colors.lastIndex-1 && colors[i + width]  == Color.TRANSPARENT)
+                return if (colors[i + width] == Color.TRANSPARENT)
                     1
                 else
                     -1
             }
             height - 1 -> {
-                return if (colors[i - width]  == Color.TRANSPARENT)
+                return if (colors[i - width] == Color.TRANSPARENT)
                     0
                 else
                     -1
             }
             else -> {
-                return if (colors[i - width]  == Color.TRANSPARENT && colors[i + width]  == Color.TRANSPARENT)
+                return if (colors[i - width] == Color.TRANSPARENT && colors[i + width] == Color.TRANSPARENT)
                     2
-                else if (colors[i - width]  == Color.TRANSPARENT)
+                else if (colors[i - width] == Color.TRANSPARENT)
                     0
-                else if (i<colors.lastIndex-1 && colors[i + width]  == Color.TRANSPARENT)
+                else if (colors[i + width] == Color.TRANSPARENT)
                     1
                 else
                     -1
@@ -369,5 +402,9 @@ class ImageHalo {
         weight = 110 - w
         weight = weight.coerceAtMost(width)
         weight = weight.coerceAtMost(height)
+    }
+
+    fun setColor(c: Int) {
+        color = c
     }
 }
