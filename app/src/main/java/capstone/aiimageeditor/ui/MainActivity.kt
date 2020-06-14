@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onBackButtonClick(v: View) {
         //TODO stack에 무언가 쌓였으면 체크 후 뒤로가기
+        imageManager.InpaintTask().cancel(true)
         finish()
     }
 
