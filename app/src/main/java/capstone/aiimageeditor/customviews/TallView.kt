@@ -60,7 +60,17 @@ class TallView  @JvmOverloads constructor(
         selectedIndex = MutableList<Int>(300,{_ -> 0})
         paint.color = Color.BLACK
 
-        //generateCoordinates()
+//        coordinates = generateCoordinate(
+//        meshWidth,
+//        meshHeight,
+//        width,
+//        height,
+//        paddingStart,
+//        paddingEnd,
+//        paddingTop,
+//        paddingBottom
+//        )
+        generateCoordinates()
         invalidate() //ondraw호출
     }
 
@@ -100,6 +110,32 @@ class TallView  @JvmOverloads constructor(
     }
 
 
+    fun removeLines() {
+        val drawPaint = Paint()
+        drawPaint.setColor(Color.BLACK)
+        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
+        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
+
+        //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
+        paint.color=Color.argb(128,255,255,255)
+        //canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
+
+        drawCanvas.drawBitmapMesh(
+            bitmap,
+            meshWidth,
+            meshHeight,     //2차원좌표를 1차원배열로 표현
+            coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
+            0,
+            null,
+            0,
+            null
+        )
+
+        //drawCoordinates(drawCanvas)
+        //drawLines(drawCanvas)
+
+        //canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawPaint = Paint()

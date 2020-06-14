@@ -88,7 +88,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
                 if (tabPosition == 0) {
-                    imageLiquify.brushsizechange(progress / 20)
+                    imageLiquify.brushsizechange(progress / 25) //0~4
                 } else if (tabPosition == 1) {
                     imageTall.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
                 } else if (tabPosition != 9) {
@@ -123,6 +123,7 @@ class FragmentPerson : Fragment(), View.OnClickListener {
         imageBG.setImageBitmap(imageManager.backgroundFiltered)
         gpuImage.setImage(imageManager.personOriginal)
         imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
+        imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageHalo = ImageHalo()
         imageLiquify.visibility = View.VISIBLE
         seekBar.progress = 0
@@ -187,11 +188,9 @@ class FragmentPerson : Fragment(), View.OnClickListener {
                     imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
                 }
                 1 -> { //????
+                    imageTall.removeLines()
                     imageTall.visibility = View.GONE
-                    imageManager.personOriginal = imageTall.getLiquifiedImage(
-                        imageManager.original.width,
-                        imageManager.original.height
-                    )
+                    imageManager.personOriginal = imageTall.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
                 }
                 8 -> {
                 }
@@ -206,15 +205,17 @@ class FragmentPerson : Fragment(), View.OnClickListener {
             tabPosition = tab!!.position
             when (tab?.position) {
                 0 -> {
+                    imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     imageLiquify.visibility = View.VISIBLE
                     seekBar.progress = 0
                     seekBar.visibility = View.VISIBLE
                 }
                 1 -> {
+                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
                     imageTall.visibility = View.VISIBLE
                     seekBar.progress = 0
                     seekBar.visibility = View.VISIBLE
-                    imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
+
                 }
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.GAMMA))
                 3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
