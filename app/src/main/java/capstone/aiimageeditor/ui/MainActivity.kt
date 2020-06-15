@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -36,9 +35,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
 
-    private val titles = listOf("마스크","인물", "배경","저장")
-    private val iconsOff = listOf(R.drawable.ic_person_off,R.drawable.ic_user_off,R.drawable.ic_background_off,R.drawable.ic_done_off)
-    private val iconsOn = listOf(R.drawable.ic_person_on,R.drawable.ic_user_on,R.drawable.ic_background_on,R.drawable.ic_done_on)
+    companion object{
+        private val titles = listOf("마스크","인물", "배경","저장")
+        private val iconsOff = listOf(R.drawable.ic_person_off,R.drawable.ic_user_off,R.drawable.ic_background_off,R.drawable.ic_done_off)
+        private val iconsOn = listOf(R.drawable.ic_person_on,R.drawable.ic_user_on,R.drawable.ic_background_on,R.drawable.ic_done_on)
+        private val ON_SAVE_ACTIVITY_RESULT=0
+        private var backKeyPressedTime: Long = 0
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                 3 -> {
                     if (saveEnabled) {
                         val intent = Intent(this@MainActivity, SaveActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, ON_SAVE_ACTIVITY_RESULT)
                     }
 
                 }
@@ -186,29 +191,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onNewButtonClick(v: View) {
-        //TODO stack에 무언가 쌓였으면 체크 후 새로 하기
+/*        //TODO stack에 무언가 쌓였으면 체크 후 새로 하기
         val intent = Intent(Intent.ACTION_PICK)
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
         startActivityForResult(
             intent,
             StartActivity.PICK_FROM_ALBUM
-        )
+        )*/
     }
 
     override fun onBackPressed() {
-        imageManager.InpaintTask().cancel(true)
-        finish()
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "로 갈 시 현재까지의 결과물은 저장되지 않습니다.뒤\n 한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            imageManager.InpaintTask().cancel(true)
+            finish()
+        }
+
         super.onBackPressed()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
+        }else if(requestCode == ON_SAVE_ACTIVITY_RESULT){
+            tabLayout.getTabAt(0)?.select()
+            setTabView(0,true)
+            setTabView(3,false)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+
+
     override fun onResume() {
-        tabLayout.getTabAt(0)?.select()
         super.onResume()
     }
 
