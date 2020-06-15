@@ -192,8 +192,6 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    external fun runMaskCorrector(imagePtr: Long, maskPtr: Long)
-
     override fun onResume() {
         tabLayout.getTabAt(0)?.select()
         super.onResume()
