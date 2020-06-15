@@ -44,21 +44,6 @@ Java_capstone_aiimageeditor_ImageManager_00024InpaintTask_startInpaint(JNIEnv *e
     *source = Inpainting(*source,*maskImage, 2).run(true);
     *source = sc.getMerged(*source);
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_ui_MainActivity_runMaskCorrector(JNIEnv *env, jobject thiz, jlong imagePtr,
-                                                          jlong maskPtr) {
-    cv::Mat* source;
-    cv::Mat* mask;
-    cv::Mat* ret;
-    source = (cv::Mat*) imagePtr;
-    mask = (cv::Mat*) maskPtr;
-    MaskCorrector mc = MaskCorrector(*source,*mask);
-    mc.Run();
-    *mask = mc.getResult();
-    //bitwise_and(*source,*source,*mask,*mask);
-    //mask = ret;
-}
 
 extern "C"
 JNIEXPORT void JNICALL
