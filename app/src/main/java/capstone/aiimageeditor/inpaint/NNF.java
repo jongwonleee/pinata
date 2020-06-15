@@ -13,6 +13,7 @@ public class NNF {
 	
 	// image 
 	MaskedImage input, output;
+	static int DSCALE=Integer.MAX_VALUE;
 	
 	//  patch size
 	int S;
@@ -39,7 +40,7 @@ public class NNF {
 			for(int x=0;x<input.W;x++) {
 				field[x][y][0] = random.nextInt(output.W);  
 				field[x][y][1] = random.nextInt(output.H);
-				field[x][y][2] = com.developpez.xphilipp.patchmatch.MaskedImage.DSCALE;
+				field[x][y][2] = DSCALE;
 			}
 		}
 		initialize();
@@ -59,7 +60,7 @@ public class NNF {
 				int ylow = Math.min(y/fy, nnf.input.H-1);
 				field[x][y][0] = nnf.field[xlow][ylow][0]*fx;  
 				field[x][y][1] = nnf.field[xlow][ylow][1]*fy;
-				field[x][y][2] = com.developpez.xphilipp.patchmatch.MaskedImage.DSCALE;
+				field[x][y][2] = DSCALE;
 			}
 		}
 		initialize();
@@ -73,7 +74,7 @@ public class NNF {
 
 				// if the distance is INFINITY (all pixels masked ?), try to find a better link
 				int iter=0, maxretry=20;
-				while( field[x][y][2] == com.developpez.xphilipp.patchmatch.MaskedImage.DSCALE && iter<maxretry) {
+				while( field[x][y][2] == DSCALE && iter<maxretry) {
 					field[x][y][0] = random.nextInt(output.W);
 					field[x][y][1] = random.nextInt(output.H);
 					field[x][y][2] = distance(x,y,  field[x][y][0],field[x][y][1]);

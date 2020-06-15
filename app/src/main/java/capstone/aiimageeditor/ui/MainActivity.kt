@@ -68,12 +68,11 @@ class MainActivity : AppCompatActivity() {
                 fragmentPerson.refreshBackground()
                 saveEnabled=true
                 (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=true
-                if(!saveEnabled) Toast.makeText(applicationContext,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG)
+                Toast.makeText(this@MainActivity,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG)
 
             }
         })
         (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=false
-
 
     }
 

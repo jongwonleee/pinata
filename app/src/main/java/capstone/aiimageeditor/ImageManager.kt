@@ -54,10 +54,12 @@ class ImageManager : Application() {
     }
 
     fun startInpaint(){
+
         backgroundOriginal = Bitmap.createBitmap(original)
         InpaintTask().execute(0)
 
-      /*  var input = Bitmap.createBitmap(original)
+
+/*        var input = Bitmap.createBitmap(original)
         val maskimage = Bitmap.createBitmap(mask)
 
         var W: Int = maskimage.getWidth()

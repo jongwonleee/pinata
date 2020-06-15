@@ -45,7 +45,7 @@ class AdapterImageList(val context: Context, var images: MutableList<String>) : 
             img.setOnClickListener({
                 listener.onClick(pos)
             })
-            if(pos==0) img.setImageResource(R.drawable.ic_add_black_24dp)
+            if(pos==0) img.setImageResource(R.drawable.ic_add)
             else
                 Glide.with(itemView)
                     .load(Uri.parse(images[pos-1]))
