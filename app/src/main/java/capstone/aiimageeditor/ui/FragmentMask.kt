@@ -70,14 +70,11 @@ class FragmentMask : Fragment() {
 
     }
 
-    fun setImageBitmap(iv:ImageView,bitmap: Bitmap){
-        Glide.with(this).load(bitmap).into(iv)
-    }
 
     fun setImage(context:Context) {
         maskView = DrawingView(context,imageManager.mask)
         maskView.setStrokeWidth(55f)
-        setImageBitmap(imageBG,imageManager.original)
+        imageBG.setImageBitmap(imageManager.original)
         imageFG.addView(maskView)
     }
 

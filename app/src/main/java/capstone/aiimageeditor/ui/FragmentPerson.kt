@@ -143,9 +143,9 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
     public fun saveImage() {
         if(tabPosition==0){
-            imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
-        }else if(tabPosition==1){
-            imageManager.personOriginal = imageTall.getTalledImage(imageManager.original.width, imageManager.original.height)
+            if(isLiquify) imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+            else imageManager.personOriginal = imageTall.getTalledImage(imageManager.original.width, imageManager.original.height)
+
         }
         applyFilters(false)
     }
