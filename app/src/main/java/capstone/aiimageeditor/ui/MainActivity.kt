@@ -2,6 +2,7 @@ package capstone.aiimageeditor.ui
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -34,6 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
 
+    private val titles = listOf("마스크","인물", "배경","저장")
+    private val iconsOff = listOf(R.drawable.ic_person_off,R.drawable.ic_user_off,R.drawable.ic_background_off,R.drawable.ic_done_off)
+    private val iconsOn = listOf(R.drawable.ic_person_on,R.drawable.ic_user_on,R.drawable.ic_background_on,R.drawable.ic_done_on)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,14 +60,19 @@ class MainActivity : AppCompatActivity() {
         fragmentPerson = FragmentPerson()
         val fragmentEmpty = FragmentMask()
         val tabAdapter = TabPagerAdapter(supportFragmentManager, 4) //behavior 4 -> 5
-        tabAdapter.addPage(fragmentMask, "마스크")
-        tabAdapter.addPage(fragmentPerson, "인물")
-        tabAdapter.addPage(fragmentBackground, "배경")
-        tabAdapter.addPage(fragmentEmpty, "저장")
+        tabAdapter.addPage(fragmentMask, "")
+        tabAdapter.addPage(fragmentPerson, "")
+        tabAdapter.addPage(fragmentBackground, "")
+        tabAdapter.addPage(fragmentEmpty, "")
 
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(tabSelectedListener)
+
+        setTabView(0,true)
+        setTabView(1,false)
+        setTabView(2,false)
+        setTabView(3,false)
         imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
                 fragmentBackground.setImage()
@@ -69,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 saveEnabled=true
                 (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=true
                 Toast.makeText(this@MainActivity,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG)
+                setTabView(3,false)
 
             }
         })
@@ -78,6 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
+            setTabView(tab!!.position,true)
             when (tab!!.position) {
                 0 -> {
                     imageManager.InpaintTask().cancel(true)
@@ -100,10 +113,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onTabReselected(tab: TabLayout.Tab?) {
-
+            setTabView(tab!!.position,true)
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
+            setTabView(tab!!.position,false)
             when (tab!!.position) {
                 0 -> {
                     fragmentMask.deleteView()
@@ -196,5 +210,25 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         tabLayout.getTabAt(0)?.select()
         super.onResume()
+    }
+
+    private fun setTabView(pos:Int,selected:Boolean){
+        Log.i("changing Tab","$pos, $selected ${if(selected)iconsOn[pos] else iconsOff[pos]}")
+        val view = layoutInflater.inflate(R.layout.tab_view_main,null)
+        val title = view.findViewById(R.id.title) as TextView
+        val image = view.findViewById(R.id.icon) as ImageView
+        if(pos==3&&!saveEnabled){
+            title.text=titles[pos]
+            title.setTextColor(Color.parseColor("#DDDDDD"))
+            image.setImageResource(R.drawable.ic_done_disabled)
+        }else
+        {
+            title.text=titles[pos]
+            title.setTextColor(Color.parseColor(if(selected)"#ff6f69" else "#909090"))
+            image.setImageResource(if(selected)iconsOn[pos] else iconsOff[pos])
+        }
+        tabLayout.getTabAt(pos)?.customView=null
+        tabLayout.getTabAt(pos)?.customView = view
+        tabLayout.refreshDrawableState()
     }
 }
