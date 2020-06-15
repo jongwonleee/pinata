@@ -11,7 +11,7 @@ import kotlin.math.sqrt
 class ImageHalo {
     private lateinit var colors: IntArray
 
-    private var weight: Int = 110
+    private var weight: Int = 105
 
     private var coordQueue: Queue<Triple<Int, Int, Pair<Int, Int>>> = LinkedList()
     private var width: Int = 1
@@ -35,13 +35,11 @@ class ImageHalo {
             isScaled = true
         }
 
-        colors = IntArray(scaledInputBitmap.width * scaledInputBitmap.height)
-        scaledInputBitmap.getPixels(colors, 0, scaledInputBitmap.width, 0, 0, scaledInputBitmap.width, scaledInputBitmap.height)
+        colors = IntArray(width * height)
+        scaledInputBitmap.getPixels(colors, 0, width, 0, 0, width, scaledInputBitmap.height)
 
-        width = scaledInputBitmap.width
-        height = scaledInputBitmap.height
-        val widthMax = scaledInputBitmap.width / weight
-        val heightMax = scaledInputBitmap.height / weight
+        val widthMax = width / weight
+        val heightMax = height / weight
         val distMax = widthMax.coerceAtMost(heightMax)
         var dist: Array<Array<Float>> = Array(width) { Array(height) { distMax.toFloat() } }
 
@@ -73,7 +71,7 @@ class ImageHalo {
                 for (w in 0 until widthMax) {
                     val wDistance = distance(w, 0)
                     val newColor =
-                        Color.argb(alpha * (widthMax - w) / widthMax, red, green, blue)
+                        Color.argb(alpha * (distMax - w) / distMax, red, green, blue)
                     when (xDirection) {
                         0 -> {
                             if (x >= w)
@@ -115,7 +113,7 @@ class ImageHalo {
                 for (h in 0 until heightMax) {
                     val yDistance = distance(0, h)
                     val newColor =
-                        Color.argb(alpha * (heightMax - h) / heightMax, red, green, blue)
+                        Color.argb(alpha * (distMax - h) / distMax, red, green, blue)
                     when (yDirection) {
                         0 -> {
                             if (y > h)
@@ -157,13 +155,7 @@ class ImageHalo {
                 for (w in 0 until widthMax) {
                     for (h in 0 until heightMax) {
                         val xyDistance = distance(w, h);
-                        val newColor =
-                            Color.argb(
-                                alpha * (distMax - distance(w, h).toInt()) / distMax,
-                                red,
-                                green,
-                                blue
-                            )
+                        val newColor = Color.argb((alpha * (distMax - xyDistance) / distMax).toInt(), red, green, blue)
                         when (xDirection) {
                             0 -> {
                                 if (x > w) {

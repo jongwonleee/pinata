@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var buttonOriginal: ImageView
-    private lateinit var imageOriginal:ImageView
+    private lateinit var imageOriginal: ImageView
     private lateinit var fragmentMask: FragmentMask
     private lateinit var fragmentBackground: FragmentBackground
     private lateinit var fragmentPerson: FragmentPerson
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
-    private var saveEnabled=false
+    private var saveEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         imageNew = findViewById(R.id.image_new)
         buttonOriginal = findViewById(R.id.button_original)
         viewPager = findViewById(R.id.viewPager)
-        imageOriginal=findViewById(R.id.image_original)
+        imageOriginal = findViewById(R.id.image_original)
         maskSeparator = MaskSeparator()
 
         buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         fragmentBackground = FragmentBackground()
         fragmentMask = FragmentMask()
         fragmentPerson = FragmentPerson()
-        val fragmentEmpty=FragmentMask()
+        val fragmentEmpty = FragmentMask()
         val tabAdapter = TabPagerAdapter(supportFragmentManager, 4) //behavior 4 -> 5
         tabAdapter.addPage(fragmentMask, "마스크")
         tabAdapter.addPage(fragmentPerson, "인물")
@@ -62,17 +62,17 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(tabSelectedListener)
-        imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
+        imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
                 fragmentBackground.setImage()
                 fragmentPerson.refreshBackground()
-                saveEnabled=true
-                (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=true
-                if(!saveEnabled) Toast.makeText(applicationContext,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG)
+                saveEnabled = true
+                (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = true
+                if (!saveEnabled) Toast.makeText(applicationContext, "이제 저장하실 수 있습니다", Toast.LENGTH_LONG)
 
             }
         })
-        (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=false
+        (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = false
 
 
     }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                     fragmentBackground.setImage()
                 }
                 3 -> {
-                    if(saveEnabled){
+                    if (saveEnabled) {
                         val intent = Intent(this@MainActivity, SaveActivity::class.java)
                         startActivity(intent)
                     }
@@ -111,24 +111,26 @@ class MainActivity : AppCompatActivity() {
                     imageManager.personOriginal = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
                     imageManager.personFiltered = Bitmap.createBitmap(imageManager.personOriginal)
                     imageManager.startInpaint()
-                    saveEnabled=false
-                    (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=false
+                    saveEnabled = false
+                    (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = false
                 }
-                1->{
+                1 -> {
                     fragmentPerson.saveImage()
                 }
-                2->{
+                2 -> {
                     fragmentBackground.saveImage()
                 }
             }
         }
     }
-    fun setImageBitmap(iv:ImageView,bitmap:Bitmap){
+
+    fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
         Glide.with(this).load(bitmap).into(iv)
     }
+
     fun initializeImage() {
-        setImageBitmap(imageNew,imageManager.original)
-        setImageBitmap(imageOriginal,imageManager.original)
+        setImageBitmap(imageNew, imageManager.original)
+        setImageBitmap(imageOriginal, imageManager.original)
         //TODO stack 초기화 시켜주기
     }
 
@@ -136,8 +138,8 @@ class MainActivity : AppCompatActivity() {
         override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
             if (p1 != null) {
                 when (p1.action) {
-                    MotionEvent.ACTION_DOWN-> imageOriginal.visibility= View.VISIBLE
-                    MotionEvent.ACTION_UP -> imageOriginal.visibility= View.GONE
+                    MotionEvent.ACTION_DOWN -> imageOriginal.visibility = View.VISIBLE
+                    MotionEvent.ACTION_UP -> imageOriginal.visibility = View.GONE
                 }
             }
             return true
@@ -151,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    fun onSettingButtonClick(v:View){
+    fun onSettingButtonClick(v: View) {
         val intent = Intent(this, SettingActivity::class.java)
         startActivity(intent)
     }

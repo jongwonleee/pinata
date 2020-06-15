@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
 
 import capstone.aiimageeditor.ZoomGestureListener;
 
-import static com.google.common.primitives.Floats.min;
-import static java.lang.Float.max;
+import static java.lang.Integer.min;
+import static java.lang.Integer.max;
 
 public class DrawingView extends View {
     private Path drawPath;
@@ -125,6 +125,7 @@ public class DrawingView extends View {
         Canvas tempCanvas = new Canvas(tempBitmap);
         Canvas tempOriginCanvas = new Canvas(tempOriginBitmap);
         Bitmap scaledOriginalBitmap = Bitmap.createScaledBitmap(original, width, height, true);
+
         tempOriginCanvas.drawBitmap(scaledOriginalBitmap, minx, miny, canvasPaint);
         tempCanvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         tempCanvas.drawPath(drawPath, drawPaint);
@@ -140,12 +141,12 @@ public class DrawingView extends View {
             Log.i("[drawableBitmap]", getWidth() + ", " + getHeight() + "");
             Log.i("[touchX, minX]", touchX + ", " + minx + "");
             Log.i("[touchY, minY]", touchY + ", " + miny + "");
-            float xCoord = max(touchX, smallBitmap.getWidth() / 2);
-            float yCoord = max(touchY, smallBitmap.getHeight() / 2);
-            xCoord = min(xCoord, getWidth() - (float) smallBitmap.getWidth() / 2 - 1);
-            yCoord = min(yCoord, getHeight() - (float) smallBitmap.getHeight() / 2 - 1);
+            int xCoord = max((int)touchX, smallBitmap.getWidth() / 2);
+            int yCoord = max((int)touchY, smallBitmap.getHeight() / 2);
+            xCoord = min(xCoord, getWidth() - smallBitmap.getWidth() / 2 - 1);
+            yCoord = min(yCoord, getHeight() - smallBitmap.getHeight() / 2 - 1);
             smallBitmap =
-                    Bitmap.createBitmap(tempOriginBitmap, (int) xCoord - smallBitmap.getWidth() / 2, (int) yCoord - smallBitmap.getHeight() / 2, smallBitmap.getWidth(), smallBitmap.getHeight());
+                    Bitmap.createBitmap(tempOriginBitmap, xCoord - smallBitmap.getWidth() / 2, yCoord - smallBitmap.getHeight() / 2, smallBitmap.getWidth(), smallBitmap.getHeight());
             Bitmap scaledSmallBitmap = Bitmap.createScaledBitmap(smallBitmap, 400, 400, true);
 
 
@@ -161,10 +162,10 @@ public class DrawingView extends View {
 
             if (isRight) {
                 canvas.drawBitmap(scaledSmallBitmap, getWidth() - (float) scaledSmallBitmap.getWidth() - minx - rectPaint.getStrokeWidth(), 200, null);
-                canvas.drawRect(new RectF(getWidth() - (float) scaledSmallBitmap.getWidth() - minx - rectPaint.getStrokeWidth(), 200, getWidth() - minx - rectPaint.getStrokeWidth(), 200 + (float) scaledSmallBitmap.getHeight()), rectPaint);
+                canvas.drawRect(new Rect(getWidth() - scaledSmallBitmap.getWidth() - minx - (int)rectPaint.getStrokeWidth(), 200, getWidth() - minx - (int)rectPaint.getStrokeWidth(), 200 + scaledSmallBitmap.getHeight()), rectPaint);
             } else {
                 canvas.drawBitmap(scaledSmallBitmap, minx + rectPaint.getStrokeWidth(), 200, null);
-                canvas.drawRect(new RectF(minx + rectPaint.getStrokeWidth(), 200, minx + (float) scaledSmallBitmap.getWidth() + rectPaint.getStrokeWidth(), 200 + (float) scaledSmallBitmap.getHeight()), rectPaint);
+                canvas.drawRect(new Rect(minx + (int)rectPaint.getStrokeWidth(), 200, minx + scaledSmallBitmap.getWidth() + (int)rectPaint.getStrokeWidth(), 200 + scaledSmallBitmap.getHeight()), rectPaint);
             }
         }
     }
