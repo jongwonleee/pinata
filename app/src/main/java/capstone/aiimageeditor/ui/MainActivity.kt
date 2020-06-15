@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         private val iconsOn = listOf(R.drawable.ic_person_on,R.drawable.ic_user_on,R.drawable.ic_background_on,R.drawable.ic_done_on)
         private val ON_SAVE_ACTIVITY_RESULT=0
         private var backKeyPressedTime: Long = 0
+        private var tabIndexLast=0
     }
 
 
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
             setTabView(tab!!.position,false)
+            tabIndexLast=tab!!.position
             when (tab!!.position) {
                 0 -> {
                     fragmentMask.deleteView()
@@ -131,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                     imageManager.startInpaint()
                     saveEnabled = false
                     (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = false
+                    setTabView(3,false)
                 }
                 1 -> {
                     fragmentPerson.saveImage()
@@ -217,8 +220,8 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
         }else if(requestCode == ON_SAVE_ACTIVITY_RESULT){
-            tabLayout.getTabAt(0)?.select()
-            setTabView(0,true)
+            tabLayout.getTabAt(tabIndexLast)?.select()
+            setTabView(tabIndexLast,true)
             setTabView(3,false)
         }
         super.onActivityResult(requestCode, resultCode, data)

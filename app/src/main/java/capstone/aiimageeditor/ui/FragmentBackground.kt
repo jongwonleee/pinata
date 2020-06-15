@@ -82,14 +82,11 @@ class FragmentBackground : Fragment() {
         addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
         seekBar.progress = 50
     }
-    fun setImageBitmap(iv:ImageView,bitmap: Bitmap){
-        Glide.with(this).load(bitmap).into(iv)
-    }
 
     fun setImage() {
         try {
             gpuImage.setImage(imageManager.backgroundOriginal)
-            setImageBitmap(imageFG,imageManager.personFiltered)
+            imageFG.setImageBitmap(imageManager.personFiltered)
             imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
         }catch (e:Exception){
 

@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.customviews.DrawingView
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
-import capstone.aiimageeditor.ZoomGestureListener
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 
 

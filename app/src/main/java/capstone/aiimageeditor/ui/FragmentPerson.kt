@@ -124,12 +124,12 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 
 
     fun refreshBackground() {
-        setImageBitmap(imageBG, imageManager.backgroundFiltered)
+        imageBG.setImageBitmap(imageManager.backgroundFiltered)
     }
 
     public fun setImage() {
-        setImageBitmap(imageFG, imageManager.personOriginal)
-        setImageBitmap(imageBG, imageManager.backgroundFiltered)
+        imageFG.setImageBitmap( imageManager.personOriginal)
+        imageBG.setImageBitmap( imageManager.backgroundFiltered)
         gpuImage.setImage(imageManager.personOriginal)
         imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
@@ -268,10 +268,6 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
             setImage(toImageView, bitmap)
         }
 
-    }
-
-    fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
-        Glide.with(this).load(bitmap).into(iv)
     }
 
     private fun setImage(toImageView: Boolean, bitmap: Bitmap) {
