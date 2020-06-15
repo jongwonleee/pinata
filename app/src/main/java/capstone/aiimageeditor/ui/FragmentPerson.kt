@@ -109,7 +109,7 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (tabPosition == 9) {
+                if (tabPosition == 8) {
                     if (seekBar != null) {
                         imageHalo.setWeight(seekBar.progress)
                     }
@@ -279,7 +279,7 @@ class FragmentPerson : Fragment(), View.OnClickListener ,View.OnTouchListener{
 
     private fun setImage(toImageView: Boolean, bitmap:Bitmap) {
         if (toImageView) imageFG.setImageBitmap(bitmap)
-        else imageManager.personFiltered = bitmap
+        imageManager.personFiltered = bitmap
     }
 
     override fun onClick(p0: View?) {
