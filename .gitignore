@@ -12,6 +12,5 @@
 /captures
 .externalNativeBuild
 .cxx
-/app/src/main/cpp/CMakeLists.txt
-./app/src/main/cpp/CMakeLists.txt
-app/src/main/cpp/CMakeLists.txt
+/app/src/main/cpp/CMakeList.txt
+/app/google-services.json

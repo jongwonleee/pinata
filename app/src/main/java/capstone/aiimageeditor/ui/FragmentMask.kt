@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -27,17 +24,20 @@ class FragmentMask : Fragment() {
     private lateinit var imageManager: ImageManager
     private lateinit var maskView: DrawingView
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         seekBar = view.findViewById(R.id.seekBar)
         imageBG = view.findViewById(R.id.image_bg)
         imageFG = view.findViewById(R.id.image_fg)
         tabLayout = view.findViewById(R.id.tabLayout)
         imageManager = (activity?.application as ImageManager)
+
         setImage(context!!)
+
         seekBar.max = 90
         seekBar.progress = 45
-
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 maskView.setStrokeWidth((p1 + 10).toFloat())
@@ -68,9 +68,9 @@ class FragmentMask : Fragment() {
 
     }
 
-    fun setImage(context:Context) {
-        Log.i("!!","${imageManager.mask.width}")
-        maskView = DrawingView(context,imageManager.mask)
+
+    fun setImage(context: Context) {
+        maskView = DrawingView(context, imageManager.mask, imageManager.original)
         maskView.setStrokeWidth(55f)
         imageBG.setImageBitmap(imageManager.original)
         imageFG.addView(maskView)

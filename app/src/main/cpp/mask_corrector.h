@@ -20,13 +20,10 @@ private:
     vector<pair<int,int>> leftEdges;
     vector<pair<int,int>> rightEdges;
     int CHECK_SIZE = 3;
-    void Correct();
     bool isBlack(uchar * ptr);
     bool setMask(int, int, bool);
-    bool setMaskByNear(int, int, bool);
     int checkNear(int,int,int);
     void detectMaskEdges();
-    void detectSharpMaskEdges();
     void detectSourceEdges(int,int);
     void color(int x,int y);
 public:
