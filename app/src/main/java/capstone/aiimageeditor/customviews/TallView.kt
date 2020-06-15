@@ -2,6 +2,7 @@ package capstone.aiimageeditor.customviews
 
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.ACTION_DOWN
@@ -9,6 +10,10 @@ import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_MOVE
 import android.view.View
+import androidx.annotation.RequiresApi
+import androidx.core.graphics.toColor
+import androidx.core.graphics.toColorLong
+import capstone.aiimageeditor.R
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -86,7 +91,6 @@ class TallView  @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-
         initBitmap(w,h)
         initialize(207f, 320f, 481f) //initialize after generateCoordinates
 
@@ -107,28 +111,7 @@ class TallView  @JvmOverloads constructor(
         )
     }
 
-
-    fun removeLines() {
-        val drawPaint = Paint()
-        drawPaint.setColor(Color.BLACK)
-        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
-        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
-
-        //canvas.drawBitmap(bgimg,minx.toFloat(),miny.toFloat(), Paint())
-        paint.color=Color.argb(128,255,255,255)
-        //canvas.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
-
-        drawCanvas.drawBitmapMesh(
-            bitmap,
-            meshWidth,
-            meshHeight,     //2차원좌표를 1차원배열로 표현
-            coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
-            0,
-            null,
-            0,
-            null
-        )
-    }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawPaint = Paint()
@@ -138,8 +121,8 @@ class TallView  @JvmOverloads constructor(
         val LinePaint = Paint()
         LinePaint.setStrokeWidth(6f)
         LinePaint.setStyle(Paint.Style.FILL)
-        LinePaint.setColor(Color.RED)
-
+        LinePaint.color = Color.argb(0.5f,1f,0f,0f)
+        LinePaint.textSize=50f
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 
         drawCanvas.drawBitmapMesh(
@@ -153,52 +136,16 @@ class TallView  @JvmOverloads constructor(
             null
         )
 
-        //drawCoordinates(drawCanvas)
-        //drawLines(drawCanvas)
-
         canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
 
-        //drawcanvas or canvas 어디에 그리나?
-        drawCanvas.drawLine(0f, Lines[0], drawCanvas.width.toFloat(), Lines[0], LinePaint)
-        drawCanvas.drawLine(0f, Lines[1], drawCanvas.width.toFloat(), Lines[1], LinePaint)
-        drawCanvas.drawLine(0f, Lines[2], drawCanvas.width.toFloat(), Lines[2], LinePaint)
+        drawCanvas.drawLine(0f, Lines[0], drawCanvas.width.toFloat()-105, Lines[0], LinePaint)
+        drawCanvas.drawLine(0f, Lines[1], drawCanvas.width.toFloat()-105, Lines[1], LinePaint)
+        drawCanvas.drawLine(0f, Lines[2], drawCanvas.width.toFloat()-105, Lines[2], LinePaint)
+
+        drawCanvas.drawText("턱끝",drawCanvas.width.toFloat()-100,Lines[0]+20, LinePaint)
+        drawCanvas.drawText("허리",drawCanvas.width.toFloat()-100,Lines[1]+20, LinePaint)
+        drawCanvas.drawText("발끝",drawCanvas.width.toFloat()-100,Lines[2]+20, LinePaint)
     }
-
-    private fun drawCoordinates(canvas: Canvas) {
-        coordinates.forEach {
-            canvas.drawPoint(it.first, it.second, paint)
-        }
-    }
-
-    private fun drawLines(canvas: Canvas) {
-
-        coordinates.forEachIndexed { index, pair ->
-            // Draw horizontal line with next column
-            if (((index + 1) % (meshWidth + 1)) != 0) {
-                val nextCoordinate = coordinates[index + 1]
-                drawLine(canvas, pair, nextCoordinate)
-            }
-
-            // Draw horizontal line with next row
-            if (((index < (meshWidth + 1) * meshHeight))) {
-                val nextCoordinate = coordinates[index + meshWidth + 1]
-                drawLine(canvas, pair, nextCoordinate)
-            }
-        }
-    }
-
-    private fun drawLine(
-        canvas: Canvas,
-        pair: Pair<Float, Float>,
-        nextCoordinate: Pair<Float, Float>
-    ) {
-        canvas.drawLine(
-            pair.first, pair.second,
-            nextCoordinate.first, nextCoordinate.second,
-            paint
-        )
-    }
-
 
 
 

@@ -11,7 +11,7 @@
         android:id="@+id/view3"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#DDEEEEEE"
+        android:background="#EEEEEE"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -66,7 +66,7 @@
         android:id="@+id/view2"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#DDEEEEEE"
+        android:background="#EEEEEE"
         app:layout_constraintBottom_toTopOf="@+id/tabLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -130,7 +130,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="감마" />
+            android:text="미드톤" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -155,12 +155,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="번" />
+            android:text="대비" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="진동" />
+            android:text="명도" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

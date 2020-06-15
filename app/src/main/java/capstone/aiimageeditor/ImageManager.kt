@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.core.graphics.set
 import capstone.aiimageeditor.inpaint.Inpaint
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 
@@ -22,6 +23,36 @@ class ImageManager : Application() {
     lateinit var backgroundOriginal:Bitmap
     lateinit var personFiltered:Bitmap
     lateinit var backgroundFiltered:Bitmap
+
+
+    var personFilters = arrayListOf<GPUImageFilter?>()
+    var personAdjusts = arrayListOf<Int>()
+    var doHalo=false
+    var haloColor=Color.WHITE
+
+    var backgroundFilters = arrayListOf<GPUImageFilter?>()
+    var backgroundAdjusts = arrayListOf<Int>()
+
+    fun initialize(){
+        haloColor=Color.WHITE
+        personFilters.clear()
+        personAdjusts.clear()
+        backgroundFilters.clear()
+        backgroundAdjusts.clear()
+        for (i in 0..9) {
+            personFilters.add(null)
+            personAdjusts.add(50)
+        }
+        for (i in 0..8) {
+            backgroundFilters.add(null)
+            backgroundAdjusts.add(50)
+        }
+        personAdjusts[4] = 0
+        personAdjusts[8] = 0
+        doHalo=false
+        backgroundAdjusts[5] = 0
+    }
+
     private lateinit var listener:OnFinishInpaint
     var isInpainting=false
 
@@ -83,13 +114,6 @@ class ImageManager : Application() {
         listener.onFinishInpaint()*/
     }
 
-    fun resetImages(){
-        original = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
-        mask = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
-        personOriginal=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
-        backgroundOriginal=Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
-        personFiltered
-    }
 
     fun loadOriginal(uri:Uri): Boolean {
         var image =getImageFromUri(uri)

@@ -46,8 +46,6 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
     private lateinit var imageHalo: ImageHalo
     private lateinit var buttonColorChange: FloatingActionButton
     private lateinit var buttonToggleLiquify: FloatingActionButton
-    private var filters = arrayListOf<GPUImageFilter?>()
-    private var adjusts = arrayListOf<Int>()
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
     private var isLiquify = true
@@ -55,13 +53,9 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for (i in 0..9) {
-            filters.add(null)
-            adjusts.add(50)
-        }
-        adjusts[4] = 0
-        adjusts[8] = 0
+
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,6 +76,7 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 
         imageManager = (activity?.application as ImageManager)
 
+
         gpuImage = GPUImage(context)
 
         imageFG.setOnTouchListener(this)
@@ -100,8 +95,8 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                     else imageTall.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
 
                 } else if (tabPosition != 8) {
-                    adjusts[tabPosition] = progress
-                    filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
+                    imageManager.personAdjusts[tabPosition] = progress
+                    filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.personFilters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
                     applyFilters(true)
                 }
@@ -111,32 +106,36 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (tabPosition == 8) {
                     if (seekBar != null) {
-                        imageHalo.setWeight(seekBar.progress)
+                        if(seekBar.progress==0)imageManager.doHalo=false
+                        else {
+                            imageManager.doHalo=true
+                            imageManager.personAdjusts[8]=seekBar.progress
+                            imageHalo.setWeight(seekBar.progress)
+                        }
                     }
                     applyFilters(true)
                 }
             }
         })
         tabLayout.addOnTabSelectedListener(tabListener)
-        seekBar.progress = 50
-
     }
 
 
     fun refreshBackground() {
-        setImageBitmap(imageBG, imageManager.backgroundFiltered)
+        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
     }
 
     public fun setImage() {
-        setImageBitmap(imageFG, imageManager.personOriginal)
-        setImageBitmap(imageBG, imageManager.backgroundFiltered)
-        gpuImage.setImage(imageManager.personOriginal)
+        imageBG.setImageBitmap( imageManager.backgroundFiltered)
         imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageHalo = ImageHalo()
+        imageHalo.setWeight(imageManager.personAdjusts[8])
+        imageHalo.setColor(imageManager.haloColor)
         imageLiquify.visibility = View.VISIBLE
-        seekBar.progress = 0
         seekBar.visibility = View.VISIBLE
+        imageFG.setImageBitmap(imageManager.personFiltered)
+        tabLayout.getTabAt(0)?.select()
     }
 
     public fun saveImage() {
@@ -160,11 +159,11 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
         imageFG.visibility = View.VISIBLE
         val index = tabPosition
         var filter = f
-        if (filters[index] != null) {
-            filter = filters[index]!!
-            seekBar.progress = adjusts[index];
+        if (imageManager.personFilters[index] != null) {
+            filter = imageManager.personFilters[index]!!
+            seekBar.progress = imageManager.personAdjusts[index];
         } else {
-            filters[index] = f
+            imageManager.personFilters[index] = f
         }
 
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
@@ -204,7 +203,6 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                         imageManager.personOriginal = imageLiquify.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
                         buttonTogleLiquify.setImageResource(R.drawable.ic_finger)
                     } else {
-                        //imageTall.removeLines()
                         imageTall.visibility = View.GONE
 
                         imageManager.personOriginal = imageTall.getTalledImage(
@@ -219,7 +217,9 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
         }
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
+/*
             applyFilters(true)
+*/
 
             buttonColorChange.visibility = View.GONE
             seekBar.visibility = View.VISIBLE
@@ -244,9 +244,8 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                 7 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
                 8 -> {
                     imageFG.visibility = View.VISIBLE
-                    imageHalo.doHalo = true
                     buttonColorChange.visibility = View.VISIBLE
-                    imageHalo.setColor(Color.WHITE)
+                    imageHalo.setColor(imageManager.haloColor)
                     seekBar.progress = 0
                     applyFilters(true)
                 }
@@ -254,24 +253,20 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                     addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.TOON))
                 }
             }
-            if (tabPosition != 8 && tabPosition != 1) //나중에 고치기
-                seekBar.progress = adjusts[tabPosition]
+            seekBar.progress = imageManager.personAdjusts[tabPosition]
         }
 
     }
 
     fun applyFilters(toImageView: Boolean) {
         var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
-        bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, filters)
-        if (imageHalo.doHalo) setImage(true, imageHalo.run(bitmap))
+        bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, imageManager.personFilters)
+        Log.i("!!","${imageManager.doHalo}")
+        if (imageManager.doHalo) setImage(toImageView, imageHalo.run(bitmap))
         else {
             setImage(toImageView, bitmap)
         }
 
-    }
-
-    fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
-        Glide.with(this).load(bitmap).into(iv)
     }
 
     private fun setImage(toImageView: Boolean, bitmap: Bitmap) {
