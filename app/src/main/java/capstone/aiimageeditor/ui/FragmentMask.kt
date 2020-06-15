@@ -70,6 +70,7 @@ class FragmentMask : Fragment() {
 
     }
 
+
     fun setImage(context: Context) {
         maskView = DrawingView(context, imageManager.mask, imageManager.original)
         maskView.setStrokeWidth(55f)

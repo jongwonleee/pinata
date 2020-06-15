@@ -2,12 +2,15 @@ package capstone.aiimageeditor.ui
 
 import android.content.Intent
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentPerson: FragmentPerson
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
+    private var saveEnabled=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +62,19 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(tabSelectedListener)
+        imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
+            override fun onFinishInpaint() {
+                fragmentBackground.setImage()
+                fragmentPerson.refreshBackground()
+                saveEnabled=true
+                (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=true
+                if(!saveEnabled) Toast.makeText(applicationContext,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG)
+
+            }
+        })
+        (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=false
+
+
     }
 
     val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
@@ -74,8 +91,11 @@ class MainActivity : AppCompatActivity() {
                     fragmentBackground.setImage()
                 }
                 3 -> {
-                    val intent = Intent(this@MainActivity, SaveActivity::class.java)
-                    startActivity(intent)
+                    if(saveEnabled){
+                        val intent = Intent(this@MainActivity, SaveActivity::class.java)
+                        startActivity(intent)
+                    }
+
                 }
             }
         }
@@ -91,12 +111,8 @@ class MainActivity : AppCompatActivity() {
                     imageManager.personOriginal = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
                     imageManager.personFiltered = Bitmap.createBitmap(imageManager.personOriginal)
                     imageManager.startInpaint()
-                    imageManager.setOnFinishInpaint(object:ImageManager.OnFinishInpaint{
-                        override fun onFinishInpaint() {
-                            fragmentBackground.setImage()
-                            fragmentPerson.refreshBackground()
-                        }
-                    })
+                    saveEnabled=false
+                    (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=false
                 }
                 1->{
                     fragmentPerson.saveImage()
