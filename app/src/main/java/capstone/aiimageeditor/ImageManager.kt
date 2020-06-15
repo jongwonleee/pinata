@@ -3,15 +3,17 @@ package capstone.aiimageeditor
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import androidx.core.graphics.set
+import capstone.aiimageeditor.inpaint.Inpaint
 import org.opencv.android.Utils
 import org.opencv.core.Mat
-import java.lang.Exception
 
 class ImageManager : Application() {
     lateinit var original:Bitmap
@@ -52,8 +54,33 @@ class ImageManager : Application() {
     }
 
     fun startInpaint(){
+
         backgroundOriginal = Bitmap.createBitmap(original)
         InpaintTask().execute(0)
+
+
+/*        var input = Bitmap.createBitmap(original)
+        val maskimage = Bitmap.createBitmap(mask)
+
+        var W: Int = maskimage.getWidth()
+        var H: Int = maskimage.getHeight()
+        val mask = Array(W) { BooleanArray(H) }
+        for (y in 0 until H)
+            for (x in 0 until W)
+                mask[x][y] = maskimage.getPixel(x,y) == Color.WHITE
+
+        W = input.getWidth()
+        H = input.getHeight()
+        for (y in 0 until H)
+            for (x in 0 until W)
+                if (mask[x][y]) input.setPixel(x, y, -0x10000)
+
+        val result = Inpaint().inpaint(input, mask, 2);
+        backgroundOriginal=result
+        backgroundFiltered=result.copy(Bitmap.Config.ARGB_8888,true)
+        isInpainting=false
+        Log.i("!!","inpaint finished")
+        listener.onFinishInpaint()*/
     }
 
     fun resetImages(){
