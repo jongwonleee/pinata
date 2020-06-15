@@ -121,7 +121,7 @@ class TallView  @JvmOverloads constructor(
         val LinePaint = Paint()
         LinePaint.setStrokeWidth(6f)
         LinePaint.setStyle(Paint.Style.FILL)
-        LinePaint.color = Color.argb(180,255,0,0)
+        LinePaint.color = Color.argb(0.5f,1f,0f,0f)
         LinePaint.textSize=50f
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 

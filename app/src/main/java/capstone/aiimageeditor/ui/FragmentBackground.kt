@@ -32,21 +32,13 @@ class FragmentBackground : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
-
-
-    private var filters = arrayListOf<GPUImageFilter?>()
-    private var adjusts = arrayListOf<Int>()
+    
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for (i in 0..8) {
-            filters.add(null)
-            adjusts.add(50)
-        }
-        adjusts[5] = 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,17 +51,19 @@ class FragmentBackground : Fragment() {
 
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
+        imageManager.backgroundAdjusts = imageManager.backgroundAdjusts
+        imageManager.backgroundFilters = imageManager.backgroundFilters
 
         imageBG.visibility = View.VISIBLE
         seekBar.max = 100
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (filters[tabPosition] != null) {
-                    adjusts[tabPosition] = progress
-                    filterAdjuster = GPUImageFilterTools.FilterAdjuster(filters[tabPosition]!!)
+                if (imageManager.backgroundFilters[tabPosition] != null) {
+                    imageManager.backgroundAdjusts[tabPosition] = progress
+                    filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.backgroundFilters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
 
                 }
             }
@@ -87,7 +81,8 @@ class FragmentBackground : Fragment() {
         try {
             gpuImage.setImage(imageManager.backgroundOriginal)
             imageFG.setImageBitmap(imageManager.personFiltered)
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
+
         }catch (e:Exception){
 
             e.printStackTrace()
@@ -96,7 +91,7 @@ class FragmentBackground : Fragment() {
     }
 
     fun saveImage() {
-        imageManager.backgroundFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, filters)
+        imageManager.backgroundFiltered = gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters)
     }
 
     override fun onCreateView(
@@ -111,11 +106,11 @@ class FragmentBackground : Fragment() {
     private fun addFilter(f: GPUImageFilter) {
         val index = tabPosition
         var filter = f
-        if (filters[index] != null) {
-            filter = filters[index]!!
-            seekBar.progress = adjusts[index];
+        if (imageManager.backgroundFilters[index] != null) {
+            filter = imageManager.backgroundFilters[index]!!
+            seekBar.progress = imageManager.backgroundAdjusts[index];
         } else {
-            filters[index] = f
+            imageManager.backgroundFilters[index] = f
         }
 
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
@@ -146,7 +141,7 @@ class FragmentBackground : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,filters))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
             seekBar.visibility=View.VISIBLE
             tabPosition= tab!!.position
             when(tab?.position){
@@ -161,7 +156,7 @@ class FragmentBackground : Fragment() {
                 8-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIBRANCE))
 
             }
-            seekBar.progress = adjusts[tabPosition]
+            seekBar.progress = imageManager.backgroundAdjusts[tabPosition]
         }
 
     }

@@ -79,13 +79,15 @@ class MainActivity : AppCompatActivity() {
         setTabView(1,false)
         setTabView(2,false)
         setTabView(3,false)
+
+        imageManager.initialize()
         imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
                 fragmentBackground.setImage()
                 fragmentPerson.refreshBackground()
                 saveEnabled=true
                 (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=true
-                Toast.makeText(this@MainActivity,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG)
+                Toast.makeText(this@MainActivity,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG).show()
                 setTabView(3,false)
 
             }
@@ -120,6 +122,18 @@ class MainActivity : AppCompatActivity() {
 
         override fun onTabReselected(tab: TabLayout.Tab?) {
             setTabView(tab!!.position,true)
+            when (tab!!.position) {
+                0 -> {
+                    imageManager.InpaintTask().cancel(true)
+                    fragmentMask.setImage(this@MainActivity.applicationContext)
+                }
+                1 -> {
+                    fragmentPerson.setImage()
+                }
+                2 -> {
+                    fragmentBackground.setImage()
+                }
+            }
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -206,7 +220,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
             backKeyPressedTime = System.currentTimeMillis();
-            Toast.makeText(this, "로 갈 시 현재까지의 결과물은 저장되지 않습니다.뒤\n 한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "뒤로 갈 시 현재까지의 결과물은 저장되지 않습니다.\n한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
             return
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
