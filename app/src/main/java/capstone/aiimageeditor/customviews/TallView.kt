@@ -2,6 +2,7 @@ package capstone.aiimageeditor.customviews
 
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.ACTION_DOWN
@@ -9,6 +10,10 @@ import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_MOVE
 import android.view.View
+import androidx.annotation.RequiresApi
+import androidx.core.graphics.toColor
+import androidx.core.graphics.toColorLong
+import capstone.aiimageeditor.R
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -106,6 +111,7 @@ class TallView  @JvmOverloads constructor(
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawPaint = Paint()
@@ -115,7 +121,7 @@ class TallView  @JvmOverloads constructor(
         val LinePaint = Paint()
         LinePaint.setStrokeWidth(6f)
         LinePaint.setStyle(Paint.Style.FILL)
-        LinePaint.setColor(Color.RED)
+        LinePaint.color = Color.argb(180,255,0,0)
         LinePaint.textSize=50f
         drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
 
