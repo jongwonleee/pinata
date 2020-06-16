@@ -1,3 +1,5 @@
 /build
 
 /app/src/main/cpp/CMakeLists.txt
+/app/google-services.json
+/app/release/app-release.aab
