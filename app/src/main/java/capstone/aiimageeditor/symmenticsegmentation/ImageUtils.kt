@@ -62,7 +62,7 @@ abstract class ImageUtils {
         }
 
         fun decodeBitmap(file: File): Bitmap {
-            Log.e("[decodeBitmap]",file.absolutePath)
+            Log.e("[decodeBitmap]", file.absolutePath)
             val exif = ExifInterface(file.absolutePath)
             val transformation =
                 decodeExifOrientation(
@@ -96,13 +96,7 @@ abstract class ImageUtils {
             )
         }
 
-        fun bitmapToByteBuffer(
-            bitmapIn: Bitmap,
-            width: Int,
-            height: Int,
-            mean: Float = 0.0f,
-            std: Float = 255.0f
-        ): ByteBuffer {
+        fun bitmapToByteBuffer(bitmapIn: Bitmap, width: Int, height: Int, mean: Float = 0.0f, std: Float = 255.0f): ByteBuffer {
             val bitmap = bitmapIn
 
             val inputImage = ByteBuffer.allocateDirect(1 * width * height * 3 * 4)

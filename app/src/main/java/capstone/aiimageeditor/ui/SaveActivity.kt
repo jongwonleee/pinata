@@ -12,10 +12,12 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_save.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -27,36 +29,35 @@ import java.util.*
 
 class SaveActivity : AppCompatActivity() {
     lateinit var image: Bitmap
-    var imageUri:Uri?=null
-    companion object{
-        val SHARED_ACTIVITY=1
+    var imageUri: Uri? = null
+
+    companion object {
+        val SHARED_ACTIVITY = 1
+    }
+    fun setImageBitmap(iv: ImageView, bitmap:Bitmap){
+        Glide.with(this).load(bitmap).into(iv)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save)
         image = (application as ImageManager).mergeImage()
-        image_done.setImageBitmap(image)
+        setImageBitmap(image_done,image)
     }
 
     fun onBackButtonClick(v: View) {
         finish()
     }
 
-    fun onDeleteButtonClick(v: View) {
-        //TODO stack 구현 후 undo 구현
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode== SHARED_ACTIVITY){
-            if(imageUri != null) {
+        if (requestCode == SHARED_ACTIVITY) {
+            if (imageUri != null) {
                 val file = File(imageUri!!.path)
                 if (file.exists()) {
                     if (file.delete()) {
                         Log.i("Pinata File Share", "File sharing done")
                     }
                 }
-            }
-            else{
+            } else {
                 Log.i("[imageUri] : ", "null")
             }
         }
@@ -67,24 +68,31 @@ class SaveActivity : AppCompatActivity() {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path: String =
-            MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null)
+            MediaStore.Images.Media.insertImage(
+                inContext.getContentResolver(),
+                inImage,
+                "Title",
+                null
+            )
         return Uri.parse(path)
     }
-    fun onShareButtonClick(v: View){
-        imageUri = getImageUri(this,image)
+
+    fun onShareButtonClick(v: View) {
+        imageUri = getImageUri(this, image)
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, imageUri)
             type = "image/bmp"
         }
         val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivityForResult(shareIntent,
+        startActivityForResult(
+            shareIntent,
             SHARED_ACTIVITY
         )
 
     }
 
-    private fun saveImage(bitmap: Bitmap, name: String){
+    fun saveImage(bitmap: Bitmap, name: String) {
         val saved: Boolean
         val fos: OutputStream
         var IMAGES_FOLDER_NAME: String = "pinata"

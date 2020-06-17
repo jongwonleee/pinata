@@ -44,26 +44,14 @@ class ImageSegmentationModelExecutor(
 
             when {
                 data.width > data.height -> {
-                    resultBitmap =
-                        Bitmap.createBitmap(data.width, data.width, Bitmap.Config.ARGB_8888)
+                    resultBitmap = Bitmap.createBitmap(data.width, data.width, Bitmap.Config.ARGB_8888)
                     value = data.width
-                    destRect = Rect(
-                        0,
-                        (resultBitmap.height - data.height) / 2,
-                        value,
-                        (resultBitmap.height + data.height) / 2
-                    )
+                    destRect = Rect(0, (resultBitmap.height - data.height) / 2, value, (resultBitmap.height + data.height) / 2)
                 }
                 data.width < data.height -> {
-                    resultBitmap =
-                        Bitmap.createBitmap(data.height, data.height, Bitmap.Config.ARGB_8888)
+                    resultBitmap = Bitmap.createBitmap(data.height, data.height, Bitmap.Config.ARGB_8888)
                     value = data.height
-                    destRect = Rect(
-                        (resultBitmap.width - data.width) / 2,
-                        0,
-                        (resultBitmap.width + data.width) / 2,
-                        value
-                    )
+                    destRect = Rect((resultBitmap.width - data.width) / 2, 0, (resultBitmap.width + data.width) / 2, value)
                 }
                 else -> {
                     resultBitmap = data
@@ -76,67 +64,27 @@ class ImageSegmentationModelExecutor(
             var canvas = Canvas(mutableResultBitmap)
             canvas.drawBitmap(data, sourceRect, destRect, null)
 
-            val scaledBitmap =
-                ImageUtils.scaleBitmapAndKeepRatio(
-                    mutableResultBitmap,
-                    imageSize,
-                    imageSize
-                )
+            val scaledBitmap = ImageUtils.scaleBitmapAndKeepRatio(mutableResultBitmap, imageSize, imageSize)
 
-            val contentArray =
-                ImageUtils.bitmapToByteBuffer(
-                    scaledBitmap,
-                    imageSize,
-                    imageSize,
-                    IMAGE_MEAN,
-                    IMAGE_STD
-                )
+            val contentArray = ImageUtils.bitmapToByteBuffer(scaledBitmap, imageSize, imageSize, IMAGE_MEAN, IMAGE_STD)
 
             interpreter.run(contentArray, segmentationMasks)
 
             val (maskImageApplied, maskOnly, itemsFound) =
-                convertBytebufferMaskToBitmap(
-                    segmentationMasks,
-                    imageSize,
-                    imageSize,
-                    scaledBitmap,
-                    segmentColors
-                )
-            val scaledMaskOnly =
-                ImageUtils.scaleBitmapAndKeepRatio(
-                    maskOnly,
-                    value,
-                    value
-                )
+                convertBytebufferMaskToBitmap(segmentationMasks, imageSize, imageSize, scaledBitmap, segmentColors)
+            val scaledMaskOnly = ImageUtils.scaleBitmapAndKeepRatio(maskOnly, value, value)
 
-            val originSizeMaskOnly =
-                Bitmap.createBitmap(data.width, data.height, Bitmap.Config.ARGB_8888)
+            val originSizeMaskOnly = Bitmap.createScaledBitmap(scaledMaskOnly, data.width, data.height, true)
 
             var mutableOriginSizeMaskOnly = originSizeMaskOnly.copy(Bitmap.Config.ARGB_8888, true)
-            var canvasMask = Canvas(mutableOriginSizeMaskOnly)
-            canvasMask.drawBitmap(scaledMaskOnly, destRect, sourceRect, null)
 
-            return ModelExecutionResult(
-                maskImageApplied,
-                data, //원본
-                mutableOriginSizeMaskOnly,
-                itemsFound
-            )
+            return ModelExecutionResult(maskImageApplied, data, mutableOriginSizeMaskOnly, itemsFound)
         } catch (e: Exception) {
             val exceptionLog = "something went wrong: ${e.message}"
             Log.d(TAG, exceptionLog)
 
-            val emptyBitmap =
-                ImageUtils.createEmptyBitmap(
-                    imageSize,
-                    imageSize
-                )
-            return ModelExecutionResult(
-                emptyBitmap,
-                emptyBitmap,
-                emptyBitmap,
-                HashSet(0)
-            )
+            val emptyBitmap = ImageUtils.createEmptyBitmap(imageSize, imageSize)
+            return ModelExecutionResult(emptyBitmap, emptyBitmap, emptyBitmap, HashSet(0))
         }
     }
 
@@ -170,21 +118,9 @@ class ImageSegmentationModelExecutor(
         return Interpreter(loadModelFile(context, modelName), tfliteOptions)
     }
 
-    private val visited = Array(imageSize) {
-        BooleanArray(
-            imageSize
-        )
-    }
-    private val mSegmentBits = Array(imageSize) {
-        IntArray(
-            imageSize
-        )
-    }
-    private val areaArray = Array(imageSize) {
-        IntArray(
-            imageSize
-        )
-    }
+    private val visited = Array(imageSize) { BooleanArray(imageSize) }
+    private val mSegmentBits = Array(imageSize) { IntArray(imageSize) }
+    private val areaArray = Array(imageSize) { IntArray(imageSize) }
     private var areaCnt: Int = 0
     private var maxArea: Int = 0
     private var bfsQueue: Queue<Pair<Int, Int>> = LinkedList<Pair<Int, Int>>()
@@ -269,12 +205,7 @@ class ImageSegmentationModelExecutor(
         val conf = Bitmap.Config.ARGB_8888
         val maskBitmap = Bitmap.createBitmap(imageWidth, imageHeight, conf)
         val resultBitmap = Bitmap.createBitmap(imageWidth, imageHeight, conf)
-        val scaledBackgroundImage =
-            ImageUtils.scaleBitmapAndKeepRatio(
-                backgroundImage,
-                imageWidth,
-                imageHeight
-            )
+        val scaledBackgroundImage = ImageUtils.scaleBitmapAndKeepRatio(backgroundImage, imageWidth, imageHeight)
         val itemsFound = HashSet<Int>()
         inputBuffer.rewind()
 

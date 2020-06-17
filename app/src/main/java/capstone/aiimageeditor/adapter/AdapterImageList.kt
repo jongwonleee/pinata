@@ -40,12 +40,12 @@ class AdapterImageList(val context: Context, var images: MutableList<String>) : 
 
         }
         override fun bind(pos: Int) {
-            // img.setImageBitmap(APIs.BitmapFromURL(url,300,300))
-            // img.setImageBitmap(images[pos])
+            // imgisUpitmap(APIs.BitmapFromURL(url,300,300))
+            // imgisUpitmap(images[pos])
             img.setOnClickListener({
                 listener.onClick(pos)
             })
-            if(pos==0) img.setImageResource(R.drawable.ic_add_black_24dp)
+            if(pos==0) img.setImageResource(R.drawable.ic_add)
             else
                 Glide.with(itemView)
                     .load(Uri.parse(images[pos-1]))

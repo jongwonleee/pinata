@@ -1,5 +1,3 @@
-
-
 #include <jni.h>
 #include <string>
 #include <opencv2/imgproc.hpp>
@@ -45,21 +43,6 @@ Java_capstone_aiimageeditor_ImageManager_00024InpaintTask_startInpaint(JNIEnv *e
     sc.getDownSized(source,maskImage);
     *source = Inpainting(*source,*maskImage, 2).run(true);
     *source = sc.getMerged(*source);
-}
-extern "C"
-JNIEXPORT void JNICALL
-Java_capstone_aiimageeditor_ui_MainActivity_runMaskCorrector(JNIEnv *env, jobject thiz, jlong imagePtr,
-                                                          jlong maskPtr) {
-    cv::Mat* source;
-    cv::Mat* mask;
-    cv::Mat* ret;
-    source = (cv::Mat*) imagePtr;
-    mask = (cv::Mat*) maskPtr;
-    MaskCorrector mc = MaskCorrector(*source,*mask);
-    mc.Run();
-    *mask = mc.getResult();
-    //bitwise_and(*source,*source,*mask,*mask);
-    //mask = ret;
 }
 
 extern "C"
@@ -217,4 +200,21 @@ Java_capstone_aiimageeditor_imageprocessing_PhotoProcessing_nativeEnhanceImage(J
             break;
     }
 
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_capstone_aiimageeditor_ImageManager_startMaskCorrection(JNIEnv *env,
+                                                                              jobject thiz,
+                                                                              jlong sourceImage,
+                                                                              jlong maskPtr) {
+    cv::Mat image;
+    cv::Mat* source;
+    cv::Mat* mask;
+
+
+    source = (cv::Mat*) sourceImage;
+    mask = (cv::Mat*) maskPtr;
+    MaskCorrector maskCorrector = MaskCorrector(*source,*mask);
+    maskCorrector.Run();
+    *mask = maskCorrector.getResult();
 }
