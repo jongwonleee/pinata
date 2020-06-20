@@ -24,7 +24,7 @@ class FragmentMask : Fragment() {
     private lateinit var imageManager: ImageManager
     private lateinit var maskView: DrawingView
 
-
+//TODO custom zoomable view 이용해 줌 기능 추가
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
