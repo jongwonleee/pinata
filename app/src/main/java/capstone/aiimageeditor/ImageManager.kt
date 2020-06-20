@@ -119,7 +119,7 @@ class ImageManager : Application() {
 
     fun loadOriginal(uri: Uri): Boolean {
         var image = getImageFromUri(uri)
-        if (image != null) {
+        return if (image != null) {
             original = image
             saveOrigianl = image
 
@@ -132,8 +132,8 @@ class ImageManager : Application() {
             original = Bitmap.createScaledBitmap(original, tempWidth, tempHeight, true)
             backgroundOriginal = Bitmap.createBitmap(original)
             backgroundFiltered = Bitmap.createBitmap(original)
-            return true
-        } else return false
+            true
+        } else false
 
 
     }
@@ -173,9 +173,9 @@ class ImageManager : Application() {
             }
         }
 
-        external fun startInpaint(image: Long, mask: Long)
+        private external fun startInpaint(image: Long, mask: Long)
     }
 
-    external fun startMaskCorrection(sourceImage: Long, mask: Long)
+    private external fun startMaskCorrection(sourceImage: Long, mask: Long)
 
 }
