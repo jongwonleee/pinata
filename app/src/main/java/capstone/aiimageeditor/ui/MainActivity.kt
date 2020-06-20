@@ -35,15 +35,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
 
-    companion object{
-        private val titles = listOf("마스크","인물", "배경","저장")
-        private val iconsOff = listOf(R.drawable.ic_person_off,R.drawable.ic_user_off,R.drawable.ic_background_off,R.drawable.ic_done_off)
-        private val iconsOn = listOf(R.drawable.ic_person_on,R.drawable.ic_user_on,R.drawable.ic_background_on,R.drawable.ic_done_on)
-        private val ON_SAVE_ACTIVITY_RESULT=0
+    companion object {
+        private val titles = listOf("마스크", "인물", "배경", "저장")
+        private val iconsOff = listOf(R.drawable.ic_person_off, R.drawable.ic_user_off, R.drawable.ic_background_off, R.drawable.ic_done_off)
+        private val iconsOn = listOf(R.drawable.ic_person_on, R.drawable.ic_user_on, R.drawable.ic_background_on, R.drawable.ic_done_on)
+        private val ON_SAVE_ACTIVITY_RESULT = 0
         private var backKeyPressedTime: Long = 0
-        private var tabIndexLast=0
+        private var tabIndexLast = 0
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,20 +74,20 @@ class MainActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
-        setTabView(0,true)
-        setTabView(1,false)
-        setTabView(2,false)
-        setTabView(3,false)
+        setTabView(0, true)
+        setTabView(1, false)
+        setTabView(2, false)
+        setTabView(3, false)
 
         imageManager.initialize()
         imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
                 fragmentBackground.setImage()
                 fragmentPerson.refreshBackground()
-                saveEnabled=true
-                (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled=true
-                Toast.makeText(this@MainActivity,"이제 저장하실 수 있습니다",Toast.LENGTH_LONG).show()
-                setTabView(3,false)
+                saveEnabled = true
+                (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = true
+                Toast.makeText(this@MainActivity, "이제 저장하실 수 있습니다", Toast.LENGTH_LONG).show()
+                setTabView(3, false)
 
             }
         })
@@ -98,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
     val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            setTabView(tab!!.position,true)
+            setTabView(tab!!.position, true)
             when (tab!!.position) {
                 0 -> {
                     imageManager.InpaintTask().cancel(true)
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onTabReselected(tab: TabLayout.Tab?) {
-            setTabView(tab!!.position,true)
+            setTabView(tab!!.position, true)
             when (tab!!.position) {
                 0 -> {
                     imageManager.InpaintTask().cancel(true)
@@ -137,8 +136,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
-            setTabView(tab!!.position,false)
-            tabIndexLast=tab!!.position
+            setTabView(tab!!.position, false)
+            tabIndexLast = tab!!.position
             when (tab!!.position) {
                 0 -> {
                     fragmentMask.deleteView()
@@ -147,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                     imageManager.startInpaint()
                     saveEnabled = false
                     (tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = false
-                    setTabView(3,false)
+                    setTabView(3, false)
                 }
                 1 -> {
                     fragmentPerson.saveImage()
@@ -233,36 +232,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == StartActivity.PICK_FROM_ALBUM && data != null) {
-        }else if(requestCode == ON_SAVE_ACTIVITY_RESULT){
+        } else if (requestCode == ON_SAVE_ACTIVITY_RESULT) {
             tabLayout.getTabAt(tabIndexLast)?.select()
-            setTabView(tabIndexLast,true)
-            setTabView(3,false)
+            setTabView(tabIndexLast, true)
+            setTabView(3, false)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
 
 
     override fun onResume() {
         super.onResume()
     }
 
-    private fun setTabView(pos:Int,selected:Boolean){
-        Log.i("changing Tab","$pos, $selected ${if(selected)iconsOn[pos] else iconsOff[pos]}")
-        val view = layoutInflater.inflate(R.layout.tab_view_main,null)
+    private fun setTabView(pos: Int, selected: Boolean) {
+        Log.i("changing Tab", "$pos, $selected ${if (selected) iconsOn[pos] else iconsOff[pos]}")
+        val view = layoutInflater.inflate(R.layout.tab_view_main, null)
         val title = view.findViewById(R.id.title) as TextView
         val image = view.findViewById(R.id.icon) as ImageView
-        if(pos==3&&!saveEnabled){
-            title.text=titles[pos]
+        if (pos == 3 && !saveEnabled) {
+            title.text = titles[pos]
             title.setTextColor(Color.parseColor("#DDDDDD"))
             image.setImageResource(R.drawable.ic_done_disabled)
-        }else
-        {
-            title.text=titles[pos]
-            title.setTextColor(Color.parseColor(if(selected)"#ff6f69" else "#909090"))
-            image.setImageResource(if(selected)iconsOn[pos] else iconsOff[pos])
+        } else {
+            title.text = titles[pos]
+            title.setTextColor(Color.parseColor(if (selected) "#ff6f69" else "#909090"))
+            image.setImageResource(if (selected) iconsOn[pos] else iconsOff[pos])
         }
-        tabLayout.getTabAt(pos)?.customView=null
+        tabLayout.getTabAt(pos)?.customView = null
         tabLayout.getTabAt(pos)?.customView = view
         tabLayout.refreshDrawableState()
     }

@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.activity_setting.*
 
 
 class CopyrightActivity : Activity() {
-    companion object{
-        val str="""
+    companion object {
+        val str = """
 ## <Copyrights 2020. @jongwonleee. All rights reserved.>
 ### _contributed with. @samsohn0168, @hyemin-Jeong_
 ```markdown
@@ -137,14 +137,15 @@ Icons made by flaticon
   
 """
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_copyright)
-       /* val markdownProcessor = MarkdownProcessor(this)
-        markdownProcessor.factory(TextFactory.create())
-        val markdownConfiguration = MarkdownConfiguration()
-        markdownProcessor.config(markdownConfiguration)
-        textCopyright.text=markdownProcessor.parse("##text")*/
+        /* val markdownProcessor = MarkdownProcessor(this)
+         markdownProcessor.factory(TextFactory.create())
+         val markdownConfiguration = MarkdownConfiguration()
+         markdownProcessor.config(markdownConfiguration)
+         textCopyright.text=markdownProcessor.parse("##text")*/
         val markdownConfiguration = MarkdownConfiguration.Builder(this)
             .setDefaultImageSize(50, 50)
             .setBlockQuotesLineColor(-0xcc4a1b)
@@ -176,7 +177,7 @@ Icons made by flaticon
     }
 
     private fun toast(msg: String) {
-        var mToast:Toast? =null
+        var mToast: Toast? = null
         if (mToast == null) {
             mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
         }

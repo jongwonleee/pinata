@@ -91,7 +91,7 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
                 if (tabPosition == 0) {
-                    if (isLiquify) imageLiquify.brushsizechange(progress / 25) //0~4
+                    if (isLiquify) imageLiquify.brushSizeChange(progress / 25) //0~4
                     else imageTall.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
 
                 } else if (tabPosition != 8) {
@@ -100,21 +100,32 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                     filterAdjuster?.adjust(progress)
                     applyFilters(true)
                 }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (tabPosition == 8) {
+                else {
                     if (seekBar != null) {
-                        if(seekBar.progress==0)imageManager.doHalo=false
+                        if (seekBar.progress == 0) imageManager.doHalo = false
                         else {
-                            imageManager.doHalo=true
-                            imageManager.personAdjusts[8]=seekBar.progress
+                            imageManager.doHalo = true
+                            imageManager.personAdjusts[8] = seekBar.progress
                             imageHalo.setWeight(seekBar.progress)
                         }
                     }
                     applyFilters(true)
                 }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+//                if (tabPosition == 8) {
+//                    if (seekBar != null) {
+//                        if (seekBar.progress == 0) imageManager.doHalo = false
+//                        else {
+//                            imageManager.doHalo = true
+//                            imageManager.personAdjusts[8] = seekBar.progress
+//                            imageHalo.setWeight(seekBar.progress)
+//                        }
+//                    }
+//                    applyFilters(true)
+//                }
             }
         })
         tabLayout.addOnTabSelectedListener(tabListener)
@@ -122,11 +133,11 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 
 
     fun refreshBackground() {
-        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
+        imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
     }
 
     public fun setImage() {
-        imageBG.setImageBitmap( imageManager.backgroundFiltered)
+        imageBG.setImageBitmap(imageManager.backgroundFiltered)
         imageLiquify.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageTall.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         imageHalo = ImageHalo()
@@ -261,7 +272,7 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
     fun applyFilters(toImageView: Boolean) {
         var bitmap = Bitmap.createBitmap(imageManager.personOriginal)
         bitmap = gpuImage.getBitmapWithFiltersApplied(bitmap, imageManager.personFilters)
-        Log.i("!!","${imageManager.doHalo}")
+        Log.i("!!", "${imageManager.doHalo}")
         if (imageManager.doHalo) setImage(toImageView, imageHalo.run(bitmap))
         else {
             setImage(toImageView, bitmap)

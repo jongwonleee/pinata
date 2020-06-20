@@ -132,7 +132,6 @@ object GPUImageFilterTools {
     }
 
 
-
     public fun createFilterForType(context: Context, type: FilterType): GPUImageFilter {
         return when (type) {
             FilterType.CONTRAST -> GPUImageContrastFilter(2.0f)
@@ -608,6 +607,7 @@ object GPUImageFilterTools {
                 filter.setRadius(range(percentage, 0.0f, 1.0f))
             }
         }
+
         private inner class HazeAdjuster(filter: GPUImageHazeFilter) :
             Adjuster<GPUImageHazeFilter>(filter) {
             override fun adjust(percentage: Int) {

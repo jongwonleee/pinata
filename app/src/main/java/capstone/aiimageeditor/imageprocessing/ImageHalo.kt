@@ -20,7 +20,7 @@ class ImageHalo {
     private var color: Int = 0
 
     fun run(inputImage: Bitmap): Bitmap {
-        if(weight==1)weight=105
+        if (weight == 1) weight = 105
         width = inputImage.width
         height = inputImage.height
         totalSize = width * height
@@ -391,11 +391,11 @@ class ImageHalo {
     }
 
     fun setWeight(w: Int) {
-        Log.i("!!setWeighted","$w, $weight")
+        Log.i("!!setWeighted", "$w, $weight")
         weight = 110 - w
         weight = weight.coerceAtMost(width)
         weight = weight.coerceAtMost(height)
-        Log.i("!!setWeighted","$w, $weight")
+        Log.i("!!setWeighted", "$w, $weight")
     }
 
     fun setColor(c: Int) {

@@ -3,7 +3,6 @@ package capstone.aiimageeditor.customviews
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.ACTION_UP
 import android.view.MotionEvent
@@ -12,7 +11,7 @@ import android.view.View
 import kotlin.math.pow
 
 
-class LiquifyView  @JvmOverloads constructor(
+class LiquifyView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -24,8 +23,8 @@ class LiquifyView  @JvmOverloads constructor(
     private var xstart = 0f
     private var ystart = 0f
 
-    private var minx=0
-    private var miny=0
+    private var minx = 0
+    private var miny = 0
 
     private lateinit var sorted: List<Pair<Float, Float>>
     private lateinit var original: List<Pair<Float, Float>>
@@ -37,29 +36,30 @@ class LiquifyView  @JvmOverloads constructor(
     private var mode: Int = 0
 
 
-    private var _width:Int = 0
-    private var _height:Int = 0
+    private var _width: Int = 0
+    private var _height: Int = 0
     private lateinit var drawCanvas: Canvas
     private lateinit var canvasBitmap: Bitmap
 
 
-    fun setup(column: Int, row: Int, img: Bitmap, backgroundimg:Bitmap) {
+    fun setup(column: Int, row: Int, img: Bitmap, backgroundimg: Bitmap) {
         meshWidth = column
         meshHeight = row
         bitmap = img
         bgimg = backgroundimg
         _width = bgimg.width
         _height = bgimg.height
-        selectedIndex = MutableList<Int>(300,{_ -> 0})
+        selectedIndex = MutableList<Int>(300, { _ -> 0 })
         paint.color = Color.BLACK
-        if(width>0)initBitmap(width,height)
+        if (width > 0) initBitmap(width, height)
         invalidate() //ondraw호출
     }
-    fun brushsizechange(size: Int) {
+
+    fun brushSizeChange(size: Int) {
         mode = size
     }
 
-    private fun initBitmap(w:Int,h:Int){
+    private fun initBitmap(w: Int, h: Int) {
         if (_width.toFloat() / _height.toFloat() > w.toFloat() / h.toFloat()) {
             _height = _height * w / _width
             _width = w
@@ -71,44 +71,33 @@ class LiquifyView  @JvmOverloads constructor(
         miny = (h - _height) / 2
         canvasBitmap = Bitmap.createBitmap(_width, _height, Bitmap.Config.ARGB_8888)
         drawCanvas = Canvas(canvasBitmap)
-        bgimg = Bitmap.createScaledBitmap(bgimg,_width,_height,true)
+        bgimg = Bitmap.createScaledBitmap(bgimg, _width, _height, true)
         generateCoordinates()
 
     }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
-        initBitmap(w,h)
+        initBitmap(w, h)
     }
 
 
-
     private fun generateCoordinates() {
-        coordinates = generateCoordinate(
-            meshWidth,
-            meshHeight,
-            _width,
-            _height,
-            paddingStart,
-            paddingEnd,
-            paddingTop,
-            paddingBottom
-        )
+        coordinates = generateCoordinate(meshWidth, meshHeight, _width, _height, paddingStart, paddingEnd, paddingTop, paddingBottom)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawPaint = Paint()
-        drawPaint.setColor(Color.BLACK)
-        drawPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
-        drawCanvas.drawRect(0f,0f, drawCanvas.width.toFloat(),drawCanvas.height.toFloat(),drawPaint)
-
-
+        drawPaint.color = Color.BLACK
+        drawPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        drawCanvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), drawPaint)
 
         drawCanvas.drawBitmapMesh(
             bitmap,
             meshWidth,
-            meshHeight,     //2차원좌표를 1차원배열로 표현
+            meshHeight,   //2차원좌표를 1차원배열로 표현
             coordinates.flatMap { listOf(it.first, it.second) }.toFloatArray(),
             0,
             null,
@@ -116,41 +105,29 @@ class LiquifyView  @JvmOverloads constructor(
             null
         )
 
-
-
-        canvas.drawBitmap(canvasBitmap,minx.toFloat(),miny.toFloat(), Paint())
+        canvas.drawBitmap(canvasBitmap, minx.toFloat(), miny.toFloat(), Paint())
     }
 
-    private fun drawLine(
-        canvas: Canvas,
-        pair: Pair<Float, Float>,
-        nextCoordinate: Pair<Float, Float>
-    ) {
-        canvas.drawLine(
-            pair.first, pair.second,
-            nextCoordinate.first, nextCoordinate.second,
-            paint
-        )
-    }
-
-
+//    private fun drawLine(canvas: Canvas, pair: Pair<Float, Float>, nextCoordinate: Pair<Float, Float>) {
+//        canvas.drawLine(pair.first, pair.second, nextCoordinate.first, nextCoordinate.second, paint)
+//    }
 
 
     private fun isEdge(i: Int): Boolean {
-        if (i >= 0 && i <= meshWidth) return true
-        else if (i % (meshWidth + 1) == 0 || i % (meshWidth + 1) == meshWidth) return true
-        else if (i >= (meshWidth + 1) * (meshHeight) && i <= (meshWidth + 1) * (meshHeight + 1) - 1) return true
-        else return false
+        return if (i in 0..meshWidth) true
+        else if (i % (meshWidth + 1) == 0 || i % (meshWidth + 1) == meshWidth) true
+        else i >= (meshWidth + 1) * (meshHeight) && i <= (meshWidth + 1) * (meshHeight + 1) - 1
     }
+
     private fun weight(mode: Int, i: Int): Float {
         //size : 3x3, 5x5, 8x8, 15x15, 20x20
-        var exp = arrayOf(0.1f, 0.05f,0.008f,0.004f,0.002f)
-        var res: Float = (i+1).toFloat().pow(exp[mode])
+        var exp = arrayOf(0.1f, 0.05f, 0.008f, 0.004f, 0.002f)
+        var res: Float = (i + 1).toFloat().pow(exp[mode])
         return 1 / res
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val gap = height/2 - _height/2
+        val gap = height / 2 - _height / 2
         when (event.action) {
             ACTION_DOWN -> {
                 xstart = event.x
@@ -205,8 +182,8 @@ class LiquifyView  @JvmOverloads constructor(
         return coordinates
     }
 
-    fun getLiquifiedImage(width: Int,height: Int):Bitmap{
-        return Bitmap.createScaledBitmap(canvasBitmap,width,height,true)
+    fun getLiquifiedImage(width: Int, height: Int): Bitmap {
+        return Bitmap.createScaledBitmap(canvasBitmap, width, height, true)
     }
 
 }
