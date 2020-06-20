@@ -32,7 +32,7 @@ class FragmentBackground : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
-    
+
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
@@ -63,7 +63,7 @@ class FragmentBackground : Fragment() {
                     imageManager.backgroundAdjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.backgroundFilters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
+                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
 
                 }
             }
@@ -81,9 +81,9 @@ class FragmentBackground : Fragment() {
         try {
             gpuImage.setImage(imageManager.backgroundOriginal)
             imageFG.setImageBitmap(imageManager.personFiltered)
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
 
             e.printStackTrace()
         }
@@ -141,19 +141,19 @@ class FragmentBackground : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal,imageManager.backgroundFilters))
-            seekBar.visibility=View.VISIBLE
-            tabPosition= tab!!.position
-            when(tab?.position){
-                0-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.BRIGHTNESS))
-                1-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.CONTRAST))
-                2-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SHARPEN))
-                3-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.SATURATION))
-                4-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.EXPOSURE))
-                5-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW))
-                6-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.WHITE_BALANCE))
-                7-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.HAZE))
-                8-> addFilter(GPUImageFilterTools.createFilterForType(context!!,GPUImageFilterTools.FilterType.VIBRANCE))
+            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
+            seekBar.visibility = View.VISIBLE
+            tabPosition = tab!!.position
+            when (tab?.position) {
+                0 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
+                1 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.CONTRAST))
+                2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SHARPEN))
+                3 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SATURATION))
+                4 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.EXPOSURE))
+                5 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW))
+                6 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.WHITE_BALANCE))
+                7 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HAZE))
+                8 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
 
             }
             seekBar.progress = imageManager.backgroundAdjusts[tabPosition]

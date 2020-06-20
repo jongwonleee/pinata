@@ -3,13 +3,10 @@ package capstone.aiimageeditor.ui
 import android.content.*
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
 
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
@@ -24,11 +21,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
-import com.itaewonproject.adapter.AdapterImageList
+import capstone.aiimageeditor.adapter.AdapterImageList
 import kotlinx.coroutines.asCoroutineDispatcher
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -50,8 +44,6 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
         tedPermission()
 
-
-
         imgList = findViewById(R.id.recyclerView)
 
         if (getSavedStringSets() != null) images = getSavedStringSets()!!
@@ -62,10 +54,7 @@ class StartActivity : AppCompatActivity() {
                 if (position == 0) {
                     val intent = Intent(Intent.ACTION_PICK)
                     intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
-                    startActivityForResult(
-                        intent,
-                        PICK_FROM_ALBUM
-                    )
+                    startActivityForResult(intent, PICK_FROM_ALBUM)
                 } else {
                     val str = images[position - 1]
                     images.remove(str)

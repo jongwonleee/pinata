@@ -19,10 +19,10 @@ class TabPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentStatePagerAd
         pages.add(Page(title, fragment))
     }
 
-    fun setPageString(index:Int,title:String){
-        pages[index].title=title
-        notifyDataSetChanged()
-    }
+//    fun setPageString(index:Int,title:String){
+//        pages[index].title=title
+//        notifyDataSetChanged()
+//    }
 
     override fun getPageTitle(position: Int): CharSequence? {
         return pages[position].title

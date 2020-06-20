@@ -6,38 +6,30 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Build;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
-import android.view.inputmethod.CursorAnchorInfo;
 
 import androidx.annotation.RequiresApi;
-
-import org.jetbrains.annotations.NotNull;
-
-import capstone.aiimageeditor.ZoomGestureListener;
 
 import static java.lang.Integer.min;
 import static java.lang.Integer.max;
 
 public class DrawingView extends View {
     private Path drawPath;
-    private Paint drawPaint, canvasPaint, pointPaint, alphaPaint;
+    private Paint drawPaint, canvasPaint, pointPaint, alphaPaint, rectPaint;
     private int paintColor = Color.RED;
     private Canvas drawCanvas;
     private Bitmap smallBitmap;
     private Bitmap canvasBitmap;
     private Bitmap mask;
     private Bitmap original;
-    private int minx, miny, maxx, maxy, width, height;
+    private int minx, miny, width, height;
     private float touchX, touchY;
     private boolean isTouched;
     private boolean isRight;
@@ -56,6 +48,7 @@ public class DrawingView extends View {
         drawPaint = new Paint();
         pointPaint = new Paint();
         alphaPaint = new Paint();
+        rectPaint = new Paint();
         pointPaint.setColor(Color.LTGRAY);
         pointPaint.setStyle(Paint.Style.STROKE);
         pointPaint.setAntiAlias(true);
@@ -77,6 +70,11 @@ public class DrawingView extends View {
         alphaPaint.setStrokeCap(Paint.Cap.ROUND);
         alphaPaint.setAlpha(178);
 
+        rectPaint.setColor(Color.BLACK);
+        rectPaint.setAntiAlias(true);
+        rectPaint.setStyle(Paint.Style.STROKE);
+        rectPaint.setStrokeWidth(10);
+
         canvasPaint = new Paint(Paint.DITHER_FLAG);
         this.setDrawingCacheEnabled(true);
     }
@@ -95,8 +93,6 @@ public class DrawingView extends View {
         }
         minx = (w - width) / 2;
         miny = (h - height) / 2;
-        maxx = minx + width;
-        maxy = miny + height;
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(getDrawableBitmap(), width, height, true);
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         smallBitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
@@ -141,8 +137,8 @@ public class DrawingView extends View {
             Log.i("[drawableBitmap]", getWidth() + ", " + getHeight() + "");
             Log.i("[touchX, minX]", touchX + ", " + minx + "");
             Log.i("[touchY, minY]", touchY + ", " + miny + "");
-            int xCoord = max((int)touchX, smallBitmap.getWidth() / 2);
-            int yCoord = max((int)touchY, smallBitmap.getHeight() / 2);
+            int xCoord = max((int) touchX, smallBitmap.getWidth() / 2);
+            int yCoord = max((int) touchY, smallBitmap.getHeight() / 2);
             xCoord = min(xCoord, getWidth() - smallBitmap.getWidth() / 2 - 1);
             yCoord = min(yCoord, getHeight() - smallBitmap.getHeight() / 2 - 1);
             smallBitmap =
@@ -150,10 +146,6 @@ public class DrawingView extends View {
             Bitmap scaledSmallBitmap = Bitmap.createScaledBitmap(smallBitmap, 400, 400, true);
 
 
-            Paint rectPaint = new Paint();
-            rectPaint.setColor(Color.BLACK);
-            rectPaint.setStyle(Paint.Style.STROKE);
-            rectPaint.setStrokeWidth(10);
             if (isRight) {
                 if (xCoord >= getWidth() * 0.7) isRight = false;
             } else {
@@ -162,10 +154,10 @@ public class DrawingView extends View {
 
             if (isRight) {
                 canvas.drawBitmap(scaledSmallBitmap, getWidth() - (float) scaledSmallBitmap.getWidth() - minx - rectPaint.getStrokeWidth(), 200, null);
-                canvas.drawRect(new Rect(getWidth() - scaledSmallBitmap.getWidth() - minx - (int)rectPaint.getStrokeWidth(), 200, getWidth() - minx - (int)rectPaint.getStrokeWidth(), 200 + scaledSmallBitmap.getHeight()), rectPaint);
+                canvas.drawRect(new Rect(getWidth() - scaledSmallBitmap.getWidth() - minx - (int) rectPaint.getStrokeWidth(), 200, getWidth() - minx - (int) rectPaint.getStrokeWidth(), 200 + scaledSmallBitmap.getHeight()), rectPaint);
             } else {
                 canvas.drawBitmap(scaledSmallBitmap, minx + rectPaint.getStrokeWidth(), 200, null);
-                canvas.drawRect(new Rect(minx + (int)rectPaint.getStrokeWidth(), 200, minx + scaledSmallBitmap.getWidth() + (int)rectPaint.getStrokeWidth(), 200 + scaledSmallBitmap.getHeight()), rectPaint);
+                canvas.drawRect(new Rect(minx + (int) rectPaint.getStrokeWidth(), 200, minx + scaledSmallBitmap.getWidth() + (int) rectPaint.getStrokeWidth(), 200 + scaledSmallBitmap.getHeight()), rectPaint);
             }
         }
     }
@@ -174,7 +166,7 @@ public class DrawingView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         touchX = event.getX();
         touchY = event.getY();
-        float brushSize = drawPaint.getStrokeWidth() / 2;
+//        float brushSize = drawPaint.getStrokeWidth() / 2;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 drawPath.moveTo(touchX, touchY);
