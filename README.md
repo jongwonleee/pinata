@@ -22,12 +22,11 @@
 ---------------------------
 ### 4. Download
 - ![Logo](https://github.com/jongwonleee/ai_photo_editor/blob/master/app/src/main/ic_launcher-playstore.png)
-- [link](https://play.google.com/store/apps/details?id=capstone.aiimageeditor)
+- [Download](https://play.google.com/store/apps/details?id=capstone.aiimageeditor)
 
 ---------------------------
 ### 5. Opensource Copyrights
-### [intel]
-#### [https://opencv.org/license/]
+### [intel](https://opencv.org/license/)
 ```markdown
   
 Copyright (C) 2000-2019, Intel Corporation, all rights reserved.
@@ -46,12 +45,10 @@ This software is provided by the copyright holders and contributors “as is” 
   
 ```
   
-### [tensorflow]
-#### [https://github.com/tensorflow]
-#### [license][https://github.com/tensorflow/tensorflow/blob/master/LICENSE]
+### [tensorflow](https://github.com/tensorflow)
+#### [license](https://github.com/tensorflow/tensorflow/blob/master/LICENSE)
   
-### [bumptech]
-#### [https://github.com/bumptech/glide]
+### [bumptech](https://github.com/bumptech/glide)
 ```markdown
   
 Copyright 2016 yydcdut
@@ -61,8 +58,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
   
 ```
   
-### [cats-oss]
-#### [https://github.com/cats-oss/android-gpuimage]
+### [cats-oss](https://github.com/cats-oss/android-gpuimage)
 ```markdown
   
 Copyright 2018 CyberAgent, Inc.
@@ -78,8 +74,7 @@ limitations under the License
   
 ```
   
-### gun0912
-#### [https://github.com/ParkSangGwon/TedPermission]
+### [gun0912](https://github.com/ParkSangGwon/TedPermission)
 ```markdown
   
 Copyright 2017 Ted Park
@@ -95,8 +90,7 @@ limitations under the License.
   
 ```
   
-### yydcdut
-#### [https://github.com/yydcdut/RxMarkdown]
+### [yydcdut](https://github.com/yydcdut/RxMarkdown)
 ```markdown
   
 Copyright 2016 yydcdut
@@ -106,16 +100,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
   
 ```
   
-### yukuku
-#### [https://github.com/yukuku/ambilwarna]
+### [yukuku](https://github.com/yukuku/ambilwarna)
   
-### [elye]
-#### [https://github.com/elye/demo_android_draw_bitmap_mesh]
+### [elye](https://github.com/elye/demo_android_draw_bitmap_mesh)
   
-### [flaticon]
-#### [https://www.flaticon.com/authors/freepik]
+### [flaticon](https://www.flaticon.com/authors/freepik)
 ```
-Icons made by flaticon
+Icons are made by flaticon
 ```
 ---------------------------
 ### 6. license
@@ -127,7 +118,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 ```
 ---------------------------
-### 4. Contacts
+### 7. Contacts
 - distributed by Jongwon Lee  
 - email: jong12em@naver.com
 
