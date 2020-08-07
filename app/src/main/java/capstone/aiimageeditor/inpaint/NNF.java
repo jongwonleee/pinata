@@ -1,4 +1,4 @@
-package com.example.inpaint;
+package capstone.aiimageeditor.inpaint;
 
 
 import java.util.Random;

@@ -1,4 +1,4 @@
-package com.example.inpaint;
+package capstone.aiimageeditor.inpaint;
 
 import android.graphics.Bitmap;
 
