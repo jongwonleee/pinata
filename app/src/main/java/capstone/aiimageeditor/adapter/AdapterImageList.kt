@@ -24,8 +24,9 @@ class AdapterImageList(val context: Context, var images: MutableList<String>) : 
     }
 
     override fun getItemCount(): Int {
-        return images.size+1
+        return images.size + 1
     }
+
     interface OnItemClickListener {
         fun onClick(position: Int)
     }
@@ -39,10 +40,10 @@ class AdapterImageList(val context: Context, var images: MutableList<String>) : 
 
         override fun bind(pos: Int) {
             img.setOnClickListener { listener.onClick(pos) }
-            if(pos==0) img.setImageResource(R.drawable.ic_add)
+            if (pos == 0) img.setImageResource(R.drawable.ic_add)
             else
                 Glide.with(itemView)
-                    .load(Uri.parse(images[pos-1]))
+                    .load(Uri.parse(images[pos - 1]))
                     .into(img)
         }
     }

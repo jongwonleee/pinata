@@ -16,10 +16,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import capstone.aiimageeditor.ImageManager
-import capstone.aiimageeditor.R
 import capstone.aiimageeditor.databinding.ActivitySaveBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_save.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -74,7 +72,7 @@ class SaveActivity : AppCompatActivity() {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path: String =
             MediaStore.Images.Media.insertImage(
-                inContext.getContentResolver(),
+                inContext.contentResolver,
                 inImage,
                 "Title",
                 null
@@ -105,7 +103,7 @@ class SaveActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val mContext = this
 
-            val resolver: ContentResolver = mContext.getContentResolver()
+            val resolver: ContentResolver = mContext.contentResolver
             val contentValues: ContentValues = ContentValues()
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")

@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
@@ -23,13 +22,14 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var fragmentMask: FragmentMask
     private lateinit var fragmentBackground: FragmentBackground
     private lateinit var fragmentPerson: FragmentPerson
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
+
     companion object {
         private val titles = listOf("마스크", "인물", "배경", "저장")
         private val iconsOff = listOf(R.drawable.ic_person_off, R.drawable.ic_user_off, R.drawable.ic_background_off, R.drawable.ic_done_off)
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             setTabView(tab!!.position, true)
-            when (tab!!.position) {
+            when (tab.position) {
                 0 -> {
                     imageManager.InpaintTask().cancel(true)
                     fragmentMask.setImage(this@MainActivity.applicationContext)
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onTabReselected(tab: TabLayout.Tab?) {
             setTabView(tab!!.position, true)
-            when (tab!!.position) {
+            when (tab.position) {
                 0 -> {
                     imageManager.InpaintTask().cancel(true)
                     fragmentMask.setImage(this@MainActivity.applicationContext)
@@ -128,8 +128,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {
             setTabView(tab!!.position, false)
-            tabIndexLast = tab!!.position
-            when (tab!!.position) {
+            tabIndexLast = tab.position
+            when (tab.position) {
                 0 -> {
                     fragmentMask.deleteView()
                     imageManager.personOriginal = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-            backKeyPressedTime = System.currentTimeMillis();
+            backKeyPressedTime = System.currentTimeMillis()
             Toast.makeText(this, "뒤로 갈 시 현재까지의 결과물은 저장되지 않습니다.\n한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
             return
         }
@@ -231,10 +231,6 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-
-    override fun onResume() {
-        super.onResume()
-    }
 
     private fun setTabView(pos: Int, selected: Boolean) {
         Log.i("changing Tab", "$pos, $selected ${if (selected) iconsOn[pos] else iconsOff[pos]}")

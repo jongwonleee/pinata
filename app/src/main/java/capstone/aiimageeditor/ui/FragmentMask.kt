@@ -1,17 +1,14 @@
 package capstone.aiimageeditor.ui
 
 import android.content.Context
-import android.graphics.*
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
-import capstone.aiimageeditor.customviews.DrawingView
 import capstone.aiimageeditor.ImageManager
-import capstone.aiimageeditor.R
+import capstone.aiimageeditor.customviews.DrawingView
 import capstone.aiimageeditor.databinding.FragmentMaskBinding
 import com.google.android.material.tabs.TabLayout
 
@@ -19,14 +16,14 @@ import com.google.android.material.tabs.TabLayout
 class FragmentMask : Fragment() {
 
     private lateinit var maskView: DrawingView
-    private var _binding: FragmentMaskBinding?=null
-    private val binding get()=_binding!!
+    private var _binding: FragmentMaskBinding? = null
+    private val binding get() = _binding!!
     private lateinit var imageManager: ImageManager
 
-//TODO custom zoomable view 이용해 줌 기능 추가
+    //TODO custom zoomable view 이용해 줌 기능 추가
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    
+
         imageManager = (activity?.application as ImageManager)
         setImage(context!!)
         binding.seekBar.max = 90
@@ -78,13 +75,13 @@ class FragmentMask : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMaskBinding.inflate(inflater,container,false)
+        _binding = FragmentMaskBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
+        _binding = null
     }
 
 }

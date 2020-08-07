@@ -1241,7 +1241,7 @@ public class GLTextureView extends TextureView
                             if (pausing && haveEglContext) {
                                 GLTextureView view = glTextureViewWeakRef.get();
                                 boolean preserveEglContextOnPause =
-                                        view == null ? false : view.preserveEGLContextOnPause;
+                                        view != null && view.preserveEGLContextOnPause;
                                 if (!preserveEglContextOnPause
                                         || glThreadManager.shouldReleaseEGLContextWhenPausing()) {
                                     stopEglContextLocked();

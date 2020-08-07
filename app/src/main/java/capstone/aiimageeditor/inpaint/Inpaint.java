@@ -214,7 +214,7 @@ public class Inpaint {
                 // average the contributions of significant pixels (near the median)
                 double lowth = 0.40 * wsum;  // low threshold in the CDF
                 double highth = 0.60 * wsum; // high threshold in the CDF
-                int rgb[] = new int[3];
+                int[] rgb = new int[3];
                 for (int band = 0; band < 3; band++) {
                     double cdf = 0, contrib = 0, wcontrib = 0;
                     for (int i = 0; i < 256; i++) {

@@ -2,23 +2,23 @@ package capstone.aiimageeditor.customviews;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
-import android.view.View;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.annotation.RequiresApi;
 
-import static java.lang.Integer.min;
 import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 
 public class DrawingView extends View {
     private Path drawPath;

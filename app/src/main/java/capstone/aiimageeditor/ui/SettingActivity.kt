@@ -5,10 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import capstone.aiimageeditor.R
 import capstone.aiimageeditor.databinding.ActivitySettingBinding
-import kotlinx.android.synthetic.main.activity_setting.*
-import kotlin.coroutines.coroutineContext
 
 class SettingActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +13,7 @@ class SettingActivity : Activity() {
         val binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         try {
-            val info = applicationContext.getPackageManager()
+            val info = applicationContext.packageManager
                 .getPackageInfo(applicationContext.packageName, 0)
             binding.textVersion.text = info.versionName
         } catch (e: PackageManager.NameNotFoundException) {
@@ -34,10 +31,10 @@ class SettingActivity : Activity() {
     }
 
     fun OnFeedbackClick(v: View) {
-        val email = Intent(Intent.ACTION_SEND);
+        val email = Intent(Intent.ACTION_SEND)
         email.putExtra(Intent.EXTRA_EMAIL, arrayOf("jong12ems@google.com"))
         email.putExtra(Intent.EXTRA_SUBJECT, "앱 Pinata 관련 피드백")
-        email.setType("message/rfc822")
+        email.type = "message/rfc822"
         startActivity(Intent.createChooser(email, "Choose an Email client :"))
     }
 

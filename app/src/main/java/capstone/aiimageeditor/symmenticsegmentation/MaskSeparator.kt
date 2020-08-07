@@ -1,7 +1,6 @@
 package capstone.aiimageeditor.symmenticsegmentation
 
 import android.graphics.*
-import androidx.core.graphics.get
 
 class MaskSeparator {
     fun applyWithMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
@@ -17,8 +16,8 @@ class MaskSeparator {
 
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
         canvas.drawBitmap(maskImage, null, Rect(0, 0, mainImage.width, mainImage.height), paint)
-        paint.xfermode = null;
-        return result;
+        paint.xfermode = null
+        return result
     }
 
     fun applyWithoutMask(mainImage: Bitmap, maskImage: Bitmap): Bitmap {
@@ -34,8 +33,8 @@ class MaskSeparator {
 
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
         canvas.drawBitmap(maskImage, null, Rect(0, 0, mainImage.width, mainImage.height), paint)
-        paint.xfermode = null;
+        paint.xfermode = null
 
-        return result;
+        return result
     }
 }

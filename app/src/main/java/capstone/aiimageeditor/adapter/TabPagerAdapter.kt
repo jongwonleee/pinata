@@ -29,7 +29,6 @@ class TabPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentStatePagerAd
     }
 
 
-
     override fun getCount(): Int {
         return pages.size
     }

@@ -10,12 +10,9 @@ import android.os.AsyncTask
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.core.graphics.set
-import capstone.aiimageeditor.inpaint.Inpaint
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import org.opencv.android.Utils
 import org.opencv.core.Mat
-import java.lang.Math.sqrt
 
 class ImageManager : Application() {
     lateinit var original: Bitmap

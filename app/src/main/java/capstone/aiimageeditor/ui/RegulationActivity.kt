@@ -1,19 +1,9 @@
 package capstone.aiimageeditor.ui
 
 import android.app.Activity
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
-import android.widget.Toast
-import capstone.aiimageeditor.R
 import capstone.aiimageeditor.databinding.ActivityRegulationBinding
-import com.yydcdut.markdown.MarkdownConfiguration
-import com.yydcdut.markdown.MarkdownProcessor
-import com.yydcdut.markdown.syntax.text.TextFactory
-import com.yydcdut.markdown.theme.ThemeSunburst
-import kotlinx.android.synthetic.main.activity_copyright.*
-import kotlinx.android.synthetic.main.activity_regulation.*
-import kotlinx.android.synthetic.main.activity_setting.*
 
 
 class RegulationActivity : Activity() {

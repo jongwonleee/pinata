@@ -1,27 +1,28 @@
 package capstone.aiimageeditor.ui
 
-import android.content.*
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.adapter.AdapterImageList
+import capstone.aiimageeditor.databinding.ActivityStartBinding
 import capstone.aiimageeditor.symmenticsegmentation.ImageSegmentationModelExecutor
 import capstone.aiimageeditor.symmenticsegmentation.MLExecutionViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
-import capstone.aiimageeditor.adapter.AdapterImageList
-import capstone.aiimageeditor.databinding.ActivityStartBinding
 import kotlinx.coroutines.asCoroutineDispatcher
 import java.util.*
 import java.util.concurrent.Executors
@@ -49,7 +50,7 @@ class StartActivity : AppCompatActivity() {
             override fun onClick(position: Int) {
                 if (position == 0) {
                     val intent = Intent(Intent.ACTION_PICK)
-                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
+                    intent.type = MediaStore.Images.Media.CONTENT_TYPE
                     startActivityForResult(intent, PICK_FROM_ALBUM)
                 } else {
                     val str = images[position - 1]
@@ -76,9 +77,9 @@ class StartActivity : AppCompatActivity() {
         }
         )
 
-        if(intent?.action ==Intent.ACTION_SEND){
-            if(intent?.type?.startsWith("image/")==true){
-                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri)?.let {
+        if (intent?.action == Intent.ACTION_SEND) {
+            if (intent?.type?.startsWith("image/") == true) {
+                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri).let {
                     val photoUri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri
                     for (i in images.indices) {
                         if (images[i] == photoUri.toString()) {

@@ -1,33 +1,24 @@
 package capstone.aiimageeditor.ui
 
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.graphics.RectF
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SeekBar
+import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageManager
-import capstone.aiimageeditor.R
 import capstone.aiimageeditor.databinding.FragmentBackgroundBinding
-import capstone.aiimageeditor.databinding.FragmentMaskBinding
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
-import java.lang.Exception
 
 
 class FragmentBackground : Fragment() {
 
-    private var _binding: FragmentBackgroundBinding?=null
-    private val binding get()=_binding!!
+    private var _binding: FragmentBackgroundBinding? = null
+    private val binding get() = _binding!!
 
 
     private lateinit var gpuImage: GPUImage
@@ -56,7 +47,12 @@ class FragmentBackground : Fragment() {
                     imageManager.backgroundAdjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.backgroundFilters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
+                    binding.imageBg.setImageBitmap(
+                        gpuImage.getBitmapWithFiltersApplied(
+                            imageManager.backgroundOriginal,
+                            imageManager.backgroundFilters
+                        )
+                    )
 
                 }
             }
@@ -92,13 +88,13 @@ class FragmentBackground : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentBackgroundBinding.inflate(inflater,container, false)
+        _binding = FragmentBackgroundBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
+        _binding = null
     }
 
     private fun addFilter(f: GPUImageFilter) {
@@ -106,7 +102,7 @@ class FragmentBackground : Fragment() {
         var filter = f
         if (imageManager.backgroundFilters[index] != null) {
             filter = imageManager.backgroundFilters[index]!!
-            binding.seekBar.progress = imageManager.backgroundAdjusts[index];
+            binding.seekBar.progress = imageManager.backgroundAdjusts[index]
         } else {
             imageManager.backgroundFilters[index] = f
         }
@@ -142,7 +138,7 @@ class FragmentBackground : Fragment() {
             binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
             binding.seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
-            when (tab?.position) {
+            when (tab.position) {
                 0 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
                 1 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.CONTRAST))
                 2 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.SHARPEN))

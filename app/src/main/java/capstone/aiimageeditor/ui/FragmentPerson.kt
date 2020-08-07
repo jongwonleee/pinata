@@ -3,29 +3,23 @@ package capstone.aiimageeditor.ui
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import android.widget.ImageView
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
-import capstone.aiimageeditor.customviews.LiquifyView
-import capstone.aiimageeditor.customviews.TallView //add tallview
 import capstone.aiimageeditor.databinding.FragmentPersonBinding
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
-import com.bumptech.glide.Glide
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import kotlinx.android.synthetic.main.fragment_person.*
-import org.opencv.android.Utils
-import org.opencv.core.Mat
-import java.lang.Exception
 import yuku.ambilwarna.AmbilWarnaDialog
 
 //밝기 내리는거, 대조 올리는거 잘됨
@@ -36,7 +30,7 @@ import yuku.ambilwarna.AmbilWarnaDialog
 
 class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 
-//    private lateinit var seekBar: SeekBar
+    //    private lateinit var seekBar: SeekBar
 //    private lateinit var binding.imageBg: ImageView
 //    private lateinit var binding.imageFg: ImageView
 //    private lateinit var binding.buttonColorChange: FloatingActionButton
@@ -44,8 +38,8 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 //    private lateinit var tabLayout: TabLayout
 //private lateinit var binding.viewLiquifyview: LiquifyView
 //    private lateinit var binding.viewTallview: TallView //add tallview
-    private var _binding:FragmentPersonBinding?=null
-    private val binding get()= _binding!!
+    private var _binding: FragmentPersonBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var gpuImage: GPUImage
     private lateinit var imageManager: ImageManager
@@ -70,12 +64,12 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                when(tabPosition){
-                    0->{
+                when (tabPosition) {
+                    0 -> {
                         if (isLiquify) binding.viewLiquifyview.brushSizeChange(progress / 25) //0~4
                         else binding.viewTallview.tall(progress.toFloat() / 33 / 10 + 1.0f) //1.00f ~ 1.30f
                     }
-                    8->{
+                    8 -> {
                         if (seekBar != null) {
                             if (seekBar.progress == 0) imageManager.doHalo = false
                             else {
@@ -86,7 +80,7 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                         }
                         applyFilters(true)
                     }
-                    else->{
+                    else -> {
                         imageManager.personAdjusts[tabPosition] = progress
                         filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.personFilters[tabPosition]!!)
                         filterAdjuster?.adjust(progress)
@@ -118,7 +112,7 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
         binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
     }
 
-    public fun setImage() {
+    fun setImage() {
         binding.imageBg.setImageBitmap(imageManager.backgroundFiltered)
         binding.viewLiquifyview.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
         binding.viewTallview.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
@@ -131,9 +125,10 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
         tabLayout.getTabAt(0)?.select()
     }
 
-    public fun saveImage() {
+    fun saveImage() {
         if (tabPosition == 0) {
-            if (isLiquify) imageManager.personOriginal = binding.viewLiquifyview.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+            if (isLiquify) imageManager.personOriginal =
+                binding.viewLiquifyview.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
             else imageManager.personOriginal = binding.viewTallview.getTalledImage(imageManager.original.width, imageManager.original.height)
 
         }
@@ -145,22 +140,22 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentPersonBinding.inflate(inflater,container,false)
+        _binding = FragmentPersonBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
+        _binding = null
     }
-    
+
     private fun addFilter(f: GPUImageFilter) {
         binding.imageFg.visibility = View.VISIBLE
         val index = tabPosition
         var filter = f
         if (imageManager.personFilters[index] != null) {
             filter = imageManager.personFilters[index]!!
-            seekBar.progress = imageManager.personAdjusts[index];
+            seekBar.progress = imageManager.personAdjusts[index]
         } else {
             imageManager.personFilters[index] = f
         }
@@ -199,7 +194,8 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
                 0 -> {
                     if (isLiquify) {
                         binding.viewLiquifyview.visibility = View.GONE
-                        imageManager.personOriginal = binding.viewLiquifyview.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
+                        imageManager.personOriginal =
+                            binding.viewLiquifyview.getLiquifiedImage(imageManager.original.width, imageManager.original.height)
                         binding.buttonTogleLiquify.setImageResource(R.drawable.ic_finger)
                     } else {
                         binding.viewTallview.visibility = View.GONE
@@ -229,7 +225,7 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
             white_view.visibility = View.GONE
             binding.buttonTogleLiquify.visibility = View.GONE
 
-            when (tab?.position) {
+            when (tab.position) {
                 0 -> {
                     binding.buttonTogleLiquify.visibility = View.VISIBLE
                     setLiquify()

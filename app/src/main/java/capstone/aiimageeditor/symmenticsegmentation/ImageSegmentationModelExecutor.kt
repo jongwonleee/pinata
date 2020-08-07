@@ -1,7 +1,10 @@
 package capstone.aiimageeditor.symmenticsegmentation
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Rect
 import android.util.Log
 import androidx.core.graphics.ColorUtils
 import org.tensorflow.lite.Interpreter
@@ -168,25 +171,25 @@ class ImageSegmentationModelExecutor(
             val tempY = temp.second
             if (tempX + 1 < imageSize) {
                 if (mSegmentBits[tempX + 1][tempY] == 15) {
-                    mSegmentBits[tempX + 1][tempY] = 0;
+                    mSegmentBits[tempX + 1][tempY] = 0
                     bfsQueue.add(Pair(tempX + 1, tempY))
                 }
             }
             if (tempX - 1 >= 0) {
                 if (mSegmentBits[tempX - 1][tempY] == 15) {
-                    mSegmentBits[tempX - 1][tempY] = 0;
+                    mSegmentBits[tempX - 1][tempY] = 0
                     bfsQueue.add(Pair(tempX - 1, tempY))
                 }
             }
             if (tempY + 1 < imageSize) {
                 if (mSegmentBits[tempX][tempY + 1] == 15) {
-                    mSegmentBits[tempX][tempY + 1] = 0;
+                    mSegmentBits[tempX][tempY + 1] = 0
                     bfsQueue.add(Pair(tempX, tempY + 1))
                 }
             }
             if (tempY - 1 >= 0) {
                 if (mSegmentBits[tempX][tempY - 1] == 15) {
-                    mSegmentBits[tempX][tempY - 1] = 0;
+                    mSegmentBits[tempX][tempY - 1] = 0
                     bfsQueue.add(Pair(tempX, tempY - 1))
                 }
             }

@@ -79,7 +79,7 @@ class ImageHalo {
                                     if (colors[i - w] == Color.TRANSPARENT)
                                         if (dist[x - w][y] >= wDistance) {
                                             scaledInputBitmap.setPixel(x - w, y, newColor)
-                                            dist[x - w][y] = wDistance;
+                                            dist[x - w][y] = wDistance
                                         }
                         }
                         1 -> {
@@ -88,7 +88,7 @@ class ImageHalo {
                                     if (colors[i + w] == Color.TRANSPARENT)
                                         if (dist[x + w][y] >= wDistance) {
                                             scaledInputBitmap.setPixel(x + w, y, newColor)
-                                            dist[x + w][y] = wDistance;
+                                            dist[x + w][y] = wDistance
                                         }
                         }
                         2 -> {
@@ -97,14 +97,14 @@ class ImageHalo {
                                     if (colors[i - w] == Color.TRANSPARENT)
                                         if (dist[x - w][y] >= wDistance) {
                                             scaledInputBitmap.setPixel(x - w, y, newColor)
-                                            dist[x - w][y] = wDistance;
+                                            dist[x - w][y] = wDistance
                                         }
                             if (x < width - w)
                                 if (i < totalSize - w)
                                     if (colors[i + w] == Color.TRANSPARENT)
                                         if (dist[x + w][y] >= wDistance) {
                                             scaledInputBitmap.setPixel(x + w, y, newColor)
-                                            dist[x + w][y] = wDistance;
+                                            dist[x + w][y] = wDistance
                                         }
                         }
                     }
@@ -154,7 +154,7 @@ class ImageHalo {
             } else {
                 for (w in 0 until widthMax) {
                     for (h in 0 until heightMax) {
-                        val xyDistance = distance(w, h);
+                        val xyDistance = distance(w, h)
                         val newColor = Color.argb((alpha * (distMax - xyDistance) / distMax).toInt(), red, green, blue)
                         when (xDirection) {
                             0 -> {
