@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Html
 import android.widget.Toast
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.ActivityRegulationBinding
 import com.yydcdut.markdown.MarkdownConfiguration
 import com.yydcdut.markdown.MarkdownProcessor
 import com.yydcdut.markdown.syntax.text.TextFactory
@@ -31,17 +32,8 @@ class RegulationActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_regulation)
-        textRegulation.text = Html.fromHtml(str)
-    }
-
-    private fun toast(msg: String) {
-        var mToast: Toast? = null
-        if (mToast == null) {
-            mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
-        }
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-        mToast?.setText(msg)
-        mToast?.show()
+        val binding = ActivityRegulationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.textRegulation.text = Html.fromHtml(str)
     }
 }

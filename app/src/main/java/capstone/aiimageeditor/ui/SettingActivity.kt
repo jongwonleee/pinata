@@ -6,17 +6,19 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.ActivitySettingBinding
 import kotlinx.android.synthetic.main.activity_setting.*
+import kotlin.coroutines.coroutineContext
 
 class SettingActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+        val binding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         try {
             val info = applicationContext.getPackageManager()
                 .getPackageInfo(applicationContext.packageName, 0)
-            val versionName = info.versionName
-            text_version.setText(versionName)
+            binding.textVersion.text = info.versionName
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }

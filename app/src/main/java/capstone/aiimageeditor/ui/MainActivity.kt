@@ -16,25 +16,20 @@ import androidx.viewpager.widget.ViewPager
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.adapter.TabPagerAdapter
+import capstone.aiimageeditor.databinding.ActivityMainBinding
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var imageNew: ImageView
-    private lateinit var viewPager: ViewPager
-
-
-    private lateinit var buttonOriginal: ImageView
-    private lateinit var imageOriginal: ImageView
+    private lateinit var binding:ActivityMainBinding
     private lateinit var fragmentMask: FragmentMask
     private lateinit var fragmentBackground: FragmentBackground
     private lateinit var fragmentPerson: FragmentPerson
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
-
     companion object {
         private val titles = listOf("마스크", "인물", "배경", "저장")
         private val iconsOff = listOf(R.drawable.ic_person_off, R.drawable.ic_user_off, R.drawable.ic_background_off, R.drawable.ic_done_off)
@@ -47,17 +42,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         imageManager = application as ImageManager
 
-        imageNew = findViewById(R.id.image_new)
-        buttonOriginal = findViewById(R.id.button_original)
-        viewPager = findViewById(R.id.viewPager)
-        imageOriginal = findViewById(R.id.image_original)
         maskSeparator = MaskSeparator()
-
-        buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
+        binding.buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
 
         initializeImage()
         fragmentBackground = FragmentBackground()
@@ -163,8 +154,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initializeImage() {
-        setImageBitmap(imageNew, imageManager.original)
-        setImageBitmap(imageOriginal, imageManager.original)
+        setImageBitmap(binding.imageNew, imageManager.original)
+        setImageBitmap(binding.imageOriginal, imageManager.original)
         //TODO stack 초기화 시켜주기
     }
 
@@ -172,8 +163,8 @@ class MainActivity : AppCompatActivity() {
         override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
             if (p1 != null) {
                 when (p1.action) {
-                    MotionEvent.ACTION_DOWN -> imageOriginal.visibility = View.VISIBLE
-                    MotionEvent.ACTION_UP -> imageOriginal.visibility = View.GONE
+                    MotionEvent.ACTION_DOWN -> binding.imageOriginal.visibility = View.VISIBLE
+                    MotionEvent.ACTION_UP -> binding.imageOriginal.visibility = View.GONE
                 }
             }
             return true

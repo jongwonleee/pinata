@@ -15,6 +15,7 @@ import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.LiquifyView
 import capstone.aiimageeditor.customviews.TallView //add tallview
+import capstone.aiimageeditor.databinding.FragmentPersonBinding
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,14 +39,15 @@ class FragmentPerson : Fragment(), View.OnClickListener, View.OnTouchListener {
     private lateinit var seekBar: SeekBar
     private lateinit var imageBG: ImageView
     private lateinit var imageFG: ImageView
+    private lateinit var buttonColorChange: FloatingActionButton
+    private lateinit var buttonToggleLiquify: FloatingActionButton
+    private lateinit var tabLayout: TabLayout
+    private lateinit var binding:FragmentPersonBinding
     private lateinit var imageLiquify: LiquifyView
     private lateinit var imageTall: TallView //add tallview
     private lateinit var gpuImage: GPUImage
-    private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var imageHalo: ImageHalo
-    private lateinit var buttonColorChange: FloatingActionButton
-    private lateinit var buttonToggleLiquify: FloatingActionButton
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
     private var isLiquify = true

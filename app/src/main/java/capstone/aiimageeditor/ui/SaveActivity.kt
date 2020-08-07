@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.ActivitySaveBinding
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_save.*
 import java.io.ByteArrayOutputStream
@@ -41,9 +42,10 @@ class SaveActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_save)
+        val binding = ActivitySaveBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         image = (application as ImageManager).mergeImage()
-        setImageBitmap(image_done, image)
+        setImageBitmap(binding.imageDone, image)
 
     }
 

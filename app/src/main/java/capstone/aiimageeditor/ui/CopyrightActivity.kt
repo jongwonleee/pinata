@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.ActivityCopyrightBinding
 import com.yydcdut.markdown.MarkdownConfiguration
 import com.yydcdut.markdown.MarkdownProcessor
 import com.yydcdut.markdown.syntax.text.TextFactory
@@ -140,12 +141,8 @@ Icons made by flaticon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_copyright)
-        /* val markdownProcessor = MarkdownProcessor(this)
-         markdownProcessor.factory(TextFactory.create())
-         val markdownConfiguration = MarkdownConfiguration()
-         markdownProcessor.config(markdownConfiguration)
-         textCopyright.text=markdownProcessor.parse("##text")*/
+        val binding = ActivityCopyrightBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val markdownConfiguration = MarkdownConfiguration.Builder(this)
             .setDefaultImageSize(50, 50)
             .setBlockQuotesLineColor(-0xcc4a1b)
@@ -167,7 +164,7 @@ Icons made by flaticon
             .setOnLinkClickCallback { view, link -> toast(link) }
             .setOnTodoClickCallback { view, line, lineNumber ->
                 toast("line:$line\nline number:$lineNumber")
-                textCopyright.text
+                binding.textCopyright.text
             }
             .build()
         val processor = MarkdownProcessor(this)

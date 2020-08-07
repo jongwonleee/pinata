@@ -1,7 +1,6 @@
 package capstone.aiimageeditor.ui
 
 import android.content.*
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -22,6 +21,7 @@ import com.google.gson.reflect.TypeToken
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import capstone.aiimageeditor.adapter.AdapterImageList
+import capstone.aiimageeditor.databinding.ActivityStartBinding
 import kotlinx.coroutines.asCoroutineDispatcher
 import java.util.*
 import java.util.concurrent.Executors
@@ -30,25 +30,21 @@ import java.util.concurrent.Executors
 class StartActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MLExecutionViewModel
-    private lateinit var imageBitmap: Bitmap
     private lateinit var imageSegmentationModel: ImageSegmentationModelExecutor
     private var useGPU = false
     private val inferenceThread = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-
-    private lateinit var imgList: RecyclerView
     var images = ArrayList<String>()
     private lateinit var adapter: AdapterImageList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start)
+        val binding = ActivityStartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         tedPermission()
-
-        imgList = findViewById(R.id.recyclerView)
 
         if (getSavedStringSets() != null) images = getSavedStringSets()!!
         adapter = AdapterImageList(this, images)
-        imgList.adapter = adapter
+        binding.recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : AdapterImageList.OnItemClickListener {
             override fun onClick(position: Int) {
                 if (position == 0) {
@@ -66,8 +62,8 @@ class StartActivity : AppCompatActivity() {
         })
 
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        imgList.layoutManager = linearLayoutManager
-        imgList.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = linearLayoutManager
+        binding.recyclerView.setHasFixedSize(true)
 
         viewModel = ViewModelProviders.of(this).get(MLExecutionViewModel::class.java)
         viewModel.resultingBitmap.observe(this, Observer { resultImage ->
