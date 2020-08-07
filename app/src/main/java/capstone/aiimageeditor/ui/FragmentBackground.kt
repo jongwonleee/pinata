@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.FragmentBackgroundBinding
+import capstone.aiimageeditor.databinding.FragmentMaskBinding
 import capstone.aiimageeditor.imageprocessing.GPUImageFilterTools
 import capstone.aiimageeditor.symmenticsegmentation.MaskSeparator
 import com.bumptech.glide.Glide
@@ -24,12 +26,11 @@ import java.lang.Exception
 
 class FragmentBackground : Fragment() {
 
+    private var _binding: FragmentBackgroundBinding?=null
+    private val binding get()=_binding!!
 
-    private lateinit var seekBar: SeekBar
-    private lateinit var imageBG: ImageView
-    private lateinit var imageFG: ImageView
+
     private lateinit var gpuImage: GPUImage
-    private lateinit var tabLayout: TabLayout
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
 
@@ -37,33 +38,25 @@ class FragmentBackground : Fragment() {
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        seekBar = view.findViewById(R.id.seekBar)
-        imageBG = view.findViewById(R.id.image_bg)
-        imageFG = view.findViewById(R.id.image_fg)
         gpuImage = GPUImage(context)
-        tabLayout = view.findViewById(R.id.tabLayout)
 
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
         imageManager.backgroundAdjusts = imageManager.backgroundAdjusts
         imageManager.backgroundFilters = imageManager.backgroundFilters
 
-        imageBG.visibility = View.VISIBLE
-        seekBar.max = 100
+        binding.imageBg.visibility = View.VISIBLE
+        binding.seekBar.max = 100
 
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (imageManager.backgroundFilters[tabPosition] != null) {
                     imageManager.backgroundAdjusts[tabPosition] = progress
                     filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.backgroundFilters[tabPosition]!!)
                     filterAdjuster?.adjust(progress)
-                    imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
+                    binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
 
                 }
             }
@@ -71,17 +64,17 @@ class FragmentBackground : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        tabLayout.addOnTabSelectedListener(tabListener)
+        binding.tabLayout.addOnTabSelectedListener(tabListener)
         setImage()
         addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
-        seekBar.progress = 50
+        binding.seekBar.progress = 50
     }
 
     fun setImage() {
         try {
             gpuImage.setImage(imageManager.backgroundOriginal)
-            imageFG.setImageBitmap(imageManager.personFiltered)
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
+            binding.imageFg.setImageBitmap(imageManager.personFiltered)
+            binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
 
         } catch (e: Exception) {
 
@@ -99,25 +92,30 @@ class FragmentBackground : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_background, container, false)
+        _binding = FragmentBackgroundBinding.inflate(inflater,container, false)
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding=null
+    }
 
     private fun addFilter(f: GPUImageFilter) {
         val index = tabPosition
         var filter = f
         if (imageManager.backgroundFilters[index] != null) {
             filter = imageManager.backgroundFilters[index]!!
-            seekBar.progress = imageManager.backgroundAdjusts[index];
+            binding.seekBar.progress = imageManager.backgroundAdjusts[index];
         } else {
             imageManager.backgroundFilters[index] = f
         }
 
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
         if (filterAdjuster!!.canAdjust()) {
-            seekBar.visibility = View.VISIBLE
+            binding.seekBar.visibility = View.VISIBLE
         } else {
-            seekBar.visibility = View.GONE
+            binding.seekBar.visibility = View.GONE
         }
     }/*
     brightness 45~55
@@ -141,8 +139,8 @@ class FragmentBackground : Fragment() {
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            imageBG.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
-            seekBar.visibility = View.VISIBLE
+            binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
+            binding.seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
             when (tab?.position) {
                 0 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.BRIGHTNESS))
@@ -156,7 +154,7 @@ class FragmentBackground : Fragment() {
                 8 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
 
             }
-            seekBar.progress = imageManager.backgroundAdjusts[tabPosition]
+            binding.seekBar.progress = imageManager.backgroundAdjusts[tabPosition]
         }
 
     }
