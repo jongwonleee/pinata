@@ -35,20 +35,11 @@ add_library( # Sets the name of the library.
         mask_corrector.h
         size_changer.cpp
         size_changer.h
-
-
-
         nnf.cpp
         nnf.h
         pyinterface.cpp
         pyinterface.h
 
-        colour_space.cpp
-        colour_space.h
-        enhance.cpp
-        enhance.h
-        filters.cpp
-        filters.h
 	)
 
 
