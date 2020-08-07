@@ -34,14 +34,17 @@ class SaveActivity : AppCompatActivity() {
     companion object {
         val SHARED_ACTIVITY = 1
     }
-    fun setImageBitmap(iv: ImageView, bitmap:Bitmap){
+
+    private fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
         Glide.with(this).load(bitmap).into(iv)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save)
         image = (application as ImageManager).mergeImage()
-        setImageBitmap(image_done,image)
+        setImageBitmap(image_done, image)
+
     }
 
     fun onBackButtonClick(v: View) {
@@ -132,17 +135,11 @@ class SaveActivity : AppCompatActivity() {
     }
 
     fun onSaveButtonClick(v: View) {
-        val fileName =
-            SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(Date(System.currentTimeMillis()))
+        val fileName = SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(Date(System.currentTimeMillis()))
+        image = Bitmap.createScaledBitmap(
+            image, (application as ImageManager).saveOrigianl.width, (application as ImageManager).saveOrigianl.height, true
+        )
         saveImage(image, fileName)
-//        val uri = saveImage()
-//        if(uri==null || Uri.EMPTY.equals(uri)){
-//            Log.i("Pinata File Saving","File Not Saved")
-//            Toast.makeText(this,"저장에 실패했습니다. 다시 한번 시도해주세요.",Toast.LENGTH_LONG)
-//        }else
-//        {
-//            Log.i("Pinata File Saving","File Saved")
-//            Toast.makeText(this,"저장 완료.",Toast.LENGTH_SHORT)
     }
 }
 

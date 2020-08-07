@@ -64,7 +64,8 @@ class ImageSegmentationModelExecutor(
             var canvas = Canvas(mutableResultBitmap)
             canvas.drawBitmap(data, sourceRect, destRect, null)
 
-            val scaledBitmap = ImageUtils.scaleBitmapAndKeepRatio(mutableResultBitmap, imageSize, imageSize)
+            val scaledBitmap = Bitmap.createScaledBitmap(mutableResultBitmap, imageSize, imageSize, true)
+//            val scaledBitmap = ImageUtils.scaleBitmapAndKeepRatio(mutableResultBitmap, imageSize, imageSize)
 
             val contentArray = ImageUtils.bitmapToByteBuffer(scaledBitmap, imageSize, imageSize, IMAGE_MEAN, IMAGE_STD)
 
@@ -72,7 +73,8 @@ class ImageSegmentationModelExecutor(
 
             val (maskImageApplied, maskOnly, itemsFound) =
                 convertBytebufferMaskToBitmap(segmentationMasks, imageSize, imageSize, scaledBitmap, segmentColors)
-            val scaledMaskOnly = ImageUtils.scaleBitmapAndKeepRatio(maskOnly, value, value)
+            val scaledMaskOnly = Bitmap.createScaledBitmap(maskOnly, value, value, true)
+//            val scaledMaskOnly = ImageUtils.scaleBitmapAndKeepRatio(maskOnly, value, value)
 
             val originSizeMaskOnly = Bitmap.createScaledBitmap(scaledMaskOnly, data.width, data.height, true)
 
@@ -101,11 +103,7 @@ class ImageSegmentationModelExecutor(
     }
 
     @Throws(IOException::class)
-    private fun getInterpreter(
-        context: Context,
-        modelName: String,
-        useGpu: Boolean = false
-    ): Interpreter {
+    private fun getInterpreter(context: Context, modelName: String, useGpu: Boolean = false): Interpreter {
         val tfliteOptions = Interpreter.Options()
         tfliteOptions.setNumThreads(numberThreads)
 
@@ -205,7 +203,8 @@ class ImageSegmentationModelExecutor(
         val conf = Bitmap.Config.ARGB_8888
         val maskBitmap = Bitmap.createBitmap(imageWidth, imageHeight, conf)
         val resultBitmap = Bitmap.createBitmap(imageWidth, imageHeight, conf)
-        val scaledBackgroundImage = ImageUtils.scaleBitmapAndKeepRatio(backgroundImage, imageWidth, imageHeight)
+        val scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, imageWidth, imageHeight, true)
+//        val scaledBackgroundImage = ImageUtils.scaleBitmapAndKeepRatio(backgroundImage, imageWidth, imageHeight)
         val itemsFound = HashSet<Int>()
         inputBuffer.rewind()
 
@@ -269,11 +268,11 @@ class ImageSegmentationModelExecutor(
 
 
         val segmentColors = IntArray(NUM_CLASSES)
-        val labelsArrays = arrayOf(
-            "background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus",
-            "car", "cat", "chair", "cow", "dining table", "dog", "horse", "motorbike",
-            "person", "potted plant", "sheep", "sofa", "train", "tv"
-        )
+//        val labelsArrays = arrayOf(
+//            "background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus",
+//            "car", "cat", "chair", "cow", "dining table", "dog", "horse", "motorbike",
+//            "person", "potted plant", "sheep", "sofa", "train", "tv"
+//        )
 
         init {
             for (i in 0 until NUM_CLASSES) {

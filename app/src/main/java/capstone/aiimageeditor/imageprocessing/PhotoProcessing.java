@@ -2,6 +2,7 @@ package capstone.aiimageeditor.imageprocessing;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;

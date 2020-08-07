@@ -1,4 +1,4 @@
-package com.itaewonproject.adapter
+package capstone.aiimageeditor.adapter
 
 import android.content.Context
 import android.net.Uri
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.RoundedImageView
 import com.bumptech.glide.Glide
+import com.itaewonproject.adapter.BaseViewHolder
 
 class AdapterImageList(val context: Context, var images: MutableList<String>) : RecyclerView.Adapter<AdapterImageList.ViewHolder>() {
     private lateinit var listener: OnItemClickListener
@@ -34,17 +35,10 @@ class AdapterImageList(val context: Context, var images: MutableList<String>) : 
     }
 
     inner class ViewHolder(itemView: View) : BaseViewHolder(itemView) {
-        private var img: RoundedImageView
-        init {
-            img = itemView.findViewById(R.id.imageView) as RoundedImageView
+        private var img: RoundedImageView = itemView.findViewById(R.id.imageView) as RoundedImageView
 
-        }
         override fun bind(pos: Int) {
-            // imgisUpitmap(APIs.BitmapFromURL(url,300,300))
-            // imgisUpitmap(images[pos])
-            img.setOnClickListener({
-                listener.onClick(pos)
-            })
+            img.setOnClickListener { listener.onClick(pos) }
             if(pos==0) img.setImageResource(R.drawable.ic_add)
             else
                 Glide.with(itemView)
