@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fragment_category">
+        <item>마스크</item>
+        <item>인물</item>
+        <item>배경</item>
+        <item>저장</item>
+    </string-array>
+    <integer-array name="fragment_icon_off">
+        <item>@drawable/ic_person_off</item>
+        <item>@drawable/ic_user_off</item>
+        <item>@drawable/ic_background_off</item>
+        <item>@drawable/ic_done_off</item>
+    </integer-array>
+    <integer-array name="fragment_icon_on">
+        <item>@drawable/ic_person_on</item>
+        <item>@drawable/ic_user_on</item>
+        <item>@drawable/ic_background_on</item>
+        <item>@drawable/ic_done_on</item>
+    </integer-array>
+</resources>

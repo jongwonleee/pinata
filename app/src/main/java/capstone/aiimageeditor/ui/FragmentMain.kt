@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
@@ -32,9 +33,8 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
     private var saveEnabled = false
 
     companion object {
-        private val titles = listOf("마스크", "인물", "배경", "저장")
-        private val iconsOff = listOf(R.drawable.ic_person_off, R.drawable.ic_user_off, R.drawable.ic_background_off, R.drawable.ic_done_off)
-        private val iconsOn = listOf(R.drawable.ic_person_on, R.drawable.ic_user_on, R.drawable.ic_background_on, R.drawable.ic_done_on)
+        private val IC_OFF = listOf(R.drawable.ic_person_off, R.drawable.ic_user_off, R.drawable.ic_background_off, R.drawable.ic_done_off)
+        private val IC_ON = listOf(R.drawable.ic_person_on, R.drawable.ic_user_on, R.drawable.ic_background_on, R.drawable.ic_done_on)
         private val ON_SAVE_ACTIVITY_RESULT = 0
         private var backKeyPressedTime: Long = 0
         private var tabIndexLast = 0
@@ -72,10 +72,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         }
         binding.buttonRedo.setOnClickListener {
             //TODO stack 구현 후 redo 구현
-        }
-        binding.buttonSetting.setOnClickListener{
-            /*        val intent = Intent(this, SettingActivity::class.java)
-            startActivity(intent)*/
         }
         binding.buttonUndo.setOnClickListener{
 
@@ -225,18 +221,21 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
 
 
     private fun setTabView(pos: Int, selected: Boolean) {
-        Log.i("changing Tab", "$pos, $selected ${if (selected) iconsOn[pos] else iconsOff[pos]}")
+        val titles = resources.getStringArray(R.array.fragment_category)
+        val IC_OFF = resources.obtainTypedArray(R.array.fragment_icon_off)
+        val IC_ON = resources.obtainTypedArray(R.array.fragment_icon_on)
+        Log.i("changing Tab", "$pos, $selected ${if (selected) IC_ON.getResourceId(pos,-1) else IC_OFF.getResourceId(pos,-1)}")
         val view = layoutInflater.inflate(R.layout.tab_view_main, null)
         val title = view.findViewById(R.id.title) as TextView
         val image = view.findViewById(R.id.icon) as ImageView
         if (pos == 3 && !saveEnabled) {
             title.text = titles[pos]
-            title.setTextColor(Color.parseColor("#DDDDDD"))
+            title.setTextColor(ContextCompat.getColor(requireContext(),R.color.colorGrey))
             image.setImageResource(R.drawable.ic_done_disabled)
         } else {
             title.text = titles[pos]
-            title.setTextColor(Color.parseColor(if (selected) "#ff6f69" else "#909090"))
-            image.setImageResource(if (selected) iconsOn[pos] else iconsOff[pos])
+            title.setTextColor(ContextCompat.getColor(requireContext(),if(selected)R.color.colorAccent else R.color.colorDeepGrey))
+            image.setImageResource(if (selected)  IC_ON.getResourceId(pos,-1) else IC_OFF.getResourceId(pos,-1))
         }
         binding.tabLayout.getTabAt(pos)?.customView = null
         binding.tabLayout.getTabAt(pos)?.customView = view
