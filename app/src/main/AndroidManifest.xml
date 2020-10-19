@@ -17,15 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.SettingActivity"
-            android:theme="@style/Theme.Transparent"></activity>
-        <activity android:name=".ui.SaveActivity" />
+        <activity
+            android:name=".ui.SettingActivity"
+            android:theme="@style/Theme.Transparent" />
         <activity android:name=".ui.CopyrightActivity" />
         <activity android:name=".ui.RegulationActivity" />
-        <activity android:name=".ui.MainActivity">
-
-        </activity>
-        <activity android:name=".ui.StartActivity">
+        <activity android:name= ".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -39,6 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
