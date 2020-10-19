@@ -56,10 +56,10 @@ class MainActivity : AppCompatActivity() {
         fragmentPerson = FragmentPerson()
         val fragmentEmpty = FragmentMask()
         val tabAdapter = TabPagerAdapter(supportFragmentManager, 4) //behavior 4 -> 5
-        tabAdapter.addPage(fragmentMask, "")
-        tabAdapter.addPage(fragmentPerson, "")
-        tabAdapter.addPage(fragmentBackground, "")
-        tabAdapter.addPage(fragmentEmpty, "")
+        if(!fragmentMask.isAdded) tabAdapter.addPage(fragmentMask, "")
+        if(!fragmentPerson.isAdded)tabAdapter.addPage(fragmentPerson, "")
+        if(!fragmentBackground.isAdded)tabAdapter.addPage(fragmentBackground, "")
+        if(!fragmentEmpty.isAdded) tabAdapter.addPage(fragmentEmpty, "")
 
         viewPager.adapter = tabAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             setTabView(tab!!.position, true)
             when (tab.position) {
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         //TODO stack 초기화 시켜주기
     }
 
-    val onOriginalButtonTouchListener = object : View.OnTouchListener {
+    private val onOriginalButtonTouchListener = object : View.OnTouchListener {
         override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
             if (p1 != null) {
                 when (p1.action) {

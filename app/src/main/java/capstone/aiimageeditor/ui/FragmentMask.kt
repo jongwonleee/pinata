@@ -8,26 +8,31 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageManager
+import capstone.aiimageeditor.R
 import capstone.aiimageeditor.customviews.DrawingView
 import capstone.aiimageeditor.databinding.FragmentMaskBinding
 import com.google.android.material.tabs.TabLayout
 
 
-class FragmentMask : Fragment() {
+class FragmentMask:BaseKotlinFragment<FragmentMaskBinding>(){
+    override val layoutResourceId: Int
+        get() = R.layout.fragment_mask
 
-    private lateinit var maskView: DrawingView
-    private var _binding: FragmentMaskBinding? = null
-    private val binding get() = _binding!!
     private lateinit var imageManager: ImageManager
+    private lateinit var maskView: DrawingView
+
+    override fun initStartView() {
+        imageManager = (requireActivity().application as ImageManager)
+        setImage(context!!)
+    }
 
     //TODO custom zoomable view 이용해 줌 기능 추가
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        imageManager = (activity?.application as ImageManager)
-        setImage(context!!)
+    override fun initDataBinding() {
         binding.seekBar.max = 90
         binding.seekBar.progress = 45
+    }
+
+    override fun initAfterBinding() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 maskView.setStrokeWidth((p1 + 10).toFloat())
@@ -40,6 +45,7 @@ class FragmentMask : Fragment() {
             }
 
         })
+
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
@@ -53,11 +59,11 @@ class FragmentMask : Fragment() {
                     else -> maskView.setBrush(false)
                 }
             }
-
         })
-
     }
 
+    override fun reLoadUI() {
+    }
 
     fun setImage(context: Context) {
         maskView = DrawingView(context, imageManager.mask, imageManager.original)
@@ -70,18 +76,4 @@ class FragmentMask : Fragment() {
         imageManager.mask = maskView.mask
         binding.imageFg.removeView(maskView)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMaskBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 }
