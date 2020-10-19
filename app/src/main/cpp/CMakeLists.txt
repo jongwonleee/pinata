@@ -10,8 +10,8 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-set(pathPROJECT /users/jongwon/ai_photo_editor)
-set(pathOPENCV /users/jongwon/ai_photo_editor/opencv)
+set(pathPROJECT C:/Users/jongwon/Documents/pinata)
+set(pathOPENCV C:/Users/jongwon/Documents/pinata/opencv)
 set(pathLIBOPENCV_JAVA ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
 set(CMAKE_VERBOSE_MAKEFILE on)

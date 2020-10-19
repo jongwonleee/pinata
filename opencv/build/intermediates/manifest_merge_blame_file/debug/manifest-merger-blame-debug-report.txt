@@ -6,8 +6,8 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="21"
-8-->/Users/jongwon/ai_photo_editor/opencv/java/AndroidManifest.xml
+8-->C:\Users\jongwon\Documents\pinata\opencv\java\AndroidManifest.xml
 9        android:targetSdkVersion="26" />
-9-->/Users/jongwon/ai_photo_editor/opencv/java/AndroidManifest.xml
+9-->C:\Users\jongwon\Documents\pinata\opencv\java\AndroidManifest.xml
 10
 11</manifest>
