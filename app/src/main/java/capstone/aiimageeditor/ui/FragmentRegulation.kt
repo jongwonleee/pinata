@@ -3,10 +3,11 @@ package capstone.aiimageeditor.ui
 import android.app.Activity
 import android.os.Bundle
 import android.text.Html
-import capstone.aiimageeditor.databinding.ActivityRegulationBinding
+import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.FragmentRegulationBinding
 
 
-class RegulationActivity : Activity() {
+class FragmentRegulation : BaseKotlinFragment<FragmentRegulationBinding>() {
     companion object {
         val str = """
 
@@ -20,10 +21,20 @@ class RegulationActivity : Activity() {
 """
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityRegulationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override val layoutResourceId: Int
+        get() = R.layout.fragment_regulation
+
+    override fun initStartView() {
         binding.textRegulation.text = Html.fromHtml(str)
     }
+
+    override fun initDataBinding() {
+    }
+
+    override fun initAfterBinding() {
+    }
+
+    override fun reLoadUI() {
+    }
+
 }

@@ -57,10 +57,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         if(!fragmentBackground.isAdded)tabAdapter.addPage(fragmentBackground, "")
         if(!fragmentEmpty.isAdded) tabAdapter.addPage(fragmentEmpty, "")
 
-        setTabView(0, true)
-        setTabView(1, false)
-        setTabView(2, false)
-        setTabView(3, false)
 
         binding.viewPager.adapter = tabAdapter
         binding.tabLayout.setupWithViewPager(binding.viewPager)
@@ -93,6 +89,9 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
             FragmentStart.PICK_FROM_ALBUM
             )
         }
+        binding.buttonSetting.setOnClickListener {
+            findNavController().navigate(FragmentMainDirections.actionFragmentMainToFragmentSetting())
+        }
         imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
                 fragmentBackground.setImage()
@@ -105,16 +104,21 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
             }
         })
         (binding.tabLayout.getChildAt(0) as ViewGroup).getChildAt(3).isEnabled = false
+
+        setTabView(0, true)
+        setTabView(1, false)
+        setTabView(2, false)
+        setTabView(3, false)
     }
 
     override fun reLoadUI() {
     }
 
-    fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
+    private fun setImageBitmap(iv: ImageView, bitmap: Bitmap) {
         Glide.with(this).load(bitmap).into(iv)
     }
 
-    fun initializeImage() {
+    private fun initializeImage() {
         setImageBitmap(binding.imageNew, imageManager.original)
         setImageBitmap(binding.imageOriginal, imageManager.original)
         //TODO stack 초기화 시켜주기
@@ -149,8 +153,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
                 }
                 3 -> {
                     if (saveEnabled) {
-//                        val intent = Intent(requireContext(), FragmentSave::class.java)
-//                        startActivityForResult(intent, ON_SAVE_ACTIVITY_RESULT)
                           findNavController().navigate(FragmentMainDirections.actionFragmentMainToFragmentSave())
                     }
 

@@ -67,8 +67,4 @@ abstract class BaseKotlinFragment<T : ViewDataBinding> : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.unbind()
-    }
 }

@@ -20,8 +20,8 @@
         <activity
             android:name=".ui.SettingActivity"
             android:theme="@style/Theme.Transparent" />
-        <activity android:name=".ui.CopyrightActivity" />
-        <activity android:name=".ui.RegulationActivity" />
+        <activity android:name=".ui.FragmentCopyright" />
+        <activity android:name=".ui.FragmentRegulation" />
         <activity android:name= ".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

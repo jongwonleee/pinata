@@ -9,7 +9,16 @@
         android:label="FragmentMain" >
         <action
             android:id="@+id/action_fragmentMain_to_fragmentSave"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/fragmentSave" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentSetting"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:destination="@id/fragmentSetting" />
     </fragment>
     <fragment
         android:id="@+id/fragmentStart"
@@ -17,10 +26,46 @@
         android:label="FragmentStart" >
         <action
             android:id="@+id/action_fragmentStart_to_fragmentMain"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/fragmentMain" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSave"
         android:name="capstone.aiimageeditor.ui.FragmentSave"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
         android:label="FragmentSave" />
+    <fragment
+        android:id="@+id/fragmentSetting"
+        android:name="capstone.aiimageeditor.ui.FragmentSetting"
+        android:label="FragmentSetting" >
+        <action
+            android:id="@+id/action_fragmentSetting_to_fragmentCopyright"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:destination="@id/fragmentCopyright" />
+        <action
+            android:id="@+id/action_fragmentSetting_to_fragmentRegulation"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:destination="@id/fragmentRegulation" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCopyright"
+        android:name="capstone.aiimageeditor.ui.FragmentCopyright"
+        android:label="FragmentCopyright" />
+    <fragment
+        android:id="@+id/fragmentRegulation"
+        android:name="capstone.aiimageeditor.ui.FragmentRegulation"
+        android:label="fragment_regulation"
+        tools:layout="@layout/fragment_regulation" />
 </navigation>

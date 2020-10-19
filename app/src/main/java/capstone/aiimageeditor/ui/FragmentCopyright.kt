@@ -4,15 +4,15 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
-import capstone.aiimageeditor.databinding.ActivityCopyrightBinding
+import capstone.aiimageeditor.R
+import capstone.aiimageeditor.databinding.FragmentCopyrightBinding
 import com.yydcdut.markdown.MarkdownConfiguration
 import com.yydcdut.markdown.MarkdownProcessor
 import com.yydcdut.markdown.syntax.text.TextFactory
 import com.yydcdut.markdown.theme.ThemeSunburst
-import kotlinx.android.synthetic.main.activity_copyright.*
 
 
-class CopyrightActivity : Activity() {
+class FragmentCopyright : BaseKotlinFragment<FragmentCopyrightBinding>(){
     companion object {
         val str = """
 ## <Copyrights 2020. @jongwonleee. All rights reserved.>
@@ -137,11 +137,11 @@ Icons made by flaticon
 """
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityCopyrightBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val markdownConfiguration = MarkdownConfiguration.Builder(this)
+    override val layoutResourceId: Int
+        get() = R.layout.fragment_copyright
+
+    override fun initStartView() {
+        val markdownConfiguration = MarkdownConfiguration.Builder(requireContext())
             .setDefaultImageSize(50, 50)
             .setBlockQuotesLineColor(-0xcc4a1b)
             .setHeader1RelativeSize(1.3f)
@@ -165,18 +165,28 @@ Icons made by flaticon
                 binding.textCopyright.text
             }
             .build()
-        val processor = MarkdownProcessor(this)
+        val processor = MarkdownProcessor(requireContext())
         processor.factory(TextFactory.create())
         processor.config(markdownConfiguration)
-        textCopyright.text = processor.parse(str)
+        binding.textCopyright.text = processor.parse(str)
+    }
+
+    override fun initDataBinding() {
+    }
+
+    override fun initAfterBinding() {
+    }
+
+    override fun reLoadUI() {
     }
 
     private fun toast(msg: String) {
         var mToast: Toast? = null
         if (mToast == null) {
-            mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
+            mToast = Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT)
         }
         mToast?.setText(msg)
         mToast?.show()
     }
 }
+
