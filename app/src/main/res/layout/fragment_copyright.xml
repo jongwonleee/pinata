@@ -35,7 +35,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="카피라이트"
+                android:text="@string/copyright"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 

@@ -32,7 +32,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="설정"
+                android:text="@string/setting"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_horizontal"
                     android:padding="8dp"
-                    android:text="버전"
+                    android:text="@string/version"
                     android:textColor="#333333" />
 
                 <TextView
@@ -62,7 +62,6 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal|left"
                     android:padding="8dp"
-                    android:text="1.0.0"
                     android:textColor="#333333"
                     android:textStyle="italic" />
             </LinearLayout>
@@ -77,7 +76,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="피드백"
+                android:text="@string/feedback"
                 android:textColor="#333333" />
 
             <TextView
@@ -90,7 +89,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="개인정보보호규정"
+                android:text="@string/regulation"
                 android:textColor="#333333" />
 
             <TextView
@@ -104,7 +103,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="카피라이트"
+                android:text="@string/copyright"
                 android:textColor="#333333" />
 
             <TextView
@@ -118,7 +117,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="후기"
+                android:text="@string/review"
                 android:textColor="#333333" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

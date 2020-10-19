@@ -44,6 +44,11 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
 
         binding.seekBar.max = 100
         binding.seekBar.visibility = View.GONE
+
+        val filterList = resources.getStringArray(R.array.filter_person)
+        filterList.forEach {
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it))
+        }
     }
 
     override fun initDataBinding() {

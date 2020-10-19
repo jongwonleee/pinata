@@ -15,4 +15,13 @@
     <string name="email_subject">앱 Pinata 관련 피드백</string>
     <string name="email_chooser">Choose an Email client :</string>
     <string name="package_name">capstone.aiimageeditor</string>
+
+    <string name="copyright">카피라이트</string>
+    <string name="regulation">개인정보보호규정</string>
+    <string name="setting">설정</string>
+    <string name="version">버전</string>
+    <string name="review">후기</string>
+    <string name="feedback">피드백</string>
+    <string name="brush">브러쉬</string>
+    <string name="eraser">지우개</string>
 </resources>

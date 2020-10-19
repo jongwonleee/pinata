@@ -35,7 +35,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="64dp"
                 android:paddingBottom="8dp"
-                android:text="개인정보보호규정"
+                android:text="@string/regulation"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
