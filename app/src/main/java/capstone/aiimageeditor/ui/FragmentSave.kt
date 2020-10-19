@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.navigation.NavHostController
 import androidx.navigation.fragment.findNavController
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R
@@ -111,16 +112,16 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
     fun saveImage(bitmap: Bitmap, name: String) {
         val saved: Boolean
         val fos: OutputStream
-        var IMAGES_FOLDER_NAME: String = "pinata"
+        var IMAGES_FOLDER_NAME: String = resources.getString(R.string.app_name)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val mContext = requireContext()
 
             val resolver: ContentResolver = mContext.contentResolver
-            val contentValues: ContentValues = ContentValues()
+            val contentValues = ContentValues()
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + IMAGES_FOLDER_NAME)
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, resources.getString(R.string.save_type))
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, resources.getString(R.string.save_location) + IMAGES_FOLDER_NAME)
             val imageUri =
                 resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             fos = imageUri?.let { resolver.openOutputStream(it) }!!
@@ -135,7 +136,7 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
                 file.mkdir()
             }
 
-            val image = File(imagesDir, name + ".png")
+            val image = File(imagesDir, name + resources.getString(R.string.save_extension))
             fos = FileOutputStream(image)
 
         }
@@ -144,7 +145,7 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
         fos.flush()
         fos.close()
         Toast.makeText(requireContext(), "Image Saved.", Toast.LENGTH_SHORT).show()
-        //finish()
+        findNavController().popBackStack()
     }
 
     fun onSaveButtonClick(v: View) {

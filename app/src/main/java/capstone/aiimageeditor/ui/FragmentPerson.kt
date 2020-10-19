@@ -3,14 +3,10 @@ package capstone.aiimageeditor.ui
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.fragment.app.Fragment
 import capstone.aiimageeditor.ImageHalo
 import capstone.aiimageeditor.ImageManager
 import capstone.aiimageeditor.R

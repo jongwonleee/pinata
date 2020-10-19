@@ -34,8 +34,8 @@ class FragmentStart:BaseKotlinFragment<FragmentStartBinding>(){
 
     companion object {
         // Used to load the 'native-lib' library on application startup.
-        val PICK_FROM_ALBUM = 1
-        private val PREF_STRING_SET_KEY = "URI"
+        const val PICK_FROM_ALBUM = 1
+        private const val PREF_STRING_SET_KEY = "URI"
 
         init {
             System.loadLibrary("native-lib")
@@ -123,7 +123,7 @@ class FragmentStart:BaseKotlinFragment<FragmentStartBinding>(){
             viewModel.onApplyModel(imageSegmentationModel, inferenceThread, (requireActivity().application as ImageManager).original)
         } else {
             images.remove(uri.toString())
-            Toast.makeText(requireContext(), "사진을 불러올 수 없습니다", Toast.LENGTH_LONG)
+            Toast.makeText(requireContext(), resources.getString(R.string.error_load_image), Toast.LENGTH_LONG)
             adapter.notifyDataSetChanged()
         }
 
@@ -141,7 +141,7 @@ class FragmentStart:BaseKotlinFragment<FragmentStartBinding>(){
             }
 
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
-                Toast.makeText(requireContext(), "서비스 이용을 위해 권한을 허용해주세요.", Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(), resources.getString(R.string.error_permission), Toast.LENGTH_LONG)
 
             }
 

@@ -23,7 +23,7 @@ class FragmentMask:BaseKotlinFragment<FragmentMaskBinding>(){
 
     override fun initStartView() {
         imageManager = (requireActivity().application as ImageManager)
-        setImage(context!!)
+        setImage(requireContext())
     }
 
     //TODO custom zoomable view 이용해 줌 기능 추가

@@ -15,9 +15,6 @@ class FragmentSetting :BaseKotlinFragment<FragmentSettingBinding>(){
     override val layoutResourceId: Int
         get() = R.layout.fragment_setting
 
-    companion object{
-        val packageName = "capstone.aiimageeditor"
-    }
 
     override fun initStartView() {
         try {
@@ -37,10 +34,10 @@ class FragmentSetting :BaseKotlinFragment<FragmentSettingBinding>(){
         }
         binding.buttonFeedback.setOnClickListener{
             val email = Intent(Intent.ACTION_SEND)
-            email.putExtra(Intent.EXTRA_EMAIL, arrayOf("jong12ems@google.com"))
-            email.putExtra(Intent.EXTRA_SUBJECT, "앱 Pinata 관련 피드백")
+            email.putExtra(Intent.EXTRA_EMAIL, arrayOf(resources.getString(R.string.email_email)))
+            email.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.email_subject))
             email.type = "message/rfc822"
-            startActivity(Intent.createChooser(email, "Choose an Email client :"))
+            startActivity(Intent.createChooser(email, resources.getString(R.string.email_chooser)))
         }
         binding.buttonCopyright.setOnClickListener {
             findNavController().navigate(FragmentSettingDirections.actionFragmentSettingToFragmentCopyright())
@@ -49,6 +46,7 @@ class FragmentSetting :BaseKotlinFragment<FragmentSettingBinding>(){
             findNavController().navigate(FragmentSettingDirections.actionFragmentSettingToFragmentRegulation())
         }
         binding.buttonReview.setOnClickListener {
+            val packageName = resources.getString(R.string.package_name)
             val uri: Uri = Uri.parse("market://details?id=$packageName")
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
             // To count with Play market backstack, After pressing back button,
