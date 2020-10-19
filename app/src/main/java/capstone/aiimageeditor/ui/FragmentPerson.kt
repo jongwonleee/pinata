@@ -46,8 +46,8 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
         binding.buttonColorChange.visibility = View.GONE
         binding.imageBg.visibility = View.VISIBLE
 
-        seekBar.max = 100
-        seekBar.visibility = View.GONE
+        binding.seekBar.max = 100
+        binding.seekBar.visibility = View.GONE
     }
 
     override fun initDataBinding() {
@@ -57,7 +57,7 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
         binding.buttonColorChange.setOnClickListener(this)
         binding.buttonTogleLiquify.setOnClickListener(this)
         binding.imageFg.setOnTouchListener(this)
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 when (tabPosition) {
                     0 -> {
@@ -87,7 +87,7 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        tabLayout.addOnTabSelectedListener(tabListener)
+        binding.tabLayout.addOnTabSelectedListener(tabListener)
     }
 
     override fun reLoadUI() {
@@ -147,9 +147,9 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
         imageHalo.setWeight(imageManager.personAdjusts[8])
         imageHalo.setColor(imageManager.haloColor)
         binding.viewLiquifyview.visibility = View.VISIBLE
-        seekBar.visibility = View.VISIBLE
+        binding.seekBar.visibility = View.VISIBLE
         binding.imageFg.setImageBitmap(imageManager.personFiltered)
-        tabLayout.getTabAt(0)?.select()
+        binding.tabLayout.getTabAt(0)?.select()
     }
 
     fun saveImage() {
@@ -169,16 +169,16 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
         var filter = f
         if (imageManager.personFilters[index] != null) {
             filter = imageManager.personFilters[index]!!
-            seekBar.progress = imageManager.personAdjusts[index]
+            binding.seekBar.progress = imageManager.personAdjusts[index]
         } else {
             imageManager.personFilters[index] = f
         }
 
         filterAdjuster = GPUImageFilterTools.FilterAdjuster(filter)
         if (filterAdjuster!!.canAdjust()) {
-            seekBar.visibility = View.VISIBLE
+            binding.seekBar.visibility = View.VISIBLE
         } else {
-            seekBar.visibility = View.GONE
+            binding.seekBar.visibility = View.GONE
         }
     }
 
@@ -233,7 +233,7 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
             applyFilters(true)
 
             binding.buttonColorChange.visibility = View.GONE
-            seekBar.visibility = View.VISIBLE
+            binding.seekBar.visibility = View.VISIBLE
             tabPosition = tab!!.position
             binding.viewLiquifyview.visibility = View.GONE
             binding.viewTallview.visibility = View.GONE
@@ -257,14 +257,14 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
                     binding.imageFg.visibility = View.VISIBLE
                     binding.buttonColorChange.visibility = View.VISIBLE
                     imageHalo.setColor(imageManager.haloColor)
-                    seekBar.progress = 0
+                    binding.seekBar.progress = 0
                     applyFilters(true)
                 }
                 9 -> {
                     addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.TOON))
                 }
             }
-            seekBar.progress = imageManager.personAdjusts[tabPosition]
+            binding.seekBar.progress = imageManager.personAdjusts[tabPosition]
         }
 
     }
@@ -294,16 +294,15 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
         if (isLiquify) {
             binding.viewLiquifyview.setup(30, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
             binding.viewLiquifyview.visibility = View.VISIBLE
-            seekBar.progress = 0
-            seekBar.visibility = View.VISIBLE
+            binding.seekBar.progress = 0
+            binding.seekBar.visibility = View.VISIBLE
             white_view.visibility = View.VISIBLE
         } else {
             binding.viewTallview.setup(1, 50, imageManager.personOriginal, imageManager.backgroundOriginal)
             binding.viewTallview.visibility = View.VISIBLE
             white_view.visibility = View.VISIBLE
 
-            seekBar.progress = 0
+            binding.seekBar.progress = 0
         }
     }
-
 }

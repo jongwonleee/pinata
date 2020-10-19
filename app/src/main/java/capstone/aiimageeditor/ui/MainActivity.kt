@@ -23,9 +23,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var fragmentMask: FragmentMask
-    private lateinit var fragmentBackground: FragmentBackground
-    private lateinit var fragmentPerson: FragmentPerson
+    private val fragmentMask = FragmentMask()
+    private val fragmentBackground= FragmentBackground()
+    private val fragmentPerson = FragmentPerson()
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
@@ -51,9 +51,6 @@ class MainActivity : AppCompatActivity() {
         binding.buttonOriginal.setOnTouchListener(onOriginalButtonTouchListener)
 
         initializeImage()
-        fragmentBackground = FragmentBackground()
-        fragmentMask = FragmentMask()
-        fragmentPerson = FragmentPerson()
         val fragmentEmpty = FragmentMask()
         val tabAdapter = TabPagerAdapter(supportFragmentManager, 4) //behavior 4 -> 5
         if(!fragmentMask.isAdded) tabAdapter.addPage(fragmentMask, "")
