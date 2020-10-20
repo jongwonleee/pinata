@@ -35,7 +35,7 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
     var imageUri: Uri? = null
 
     companion object {
-        val SHARED_ACTIVITY = 1
+        const val SHARED_ACTIVITY = 1
     }
 
 
@@ -61,6 +61,13 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
                 SHARED_ACTIVITY
             )
         }
+        binding.floatingActionButton.setOnClickListener {
+            val fileName = SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(Date(System.currentTimeMillis()))
+            image = Bitmap.createScaledBitmap(
+                image, (requireActivity().application as ImageManager).saveOrigianl.width, (requireActivity().application as ImageManager).saveOrigianl.height, true
+            )
+            saveImage(image, fileName)
+        }
         binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -73,20 +80,13 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
         Glide.with(this).load(bitmap).into(iv)
     }
 
-    /*
-    fun onBackButtonClick(v: View) {
-        finish()
-    }
-     */
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == SHARED_ACTIVITY) {
             if (imageUri != null) {
                 val file = File(imageUri!!.path)
-                if (file.exists()) {
-                    if (file.delete()) {
-                        Log.i("Pinata File Share", "File sharing done")
-                    }
+                if (file.exists() && file.delete()) {
+                    Log.i("Pinata File Share", "File sharing done")
                 }
             } else {
                 Log.i("[imageUri] : ", "null")
@@ -95,7 +95,7 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path: String =
@@ -109,10 +109,10 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
     }
 
 
-    fun saveImage(bitmap: Bitmap, name: String) {
+    private fun saveImage(bitmap: Bitmap, name: String) {
         val saved: Boolean
         val fos: OutputStream
-        var IMAGES_FOLDER_NAME: String = resources.getString(R.string.app_name)
+        val IMAGES_FOLDER_NAME: String = resources.getString(R.string.app_name)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val mContext = requireContext()
@@ -146,14 +146,6 @@ class FragmentSave : BaseKotlinFragment<FragmentSaveBinding>() {
         fos.close()
         Toast.makeText(requireContext(), "Image Saved.", Toast.LENGTH_SHORT).show()
         findNavController().popBackStack()
-    }
-
-    fun onSaveButtonClick(v: View) {
-        val fileName = SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(Date(System.currentTimeMillis()))
-        image = Bitmap.createScaledBitmap(
-            image, (requireActivity().application as ImageManager).saveOrigianl.width, (requireActivity().application as ImageManager).saveOrigianl.height, true
-        )
-        saveImage(image, fileName)
     }
 
 }

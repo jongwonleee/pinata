@@ -31,11 +31,12 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
+    private val iconsOff = resources.obtainTypedArray(R.array.fragment_icon_off)
+    private val iconsOn = resources.obtainTypedArray(R.array.fragment_icon_on)
+    private val titles = resources.getStringArray(R.array.fragment_category)
 
     companion object {
-        private val IC_OFF = listOf(R.drawable.ic_person_off, R.drawable.ic_user_off, R.drawable.ic_background_off, R.drawable.ic_done_off)
-        private val IC_ON = listOf(R.drawable.ic_person_on, R.drawable.ic_user_on, R.drawable.ic_background_on, R.drawable.ic_done_on)
-        private val ON_SAVE_ACTIVITY_RESULT = 0
+        private const val ON_SAVE_ACTIVITY_RESULT = 0
         private var backKeyPressedTime: Long = 0
         private var tabIndexLast = 0
     }
@@ -79,7 +80,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         binding.imageNew.setOnClickListener{
             //TODO stack에 무언가 쌓였으면 체크 후 새로 하기
             val intent = Intent(Intent.ACTION_PICK)
-            intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
+            intent.type = MediaStore.Images.Media.CONTENT_TYPE
             startActivityForResult(
             intent,
             FragmentStart.PICK_FROM_ALBUM
@@ -148,9 +149,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
                     fragmentBackground.setImage()
                 }
                 3 -> {
-                    if (saveEnabled) {
-                          findNavController().navigate(FragmentMainDirections.actionFragmentMainToFragmentSave())
-                    }
+                    if (saveEnabled) findNavController().navigate(FragmentMainDirections.actionFragmentMainToFragmentSave())
 
                 }
             }
@@ -221,10 +220,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
 
 
     private fun setTabView(pos: Int, selected: Boolean) {
-        val titles = resources.getStringArray(R.array.fragment_category)
-        val IC_OFF = resources.obtainTypedArray(R.array.fragment_icon_off)
-        val IC_ON = resources.obtainTypedArray(R.array.fragment_icon_on)
-        Log.i("changing Tab", "$pos, $selected ${if (selected) IC_ON.getResourceId(pos,-1) else IC_OFF.getResourceId(pos,-1)}")
+        Log.i("changing Tab", "$pos, $selected ${if (selected) iconsOn.getResourceId(pos,-1) else iconsOff.getResourceId(pos,-1)}")
         val view = layoutInflater.inflate(R.layout.tab_view_main, null)
         val title = view.findViewById(R.id.title) as TextView
         val image = view.findViewById(R.id.icon) as ImageView
@@ -235,9 +231,9 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         } else {
             title.text = titles[pos]
             title.setTextColor(ContextCompat.getColor(requireContext(),if(selected)R.color.colorAccent else R.color.colorDeepGrey))
-            image.setImageResource(if (selected)  IC_ON.getResourceId(pos,-1) else IC_OFF.getResourceId(pos,-1))
+            image.setImageResource(if (selected)  iconsOn.getResourceId(pos,-1) else iconsOff.getResourceId(pos,-1))
         }
-        binding.tabLayout.getTabAt(pos)?.customView = null
+        //binding.tabLayout.getTabAt(pos)?.customView = null
         binding.tabLayout.getTabAt(pos)?.customView = view
         binding.tabLayout.refreshDrawableState()
     }

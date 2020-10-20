@@ -25,24 +25,22 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
 
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
-
+    private val filterList = resources.getStringArray(R.array.filter_background)
 
     override fun initStartView() {
         gpuImage = GPUImage(context)
         maskSeparator = MaskSeparator()
         imageManager = (activity?.application as ImageManager)
-        imageManager.backgroundAdjusts = imageManager.backgroundAdjusts
-        imageManager.backgroundFilters = imageManager.backgroundFilters
+        //imageManager.backgroundAdjusts = imageManager.backgroundAdjusts
+        //imageManager.backgroundFilters = imageManager.backgroundFilters
 
         binding.imageBg.visibility = View.VISIBLE
         binding.seekBar.max = 100
         binding.seekBar.progress = 50
 
-        val filterList = resources.getStringArray(R.array.filter_background)
         filterList.forEach {
             binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it))
         }
-
     }
 
     override fun initDataBinding() {
@@ -63,7 +61,6 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
                             imageManager.backgroundFilters
                         )
                     )
-
                 }
             }
 
@@ -83,10 +80,8 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
             binding.imageBg.setImageBitmap(gpuImage.getBitmapWithFiltersApplied(imageManager.backgroundOriginal, imageManager.backgroundFilters))
 
         } catch (e: Exception) {
-
             e.printStackTrace()
         }
-
     }
 
     fun saveImage() {
@@ -127,7 +122,7 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
     vibrance 25~75
     */
 
-    val tabListener = object : TabLayout.OnTabSelectedListener {
+    private val tabListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
 
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -146,7 +141,6 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
                 6 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.WHITE_BALANCE))
                 7 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.HAZE))
                 8 -> addFilter(GPUImageFilterTools.createFilterForType(context!!, GPUImageFilterTools.FilterType.VIBRANCE))
-
             }
             binding.seekBar.progress = imageManager.backgroundAdjusts[tabPosition]
         }

@@ -67,32 +67,3 @@ class FragmentSetting :BaseKotlinFragment<FragmentSettingBinding>(){
     }
 
 }
-/*
-
-class SettingActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivitySettingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-    }
-
-    fun OnRegulationClick(v: View) {
-        val intent = Intent(this, RegulationActivity::class.java)
-        startActivity(intent)
-    }
-
-    fun OnFeedbackClick(v: View) {
-
-    }
-
-    fun OnCopyrightClick(v: View) {
-        val intent = Intent(this, CopyrightActivity::class.java)
-        startActivity(intent)
-    }
-
-    fun OnReviewClick(v: View) {
-
-    }
-}
- */

@@ -105,8 +105,6 @@ class FragmentStart:BaseKotlinFragment<FragmentStartBinding>(){
             if (resultImage != null) {
                (requireActivity().application as ImageManager).mask = resultImage.bitmapMaskOnly
                 (requireActivity().application as ImageManager).runMaskCorrection()
-                /* val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)*/
                 findNavController().navigate(FragmentStartDirections.actionFragmentStartToFragmentMain())
             }
         })
@@ -194,22 +192,3 @@ class FragmentStart:BaseKotlinFragment<FragmentStartBinding>(){
     }
 
 }
-
-
-/*
-
-class StartActivity : AppCompatActivity() {
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityStartBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-    }
-
-
-
-}
-*/

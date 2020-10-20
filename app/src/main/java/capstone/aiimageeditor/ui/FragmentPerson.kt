@@ -33,6 +33,7 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
     private lateinit var imageHalo: ImageHalo
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
+    private val filterList = resources.getStringArray(R.array.filter_person)
     private var isLiquify = true
 
     override fun initStartView() {
@@ -45,7 +46,6 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
         binding.seekBar.max = 100
         binding.seekBar.visibility = View.GONE
 
-        val filterList = resources.getStringArray(R.array.filter_person)
         filterList.forEach {
             binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it))
         }

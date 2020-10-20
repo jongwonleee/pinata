@@ -14,7 +14,7 @@ import com.yydcdut.markdown.theme.ThemeSunburst
 
 class FragmentCopyright : BaseKotlinFragment<FragmentCopyrightBinding>(){
     companion object {
-        val str = """
+        private const val str = """
 ## <Copyrights 2020. @jongwonleee. All rights reserved.>
 ### _contributed with. @samsohn0168, @hyemin-Jeong_
 ```markdown
