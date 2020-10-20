@@ -38,6 +38,11 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
         binding.seekBar.max = 100
         binding.seekBar.progress = 50
 
+        val filterList = resources.getStringArray(R.array.filter_background)
+        filterList.forEach {
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(it))
+        }
+
     }
 
     override fun initDataBinding() {

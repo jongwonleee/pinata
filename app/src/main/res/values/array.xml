@@ -31,4 +31,16 @@
         <item>후광</item>
         <item>만화</item>
     </string-array>
+
+    <string-array name="filter_background">
+        <item>밝기</item>
+        <item>대조</item>
+        <item>선명도</item>
+        <item>포화</item>
+        <item>노출</item>
+        <item>하이라이트</item>
+        <item>화이트밸런스</item>
+        <item>헤이즈</item>
+        <item>진동</item>
+    </string-array>
 </resources>
