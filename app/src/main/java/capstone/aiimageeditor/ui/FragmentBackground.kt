@@ -32,9 +32,9 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
     override fun initStartView() {
         gpuImage = GPUImage(context)
         maskSeparator = MaskSeparator()
-        imageManager = (activity?.application as ImageManager)
-        //imageManager.backgroundAdjusts = imageManager.backgroundAdjusts
-        //imageManager.backgroundFilters = imageManager.backgroundFilters
+        imageManager = (requireActivity().application as ImageManager)
+        imageManager.backgroundAdjusts = imageManager.backgroundAdjusts
+        imageManager.backgroundFilters = imageManager.backgroundFilters
 
         binding.imageBg.visibility = View.VISIBLE
         binding.seekBar.max = 100

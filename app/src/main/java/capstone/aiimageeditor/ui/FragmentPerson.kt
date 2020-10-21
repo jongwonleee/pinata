@@ -39,7 +39,7 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
     private var isLiquify = true
 
     override fun initStartView() {
-        imageManager = (activity?.application as ImageManager)
+        imageManager = (requireActivity().application as ImageManager)
         gpuImage = GPUImage(context)
 
         binding.buttonColorChange.visibility = View.GONE

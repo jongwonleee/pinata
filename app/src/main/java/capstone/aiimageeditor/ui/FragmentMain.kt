@@ -1,5 +1,6 @@
 package capstone.aiimageeditor.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -42,6 +43,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         private var tabIndexLast = 0
     }
 
+    @SuppressLint("RestrictedApi")
     override fun initStartView() {
         imageManager = requireActivity().application as ImageManager
         imageManager.initialize()
@@ -50,19 +52,24 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         initializeImage()
         requireActivity().onBackPressedDispatcher.addCallback {
             findNavController().currentDestination?.label?.let {
-                if(it == "FragmentMain"){
-                    if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-                        backKeyPressedTime = System.currentTimeMillis()
-                        Toast.makeText(requireContext(), "뒤로 갈 시 현재까지의 결과물은 저장되지 않습니다.\n한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
+                Log.i("!!",it.toString())
+                when (it) {
+                    "FragmentMain" -> {
+                        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                            backKeyPressedTime = System.currentTimeMillis()
+                            Toast.makeText(requireContext(), "뒤로 갈 시 현재까지의 결과물은 저장되지 않습니다.\n한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
+                        } else if(System.currentTimeMillis() <= backKeyPressedTime + 2000){
+                            imageManager.InpaintTask().cancel(true)
+                            findNavController().popBackStack()
+                            this.remove()
+                        }
+                        return@addCallback
                     }
-                    else if(System.currentTimeMillis() <= backKeyPressedTime + 2000){
-                        imageManager.InpaintTask().cancel(true)
-                        findNavController().popBackStack()
+                    else -> {
+                        if(findNavController().backStack.size==0) requireActivity().finish()
+                        else findNavController().popBackStack()
                     }
-                    return@addCallback
                 }
-                else
-                    findNavController().popBackStack()
             }
         }
     }
@@ -74,7 +81,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         if(!fragmentPerson.isAdded)tabAdapter.addPage(fragmentPerson, "")
         if(!fragmentBackground.isAdded)tabAdapter.addPage(fragmentBackground, "")
         if(!fragmentEmpty.isAdded) tabAdapter.addPage(fragmentEmpty, "")
-
 
         binding.viewPager.adapter = tabAdapter
         binding.tabLayout.setupWithViewPager(binding.viewPager)
