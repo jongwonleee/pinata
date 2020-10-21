@@ -114,7 +114,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         }
         imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
-                binding.imageOriginal.setImageBitmap(imageManager.backgroundOriginal)
                 fragmentBackground.setImage()
                 fragmentPerson.refreshBackground()
                 saveEnabled = true

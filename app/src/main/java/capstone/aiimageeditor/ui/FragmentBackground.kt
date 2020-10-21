@@ -48,6 +48,8 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
     override fun initDataBinding() {
         setImage()
         addFilter(GPUImageFilterTools.createFilterForType(requireContext(), GPUImageFilterTools.FilterType.BRIGHTNESS))
+        filterAdjuster = GPUImageFilterTools.FilterAdjuster(imageManager.backgroundFilters[0]!!)
+        filterAdjuster?.adjust(50)
     }
 
     override fun initAfterBinding() {
