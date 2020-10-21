@@ -10,6 +10,8 @@ import android.os.AsyncTask
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import androidx.annotation.RequiresApi
+import jongwonleee.androidinpaint.inpaint.Inpaint
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import org.opencv.android.Utils
 import org.opencv.core.Mat
@@ -147,15 +149,19 @@ class ImageManager : Application() {
     }
 
     inner class InpaintTask : AsyncTask<Int, Int, Bitmap>() {
+        @RequiresApi(Build.VERSION_CODES.Q)
         override fun doInBackground(vararg p0: Int?): Bitmap {
             isInpainting = true
-            val source = Mat()
+/*            val source = Mat()
             val mask = Mat()
             Utils.bitmapToMat(original, source)
             Utils.bitmapToMat(this@ImageManager.mask, mask)
             startInpaint(source.nativeObjAddr, mask.nativeObjAddr)
             val bitmap = Bitmap.createBitmap(original.width, original.height, Bitmap.Config.ARGB_8888)
-            Utils.matToBitmap(source, bitmap)
+            Utils.matToBitmap(source, bitmap)*/
+            Log.i("!!!","start Inpainting")
+            val bitmap = Inpaint().inpaint(original, mask,1)
+            Log.i("!!!","inpainting done")
             return bitmap
         }
 
@@ -170,7 +176,7 @@ class ImageManager : Application() {
             }
         }
 
-        private external fun startInpaint(image: Long, mask: Long)
+        //private external fun startInpaint(image: Long, mask: Long)
     }
 
     private external fun startMaskCorrection(sourceImage: Long, mask: Long)
