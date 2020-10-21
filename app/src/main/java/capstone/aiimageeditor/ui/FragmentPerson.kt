@@ -33,7 +33,9 @@ class FragmentPerson : BaseKotlinFragment<FragmentPersonBinding>(), View.OnClick
     private lateinit var imageHalo: ImageHalo
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
-    private val filterList = resources.getStringArray(R.array.filter_person)
+    private val filterList by lazy{
+        resources.getStringArray(R.array.filter_person)
+    }
     private var isLiquify = true
 
     override fun initStartView() {

@@ -31,9 +31,9 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
     private lateinit var imageManager: ImageManager
     private lateinit var maskSeparator: MaskSeparator
     private var saveEnabled = false
-    private val iconsOff = resources.obtainTypedArray(R.array.fragment_icon_off)
-    private val iconsOn = resources.obtainTypedArray(R.array.fragment_icon_on)
-    private val titles = resources.getStringArray(R.array.fragment_category)
+    private val iconsOff by lazy { resources.obtainTypedArray(R.array.fragment_icon_off)}
+    private val iconsOn by lazy { resources.obtainTypedArray(R.array.fragment_icon_on)}
+    private val titles by lazy { resources.getStringArray(R.array.fragment_category)}
 
     companion object {
         private const val ON_SAVE_ACTIVITY_RESULT = 0

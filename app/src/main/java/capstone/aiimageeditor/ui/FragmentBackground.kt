@@ -25,7 +25,9 @@ class FragmentBackground : BaseKotlinFragment<FragmentBackgroundBinding>(){
 
     private var tabPosition = 0
     private var filterAdjuster: GPUImageFilterTools.FilterAdjuster? = null
-    private val filterList = resources.getStringArray(R.array.filter_background)
+    private val filterList by lazy {
+        resources.getStringArray(R.array.filter_background)
+    }
 
     override fun initStartView() {
         gpuImage = GPUImage(context)
