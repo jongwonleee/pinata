@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import capstone.aiimageeditor.ImageManager
@@ -47,7 +48,23 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
 
         maskSeparator = MaskSeparator()
         initializeImage()
-
+        requireActivity().onBackPressedDispatcher.addCallback {
+            findNavController().currentDestination?.label?.let {
+                if(it == "FragmentMain"){
+                    if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                        backKeyPressedTime = System.currentTimeMillis()
+                        Toast.makeText(requireContext(), "뒤로 갈 시 현재까지의 결과물은 저장되지 않습니다.\n한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
+                    }
+                    else if(System.currentTimeMillis() <= backKeyPressedTime + 2000){
+                        imageManager.InpaintTask().cancel(true)
+                        findNavController().popBackStack()
+                    }
+                    return@addCallback
+                }
+                else
+                    findNavController().popBackStack()
+            }
+        }
     }
 
     override fun initDataBinding() {
@@ -91,6 +108,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         }
         imageManager.setOnFinishInpaint(object : ImageManager.OnFinishInpaint {
             override fun onFinishInpaint() {
+                binding.imageOriginal.setImageBitmap(imageManager.backgroundOriginal)
                 fragmentBackground.setImage()
                 fragmentPerson.refreshBackground()
                 saveEnabled = true
@@ -177,6 +195,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
             when (tab.position) {
                 0 -> {
                     fragmentMask.deleteView()
+                    //binding.imageOriginal.setImageBitmap(imageManager.mask)
                     imageManager.personOriginal = maskSeparator.applyWithMask(imageManager.original, imageManager.mask)
                     imageManager.personFiltered = Bitmap.createBitmap(imageManager.personOriginal)
                     imageManager.startInpaint()
@@ -194,19 +213,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
         }
     }
 
-//    override fun onBackPressed() {
-//        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-//            backKeyPressedTime = System.currentTimeMillis()
-//            Toast.makeText(requireContext(), "뒤로 갈 시 현재까지의 결과물은 저장되지 않습니다.\n한번 더 누를 시 시작 액티비티로 이동합니다", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-//        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-//            imageManager.InpaintTask().cancel(true)
-//            //finish()
-//        }
-//
-//        super.onBackPressed()
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FragmentStart.PICK_FROM_ALBUM && data != null) {
@@ -220,7 +226,6 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
 
 
     private fun setTabView(pos: Int, selected: Boolean) {
-        Log.i("changing Tab", "$pos, $selected ${if (selected) iconsOn.getResourceId(pos,-1) else iconsOff.getResourceId(pos,-1)}")
         val view = layoutInflater.inflate(R.layout.tab_view_main, null)
         val title = view.findViewById(R.id.title) as TextView
         val image = view.findViewById(R.id.icon) as ImageView
@@ -233,7 +238,7 @@ class FragmentMain: BaseKotlinFragment<FragmentMainBinding>() {
             title.setTextColor(ContextCompat.getColor(requireContext(),if(selected)R.color.colorAccent else R.color.colorDeepGrey))
             image.setImageResource(if (selected)  iconsOn.getResourceId(pos,-1) else iconsOff.getResourceId(pos,-1))
         }
-        //binding.tabLayout.getTabAt(pos)?.customView = null
+        binding.tabLayout.getTabAt(pos)?.customView = null
         binding.tabLayout.getTabAt(pos)?.customView = view
         binding.tabLayout.refreshDrawableState()
     }

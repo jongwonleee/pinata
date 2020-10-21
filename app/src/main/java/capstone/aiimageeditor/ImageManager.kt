@@ -159,9 +159,7 @@ class ImageManager : Application() {
             startInpaint(source.nativeObjAddr, mask.nativeObjAddr)
             val bitmap = Bitmap.createBitmap(original.width, original.height, Bitmap.Config.ARGB_8888)
             Utils.matToBitmap(source, bitmap)*/
-            Log.i("!!!","start Inpainting")
             val bitmap = Inpaint().inpaint(original, mask,1)
-            Log.i("!!!","inpainting done")
             return bitmap
         }
 
@@ -176,7 +174,7 @@ class ImageManager : Application() {
             }
         }
 
-        //private external fun startInpaint(image: Long, mask: Long)
+        private external fun startInpaint(image: Long, mask: Long)
     }
 
     private external fun startMaskCorrection(sourceImage: Long, mask: Long)

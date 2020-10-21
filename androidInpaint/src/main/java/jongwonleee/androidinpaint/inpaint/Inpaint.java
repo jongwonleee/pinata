@@ -41,15 +41,15 @@ public class Inpaint {
         boolean[][] maskBoolean = new boolean[mask.getWidth()][mask.getHeight()];
         for(int i=0;i<mask.getWidth();i++){
             for(int j=0;j<mask.getHeight();j++){
-                maskBoolean[i][j] = mask.getColor(i,j).toArgb() == 0;
-                if(mask.getColor(i,j).toArgb() == Color.BLACK) Log.i("!@!",mask.getColor(i,j).toArgb()+"");
+                maskBoolean[i][j] = mask.getColor(i,j).toArgb() != 0;
             }
         }
+
         this.initial = new MaskedImage(input, maskBoolean);
 
         // patch radius
         this.radius = radius;
-
+       //if(mask!=null) return mask;
         // working copies
         MaskedImage source = initial;
 
