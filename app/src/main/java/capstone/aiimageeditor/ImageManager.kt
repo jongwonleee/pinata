@@ -11,10 +11,11 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
-import jongwonleee.androidinpaint.inpaint.Inpaint
+import com.inpainting.Inpaint
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import org.opencv.android.Utils
 import org.opencv.core.Mat
+
 
 class ImageManager : Application() {
     lateinit var original: Bitmap
@@ -152,15 +153,7 @@ class ImageManager : Application() {
         @RequiresApi(Build.VERSION_CODES.Q)
         override fun doInBackground(vararg p0: Int?): Bitmap {
             isInpainting = true
-/*            val source = Mat()
-            val mask = Mat()
-            Utils.bitmapToMat(original, source)
-            Utils.bitmapToMat(this@ImageManager.mask, mask)
-            startInpaint(source.nativeObjAddr, mask.nativeObjAddr)
-            val bitmap = Bitmap.createBitmap(original.width, original.height, Bitmap.Config.ARGB_8888)
-            Utils.matToBitmap(source, bitmap)*/
-            val bitmap = Inpaint().inpaint(original, mask,1)
-            return bitmap
+            return Inpaint().inpaint(original, mask,1)
         }
 
         override fun onPostExecute(result: Bitmap?) {
